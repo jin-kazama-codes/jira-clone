@@ -83,17 +83,17 @@ const EpicsTable: React.FC = () => {
 
   return (
     <div
-      className="w-full overflow-y-auto rounded-[3px] border"
+      className="w-full overflow-y-auto rounded-xl border-2"
       ref={renderContainerRef}
     >
       <div className="sticky top-0 z-10 h-10 bg-gray-100" />
       <EpicsAccordion handleCreateIssue={handleCreateIssue} />
-      <div className="sticky bottom-0 h-10 border-t bg-white">
+      <div className="sticky bottom-0 h-12  bg-white">
         <Button
           onClick={() => setIsCreatingEpic(true)}
           data-state={isCreatingEpic ? "closed" : "open"}
           customColors
-          className="flex w-full items-center gap-x-1.5 hover:bg-gray-100 [&[data-state=closed]]:hidden"
+          className="flex w-full rounded-xl items-center gap-x-1.5 hover:bg-gray-100 [&[data-state=closed]]:hidden"
         >
           <AiOutlinePlus />
           <span className="text-[14px] font-medium">Create Epic</span>
@@ -173,7 +173,7 @@ const EpicsAccordion: React.FC<{
             <div
               className={clsx(
                 index % 2 == 0 ? "bg-white" : "bg-gray-100",
-                "flex w-full items-center justify-between hover:bg-gray-200"
+                "flex w-full rounded-xl items-center justify-between hover:bg-gray-200"
               )}
             >
               <AccordionTrigger className="flex w-full items-center px-2 py-2.5 font-medium [&[data-state=open]>svg]:rotate-90">
@@ -209,7 +209,7 @@ const EpicsAccordion: React.FC<{
               </div>
               <Button
                 customColors
-                className="mr-2  hover:bg-gray-300"
+                className="mr-2 rounded-full hover:bg-gray-300"
                 onClick={() => handleAddIssueToEpic(issue.key, index)}
               >
                 <AiOutlinePlus />
@@ -221,7 +221,7 @@ const EpicsAccordion: React.FC<{
                   key={child.key}
                   role="button"
                   onClick={() => setIssueKey(child.key)}
-                  className="flex items-center justify-between p-1.5 pl-12 hover:bg-gray-100"
+                  className="flex items-center justify-between p-1.5 rounded-xl pl-12 hover:bg-gray-200"
                 >
                   <div className="flex items-center gap-x-2">
                     <IssueIcon issueType={child.type} />

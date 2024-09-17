@@ -116,7 +116,7 @@ const ChildIssue: React.FC<{ issue: IssueType }> = ({ issue }) => {
       data-state={issueKey == issue.key ? "selected" : "not-selected"}
       onClick={() => setIssueKey(issue.key)}
       className={clsx(
-        "group flex w-full max-w-full items-center justify-between border-[0.3px] border-gray-300 px-3 py-1.5 text-sm hover:bg-gray-50 [&[data-state=selected]]:bg-blue-100"
+        "group flex w-full max-w-full items-center justify-between border-[0.3px] rounded-xl border-gray-300 px-3 py-1.5 text-sm hover:bg-gray-50 [&[data-state=selected]]:bg-blue-100"
       )}
     >
       <div

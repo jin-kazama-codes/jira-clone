@@ -25,7 +25,7 @@ const BacklogList: React.FC<{
 
   return (
     <Accordion
-      className="rounded-md pb-20 pl-2"
+      className="rounded-xl border-2 pb-20 p-4 "
       type="single"
       value={openAccordion}
       onValueChange={setOpenAccordion}
@@ -53,14 +53,14 @@ const BacklogListHeader: React.FC<{ issues: IssueType[] }> = ({ issues }) => {
 
   return (
     <div className="flex w-full items-center justify-between text-sm ">
-      <AccordionTrigger className="flex w-full items-center p-2 font-medium [&[data-state=open]>svg]:rotate-90">
+      <AccordionTrigger className="flex w-full items-center p-2  font-medium [&[data-state=open]>svg]:rotate-90">
         <Fragment>
           <FaChevronRight
             className="mr-2 text-xs text-black transition-transform"
             aria-hidden
           />
           <div className="flex items-center">
-            <div className="text-semibold">Backlog</div>
+            <div className="text-semibold text-xl">Backlog</div>
             <div className="ml-3 font-normal text-gray-500">
               ({issues.length} issues)
             </div>
@@ -69,8 +69,8 @@ const BacklogListHeader: React.FC<{ issues: IssueType[] }> = ({ issues }) => {
       </AccordionTrigger>
       <div className="flex items-center gap-x-2 py-2">
         <IssueStatusCount issues={issues} />
-        <Button onClick={handleCreateSprint}>
-          <span className="whitespace-nowrap">Create Sprint</span>
+        <Button onClick={handleCreateSprint} className="!bg-black !text-white rounded-xl px-4 hover:!bg-black">
+          <span className="whitespace-nowrap text-white">Create Sprint</span>
         </Button>
       </div>
     </div>

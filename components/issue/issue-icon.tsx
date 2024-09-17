@@ -15,7 +15,7 @@ const Icon: React.FC<{ children: ReactNode; className?: string }> = ({
   className,
 }) => {
   return (
-    <div className={clsx("rounded-sm  p-0.5 text-sm text-white", className)}>
+    <div className={clsx("rounded-xl  p-0.5 text-sm text-white", className)}>
       {children}
     </div>
   );

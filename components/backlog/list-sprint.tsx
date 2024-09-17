@@ -37,7 +37,7 @@ const SprintList: React.FC<{
     <Accordion
       onValueChange={setOpenAccordion}
       value={openAccordion}
-      className="overflow-hidden rounded-lg bg-gray-100 p-2"
+      className="overflow-hidden border-2 rounded-xl  p-4"
       type="single"
       collapsible
     >
@@ -125,7 +125,7 @@ const SprintListHeader: React.FC<{ issues: IssueType[]; sprint: Sprint }> = ({
               aria-hidden
             />
             <div className="flex items-center gap-x-2">
-              <div className="text-semibold whitespace-nowrap">
+              <div className="text-semibold text-xl whitespace-nowrap">
                 {sprint.name}
               </div>
               <div className="flex items-center gap-x-3 whitespace-nowrap font-normal text-gray-500">
@@ -148,10 +148,10 @@ const SprintListHeader: React.FC<{ issues: IssueType[]; sprint: Sprint }> = ({
           >
             <DropdownTrigger
               asChild
-              className="rounded-m flex items-center gap-x-1 px-1.5 py-0.5 text-xs font-semibold focus:ring-2"
+              className="flex items-center gap-x-1 px-1.5 py-0.5 text-xs font-semibold focus:ring-2"
             >
-              <div className="rounded-sm bg-gray-200 px-1.5 py-1.5 text-gray-600 hover:cursor-pointer hover:bg-gray-300 [&[data-state=open]]:bg-gray-700 [&[data-state=open]]:text-white">
-                <BsThreeDots className="sm:text-xl" />
+              <div className="rounded-full px-1.5 py-1.5 text-black hover:cursor-pointer hover:bg-gray-300 [&[data-state=open]]:bg-gray-300 ">
+                <BsThreeDots className="sm:text-xl " />
               </div>
             </DropdownTrigger>
           </SprintDropdownMenu>
@@ -168,8 +168,8 @@ const SprintActionButton: React.FC<{ sprint: Sprint; issues: IssueType[] }> = ({
   if (sprint.status === "ACTIVE") {
     return (
       <CompleteSprintModal issues={issues} sprint={sprint}>
-        <Button>
-          <span className="whitespace-nowrap">Complete sprint</span>
+        <Button className="!bg-black !text-white rounded-xl px-4 hover:!bg-black">
+          <span className="whitespace-nowrap text-white">Complete sprint</span>
         </Button>
       </CompleteSprintModal>
     );
@@ -178,8 +178,8 @@ const SprintActionButton: React.FC<{ sprint: Sprint; issues: IssueType[] }> = ({
   if (sprint.status === "PENDING") {
     return (
       <StartSprintModal issueCount={issues.length} sprint={sprint}>
-        <Button>
-          <span className="whitespace-nowrap">Start sprint</span>
+        <Button className="!bg-black !text-white rounded-xl px-4 hover:!bg-black">
+          <span className="whitespace-nowrap text-white">Start sprint</span>
         </Button>
       </StartSprintModal>
     );

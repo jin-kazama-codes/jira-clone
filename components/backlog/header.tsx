@@ -19,16 +19,16 @@ const BacklogHeader: React.FC<{ project: Project }> = ({ project }) => {
       <h1>Backlog </h1>
       <div className="my-3 flex items-center justify-between">
         <div className="flex items-center gap-x-5">
-          <SearchBar search={search} setSearch={setSearch} />
+          <SearchBar search={search} setSearch={setSearch} placeholder={'Search Roadmap'}/>
           <Members />
           <EpicFilter />
           <IssueTypeFilter />
           <ClearFilters />
         </div>
         <NotImplemented feature="insights">
-          <Button className="flex items-center gap-x-2">
-            <BiLineChart className="text-gray-900" />
-            <span className="text-sm text-gray-900">Insights</span>
+          <Button className="flex items-center gap-x-2 !bg-black !text-white rounded-xl px-4 hover:!bg-slate-800">
+            <BiLineChart className="text-white" />
+            <span className="text-sm text-white">Insights</span>
           </Button>
         </NotImplemented>
       </div>

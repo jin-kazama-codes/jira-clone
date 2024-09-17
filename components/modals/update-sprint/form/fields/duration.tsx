@@ -38,7 +38,7 @@ const DurationField: React.FC<{
         render={({ field }) => {
           return (
             <Select onValueChange={field.onChange} defaultValue={field.value}>
-              <SelectTrigger className="flex h-10 w-64 items-center justify-between rounded-[3px] bg-gray-100 px-2 text-xs font-semibold transition-all duration-200 hover:bg-gray-200 focus:ring-2">
+              <SelectTrigger className="flex h-10 w-64 items-center justify-between rounded-xl bg-gray-100 px-2 text-xs font-semibold transition-all duration-200 hover:bg-gray-200 focus:ring-2">
                 <SelectValue />
                 <SelectIcon>
                   <FaChevronDown className="text-gray-500" />

@@ -56,7 +56,7 @@ const SmallIssueDetailsInfo = React.forwardRef<
           role="button"
           onClick={() => setIsEditing(true)}
           data-state={isEditing ? "editing" : "notEditing"}
-          className="w-full transition-all [&[data-state=notEditing]]:hover:bg-gray-100"
+          className="w-full transition-all rounded-xl [&[data-state=notEditing]]:hover:bg-gray-100"
         >
           <IssueTitle
             className="mr-1 py-1"
@@ -80,7 +80,7 @@ const SmallIssueDetailsInfo = React.forwardRef<
           variant="lg"
         />
         <NotImplemented>
-          <Button customColors className="hover:bg-gray-200">
+          <Button customColors className="hover:bg-gray-200 rounded-xl">
             <div className="flex items-center">
               <LightningIcon className="mt-0.5" />
               <span>Actions</span>

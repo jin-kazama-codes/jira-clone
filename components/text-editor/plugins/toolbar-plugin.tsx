@@ -440,7 +440,7 @@ export default function ToolbarPlugin(): JSX.Element {
         }}
         title="Undo (⌘Z)"
         type="button"
-        className="rounded-md p-1.5 hover:bg-gray-200"
+        className="rounded-full p-1.5 hover:bg-gray-200"
         aria-label="Undo"
       >
         <FiRotateCcw className="text-sm" />
@@ -452,7 +452,7 @@ export default function ToolbarPlugin(): JSX.Element {
         }}
         title="Redo (⌘Y)"
         type="button"
-        className="rounded-md p-1.5 hover:bg-gray-200"
+        className="rounded-full p-1.5 hover:bg-gray-200"
         aria-label="Redo"
       >
         <FiRotateCw className="text-sm" />
@@ -501,7 +501,7 @@ export default function ToolbarPlugin(): JSX.Element {
             onClick={() => {
               activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold");
             }}
-            className={"rounded-md p-1.5 " + (isBold ? "bg-gray-200" : "")}
+            className={"rounded-full p-1.5 " + (isBold ? "bg-gray-200" : "")}
             title="Bold (⌘B)"
             type="button"
             aria-label="Format text as bold. Shortcut: ⌘B"
@@ -513,7 +513,7 @@ export default function ToolbarPlugin(): JSX.Element {
             onClick={() => {
               activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic");
             }}
-            className={"rounded-md p-1.5 " + (isItalic ? "bg-gray-200" : "")}
+            className={"rounded-full p-1.5 " + (isItalic ? "bg-gray-200" : "")}
             title="Italic (⌘I)"
             type="button"
             aria-label="Format text as italics. Shortcut: ⌘I"
@@ -525,7 +525,7 @@ export default function ToolbarPlugin(): JSX.Element {
             onClick={() => {
               activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline");
             }}
-            className={"rounded-md p-1.5 " + (isUnderline ? "bg-gray-200" : "")}
+            className={"rounded-full p-1.5 " + (isUnderline ? "bg-gray-200" : "")}
             title="Underline (⌘U)"
             type="button"
             aria-label="Format text as underline. Shortcut: ⌘U"
@@ -541,7 +541,7 @@ export default function ToolbarPlugin(): JSX.Element {
               );
             }}
             className={
-              "rounded-md p-1.5 " + (isStrikethrough ? "bg-gray-200" : "")
+              "rounded-full p-1.5 " + (isStrikethrough ? "bg-gray-200" : "")
             }
             title="Strikethrough (⌘K)"
             type="button"
@@ -556,6 +556,7 @@ export default function ToolbarPlugin(): JSX.Element {
         disabled={!isEditable}
         buttonLabel="Align"
         buttonAriaLabel="Formatting options for text alignment"
+
       >
         <DropDownItem
           onClick={() => {

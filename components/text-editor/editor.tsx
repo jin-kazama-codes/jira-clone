@@ -44,7 +44,7 @@ export const Editor: React.FC<{
     <Fragment>
       <div
         className={clsx(
-          "w-full rounded-[3px] border border-gray-200 bg-white shadow-sm",
+          "w-full rounded-xl border border-gray-200 bg-white shadow-sm",
           className
         )}
       >
@@ -78,7 +78,7 @@ export const Editor: React.FC<{
           onClick={() => onSave && onSave(jsonState)}
           customColors
           customPadding
-          className="bg-inprogress px-2.5 py-1.5 text-sm font-medium text-white hover:brightness-110"
+          className="bg-inprogress px-2.5 py-1.5 text-sm rounded-xl font-medium text-white hover:brightness-110"
         >
           Save
         </Button>
@@ -86,7 +86,7 @@ export const Editor: React.FC<{
           onClick={onCancel}
           customColors
           customPadding
-          className="px-2.5 py-1.5 text-sm font-medium hover:bg-gray-200"
+          className="px-2.5 py-1.5 text-sm rounded-xl font-medium hover:bg-gray-200"
         >
           Cancel
         </Button>
