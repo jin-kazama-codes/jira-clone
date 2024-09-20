@@ -11,7 +11,7 @@ const DescriptionField: React.FC<{
       <textarea
         {...register("description")}
         id="description"
-        className="block h-32 w-[500px] rounded-[3px] border border-gray-300 p-2 text-sm shadow-sm outline-2 transition-all duration-75 focus:outline-blue-400"
+        className="block h-32 w-[500px] rounded-xl border border-gray-300 p-2 text-sm shadow-sm outline-2 transition-all duration-75 focus:outline-blue-400"
       />
     </div>
   );

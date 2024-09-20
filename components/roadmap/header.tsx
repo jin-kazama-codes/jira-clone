@@ -28,9 +28,9 @@ const RoadmapHeader: React.FC<{ project: Project }> = ({ project }) => {
           <ClearFilters />
         </div>
         <NotImplemented feature="insights">
-          <Button className="flex items-center gap-x-2">
-            <BiLineChart className="text-gray-900" />
-            <span className="text-sm text-gray-900">Insights</span>
+          <Button className="flex items-center gap-x-2 !bg-black !text-white rounded-xl px-4 hover:!bg-slate-800">
+            <BiLineChart className="text-white" />
+            <span className="text-sm text-whte">Insights</span>
           </Button>
         </NotImplemented>
       </div>

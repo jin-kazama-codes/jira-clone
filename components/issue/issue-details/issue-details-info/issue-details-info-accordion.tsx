@@ -40,7 +40,7 @@ const IssueDetailsInfoAccordion: React.FC<{ issue: IssueType }> = ({
     <Accordion
       onValueChange={setOpenAccordion}
       value={openAccordion}
-      className="my-3 w-min min-w-full rounded-[3px] border"
+      className="my-3 w-min min-w-full rounded-xl  border"
       type="single"
       collapsible
     >

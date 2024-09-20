@@ -23,10 +23,10 @@ import { useIsAuthenticated } from "@/hooks/use-is-authed";
 export const statuses: StatusObject[] = [
   {
     value: "TODO",
-    smBgColor: "#f5f5f5",
-    lgBgColor: "#f5f5f5",
-    smTextColor: "#383939",
-    lgTextColor: "#383939",
+    smBgColor: "#000",
+    lgBgColor: "#000",
+    smTextColor: "#fff",
+    lgTextColor: "#fff",
   },
   {
     value: "IN_PROGRESS",
@@ -106,7 +106,7 @@ const IssueSelectStatus: React.FC<{
             variant == "sm" && "bg-opacity-20 px-1.5 py-0.5 text-xs font-bold",
             variant == "lg" && "my-2 px-3 py-1.5 text-[16px] font-semibold",
             isUpdating && "cursor-not-allowed",
-            "flex items-center gap-x-1 whitespace-nowrap rounded-[3px] focus:ring-2"
+            "flex items-center gap-x-2 whitespace-nowrap px-2 rounded-xl py-1 focus:ring-2"
           )}
         >
           <SelectValue className="w-full whitespace-nowrap bg-transparent text-white">
@@ -134,7 +134,12 @@ const IssueSelectStatus: React.FC<{
                     )}
                   >
                     <span
-                      style={{ color: status.smTextColor }}
+                      style={{
+                        color:
+                          status.value === "TODO"
+                            ? "#000" 
+                            : status.smTextColor,
+                      }}
                       className="rounded-md bg-opacity-30 px-2 text-xs font-semibold"
                     >
                       {statusMap[status.value]}

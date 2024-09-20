@@ -22,17 +22,17 @@ const IssueDetailsHeader: React.FC<{
       <IssuePath issue={issue} setIssueKey={setIssueKey} />
       <div className="relative flex items-center gap-x-0.5">
         <NotImplemented feature="watch">
-          <Button customColors className="bg-transparent hover:bg-gray-200">
+          <Button customColors className="bg-transparent rounded-full hover:bg-gray-200">
             <MdRemoveRedEye className="text-xl" />
           </Button>
         </NotImplemented>
         <NotImplemented feature="like">
-          <Button customColors className="bg-transparent hover:bg-gray-200">
+          <Button customColors className="bg-transparent rounded-full hover:bg-gray-200">
             <AiOutlineLike className="text-xl" />
           </Button>
         </NotImplemented>
         <NotImplemented feature="share">
-          <Button customColors className="bg-transparent hover:bg-gray-200">
+          <Button customColors className="bg-transparent rounded-full hover:bg-gray-200">
             <MdOutlineShare className="text-xl" />
           </Button>
         </NotImplemented>
@@ -41,14 +41,14 @@ const IssueDetailsHeader: React.FC<{
             asChild
             className="rounded-m flex items-center gap-x-1 bg-opacity-30 p-2 text-xs font-semibold focus:ring-2 [&[data-state=open]]:bg-gray-700 [&[data-state=open]]:text-white"
           >
-            <div className="rounded-[3px] text-gray-800 hover:bg-gray-200">
+            <div className="rounded-full text-gray-800 hover:bg-gray-200">
               <BsThreeDots className="sm:text-xl" />
             </div>
           </DropdownTrigger>
         </IssueDropdownMenu>
         <Button
           customColors
-          className="bg-transparent hover:bg-gray-200"
+          className="bg-transparent  rounded-full hover:bg-gray-200"
           onClick={() => setIssueKey(null)}
         >
           <MdClose className="text-2xl" />

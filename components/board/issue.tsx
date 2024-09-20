@@ -28,7 +28,7 @@ const Issue: React.FC<{ issue: IssueType; index: number }> = ({
           {...dragHandleProps}
           className={clsx(
             isDragging && "bg-white",
-            "group my-0.5 max-w-full rounded-[3px] border-[0.3px] border-gray-300 bg-white p-2 text-sm shadow-sm shadow-gray-300 hover:bg-gray-200 "
+            "group my-2 max-w-full rounded-xl bg-slate-50 border-[0.2px] border-slate-200  p-2 text-sm shadow-sm shadow-gray-300 hover:bg-gray-200 "
           )}
         >
           <div className="flex items-start justify-between">
@@ -38,7 +38,7 @@ const Issue: React.FC<{ issue: IssueType; index: number }> = ({
                 asChild
                 className="rounded-m flex h-fit items-center gap-x-2 bg-opacity-30 px-1.5 text-xs font-semibold focus:ring-2"
               >
-                <div className="invisible rounded-sm px-1.5 py-1.5 text-gray-700 group-hover:visible group-hover:bg-gray-100 group-hover:hover:bg-gray-300 [&[data-state=open]]:visible [&[data-state=open]]:bg-gray-700 [&[data-state=open]]:text-white">
+                <div className="invisible rounded-full px-1.5 py-1.5 text-gray-700 group-hover:visible group-hover:bg-slate-100 group-hover:hover:bg-slate-300 [&[data-state=open]]:visible [&[data-state=open]]:bg-slate-700 [&[data-state=open]]:text-white">
                   <BsThreeDots className="sm:text-xl" />
                 </div>
               </DropdownTrigger>

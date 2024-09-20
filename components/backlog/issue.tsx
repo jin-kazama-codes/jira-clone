@@ -18,6 +18,23 @@ import { hasChildren, isEpic, hexToRgba } from "@/utils/helpers";
 import { IssueAssigneeSelect } from "../issue/issue-select-assignee";
 import { DARK_COLORS, LIGHT_COLORS } from "../color-picker";
 
+const getIssueKeyColorClass = (type: String) => {
+  switch (type) {
+    case "TASK":
+      return "bg-task";
+    case "STORY":
+      return "bg-story";
+    case "BUG":
+      return "bg-bug";
+    case "EPIC":
+      return "bg-epic";
+    case "SUBTASK":
+      return "bg-task";
+    default:
+      return "bg-gray-200"; 
+  }
+};
+
 const Issue: React.FC<{
   issue: IssueType;
   index: number;
@@ -25,6 +42,7 @@ const Issue: React.FC<{
   const [isEditing, setIsEditing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const { setIssueKey, issueKey } = useSelectedIssueContext();
+  const issueKeyColorClass = getIssueKeyColorClass(issue.type);
 
   return (
     <Draggable draggableId={issue.id} index={index}>
@@ -38,19 +56,26 @@ const Issue: React.FC<{
           {...dragHandleProps}
           className={clsx(
             isDragging
-              ? "border-[0.3px] border-gray-300 bg-blue-100"
-              : "bg-white",
-            "group flex w-full max-w-full items-center justify-between  px-3 py-1.5 text-sm hover:bg-gray-50 [&[data-state=selected]]:bg-blue-100"
+              ? "border-[0.3px] border-gray-300 rounded-xl bg-gray-100"
+              : "bg-slate-50 border-[0.3px] border-slate-200",
+            "group flex w-full max-w-full items-center rounded-xl justify-between   px-3 py-1.5 text-sm hover:bg-gray-300 [&[data-state=selected]]:bg-gray-300"
           )}
+          style={{
+            borderBottomWidth: "0.3px", // Ensuring the bottom border is visible
+            borderBottomColor: isDragging ? "rgb(209 213 219)" : "rgb(226 232 240)", // Color matches the side borders
+          }}
         >
           <div
             data-state={isEditing ? "editing" : "not-editing"}
-            className="flex w-fit items-center gap-x-2 [&[data-state=editing]]:w-full [&[data-state=not-editing]]:overflow-x-hidden"
+            className="flex w-fit rounded-xl items-center gap-x-2 [&[data-state=editing]]:w-full [&[data-state=not-editing]]:overflow-x-hidden"
           >
-            <IssueIcon issueType={issue.type} />
+            <IssueIcon issueType={issue.type}/>
             <div
               data-state={issue.status}
-              className="whitespace-nowrap text-gray-500 [&[data-state=DONE]]:line-through"
+              className={clsx(
+                "whitespace-nowrap text-white px-2 py-0.5 rounded-xl",
+                issueKeyColorClass
+              )}
             >
               {issue.key}
             </div>
@@ -97,10 +122,10 @@ const Issue: React.FC<{
             <IssueDropdownMenu issue={issue}>
               <DropdownTrigger
                 asChild
-                className="rounded-m flex items-center gap-x-2 bg-opacity-30 px-1.5 text-xs font-semibold focus:ring-2 "
+                className=" flex items-center gap-x-2 bg-opacity-30 px-1.5 text-xs font-semibold  "
               >
-                <div className="invisible rounded-sm px-1.5 py-1.5 text-gray-700 group-hover:visible group-hover:bg-gray-200 group-hover:hover:bg-gray-300 [&[data-state=open]]:visible [&[data-state=open]]:bg-gray-700 [&[data-state=open]]:text-white">
-                  <BsThreeDots className="sm:text-xl" />
+                <div className="invisible !rounded-full px-1.5 py-1.5 !bg-gray-300 group-hover:visible group-hover:bg-gray-300 group-hover:hover:bg-gray-300 [&[data-state=open]]:visible [&[data-state=open]]:bg-gray-300">
+                  <BsThreeDots className="sm:text-xl text-black" />
                 </div>
               </DropdownTrigger>
             </IssueDropdownMenu>
@@ -135,7 +160,7 @@ export const EpicName: React.FC<{
         color: calcTextColor(),
       }}
       className={clsx(
-        "whitespace-nowrap rounded-[3px] px-2 text-xs font-bold",
+        "whitespace-nowrap rounded-xl px-2 py-[2px] text-xs font-bold",
         className
       )}
     >

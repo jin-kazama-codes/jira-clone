@@ -45,7 +45,7 @@ const IssueSelectEpic: React.FC<{
       >
         <SelectTrigger
           onClick={(e) => e.stopPropagation()}
-          className="flex items-center gap-x-1 rounded-[3px] p-1.5 text-xs font-semibold text-white hover:bg-gray-200 focus:ring-2"
+          className="flex items-center gap-x-1 rounded-xl p-1.5 text-xs font-semibold text-white hover:bg-gray-200 focus:ring-2"
         >
           <SelectValue
             defaultValue={selected ?? undefined}

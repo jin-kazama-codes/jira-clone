@@ -202,12 +202,12 @@ const AddComment: React.FC<{
           type="text"
           id="add-comment"
           placeholder="Add a comment..."
-          className="w-full rounded-[3px] border border-gray-300 px-4 py-2 placeholder:text-sm"
+          className="w-full rounded-xl border border-gray-300 px-4 py-2 placeholder:text-sm"
         />
         <p className="my-2 text-xs text-gray-500">
           <span className="font-bold">Pro tip:</span>
           <span> press </span>
-          <span className="rounded-[3px] bg-gray-300 px-1 py-0.5 font-bold">
+          <span className="rounded-full bg-gray-300 px-1 py-0.5 font-bold">
             M
           </span>
           <span> to comment </span>

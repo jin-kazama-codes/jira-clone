@@ -51,15 +51,15 @@ const Sidebar: React.FC = () => {
   ];
   return (
     <div className="flex h-full w-64 flex-col gap-y-5 bg-gray-50 p-3 shadow-inner">
-      <div className="my-5 flex items-center gap-x-2 px-3">
-        <div className="mt-1 flex items-center justify-center rounded-sm bg-[#FF5630] p-1 text-xs font-bold text-white">
+      <div className="my-5 flex items-center gap-x-2 px-3 border-b-2 pb-7">
+        <div className="mt-1 flex items-center justify-center rounded-full bg-[#FF5630] p-1 text-xs font-bold text-white">
           <FaChessPawn className="aspect-square text-2xl" />
         </div>
         <div>
-          <h2 className="-mb-[0.5px] text-sm font-semibold text-gray-600">
+          <h2 className="-mb-[0.5px] text-md font-semibold text-gray-600">
             {project?.name ?? "Project Name"}
           </h2>
-          <p className="text-xs text-gray-500">Software Project</p>
+          <p className="text-xs text-gray-500">Task Management App</p>
         </div>
       </div>
       <NavList label={"PLANNING"} items={planningItems} />
@@ -139,10 +139,10 @@ const NavItem: React.FC<{ item: NavItemType; disabled?: boolean }> = ({
     >
       <NavigationMenuLink
         active={currentPath === item.href}
-        className="flex w-full rounded-sm border-transparent py-2 [&[data-active]]:border-l-blue-700 [&[data-active]]:bg-blue-100 [&[data-active]]:text-blue-700"
+        className="flex w-full rounded-sm border-transparent rounded-r-xl [&[data-active]]:rounded-r-xl py-2 [&[data-active]]:border-l-black [&[data-active]]:bg-slate-200 [&[data-active]]:text-black hover:bg-slate-100"
       >
         <div className="flex w-full items-center gap-x-3 border-l-4 border-inherit bg-inherit px-2">
-          <item.icon />
+          <item.icon className="[&[data-active]]:text-blue-500"/>
           <span className="text-sm">{item.label}</span>
         </div>
       </NavigationMenuLink>
