@@ -20,10 +20,10 @@ const IssueList: React.FC<{ status: IssueStatus; issues: IssueType[] }> = ({
   return (
     <div
       className={clsx(
-        "mb-5 h-max min-h-fit w-[350px] rounded-md bg-gray-100 px-1.5  pb-3"
+        "mb-5 h-max min-h-fit w-[350px] rounded-xl  px-1.5  pb-3 border-2"
       )}
     >
-      <h2 className="sticky top-0 -mx-1.5 -mt-1.5 mb-1.5 rounded-t-md bg-gray-100 px-2 py-3 text-xs text-gray-500">
+      <h2 className="sticky top-0 -mx-1.5 -mt-1.5 mb-1.5 border-b-2 rounded-t-md px-2 py-3 text-md font-semibold text-gray-500">
         {statusMap[status]}{" "}
         {issues.filter((issue) => issue.status == status).length}
         {` ISSUE${getPluralEnd(issues).toUpperCase()}`}
@@ -34,7 +34,7 @@ const IssueList: React.FC<{ status: IssueStatus; issues: IssueType[] }> = ({
           <div
             {...droppableProps}
             ref={innerRef}
-            className=" h-fit min-h-[10px]"
+            className=" h-fit min-h-[10px] py-2"
           >
             {issues
               .sort((a, b) => a.boardPosition - b.boardPosition)

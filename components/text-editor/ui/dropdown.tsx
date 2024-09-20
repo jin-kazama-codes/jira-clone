@@ -207,7 +207,7 @@ export default function DropDown({
       <button
         disabled={disabled}
         aria-label={buttonAriaLabel || buttonLabel}
-        className="flex items-center gap-x-1 rounded-md p-1.5 text-xs hover:bg-gray-200"
+        className="flex items-center gap-x-1 rounded-xl p-1.5 text-xs hover:bg-gray-200"
         onClick={() => setShowDropDown(!showDropDown)}
         ref={buttonRef}
       >

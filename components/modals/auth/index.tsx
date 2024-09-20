@@ -43,7 +43,7 @@ const AuthModal = () => {
                   "bg-inprogress hover:bg-inprogress hover:brightness-95 text-sm normal-case",
 
                 formButtonSecondary: "bg-inprogress text-sm normal-case",
-                footerActionText: " text-md",
+                footerActionText: "text-md",
                 footerActionLink:
                   "text-inprogress hover:text-inprogress hover:brightness-95 font-semibold text-md",
               },

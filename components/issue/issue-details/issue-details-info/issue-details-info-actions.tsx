@@ -15,7 +15,7 @@ const IssueDetailsInfoActions: React.FC<{
       <NotImplemented feature="attachment">
         <Button
           customColors
-          className="flex items-center whitespace-nowrap bg-gray-100 hover:bg-gray-200"
+          className="flex items-center rounded-full whitespace-nowrap bg-gray-100 hover:bg-gray-200"
         >
           <CgAttachment className="rotate-45 text-xl" />
           <span
@@ -30,7 +30,7 @@ const IssueDetailsInfoActions: React.FC<{
         <Button
           onClick={onAddChildIssue}
           customColors
-          className="flex items-center whitespace-nowrap bg-gray-100 hover:bg-gray-200"
+          className="flex items-center rounded-full whitespace-nowrap bg-gray-100 hover:bg-gray-200"
         >
           <ChildrenTreeIcon />
           <span
@@ -44,7 +44,7 @@ const IssueDetailsInfoActions: React.FC<{
       <NotImplemented feature="link">
         <Button
           customColors
-          className="flex items-center whitespace-nowrap bg-gray-100 hover:bg-gray-200"
+          className="flex items-center rounded-full whitespace-nowrap bg-gray-100 hover:bg-gray-200"
         >
           <BiLink className="text-xl" />
           <span
@@ -58,7 +58,7 @@ const IssueDetailsInfoActions: React.FC<{
       <NotImplemented feature="add apps">
         <Button
           customColors
-          className="flex items-center whitespace-nowrap bg-gray-100 hover:bg-gray-200"
+          className="flex items-center rounded-full whitespace-nowrap bg-gray-100 hover:bg-gray-200"
         >
           <BsThreeDots className="text-xl" />
         </Button>
