@@ -7,13 +7,11 @@ import {
   type DefaultUser,
 } from "@prisma/client";
 import { z } from "zod";
-import { getAuth } from "@clerk/nextjs/server";
 import {
   calculateInsertPosition,
-  filterUserForClient,
   generateIssuesForClient,
 } from "@/utils/helpers";
-import { clerkClient } from "@clerk/nextjs";
+import { parseCookies } from "@/utils/cookies";
 
 const postIssuesBodyValidator = z.object({
   name: z.string(),
@@ -51,6 +49,7 @@ type IssueT = Issue & {
   };
   assignee: DefaultUser | null;
   reporter: DefaultUser | null;
+  projectId: number;
 };
 
 export type GetIssuesResponse = {
@@ -58,11 +57,10 @@ export type GetIssuesResponse = {
 };
 
 export async function GET(req: NextRequest) {
-  const { userId } = getAuth(req);
-
+  const project = parseCookies(req, "project");
   const activeIssues = await prisma.issue.findMany({
     where: {
-      creatorId: userId ?? "init",
+      projectId: project.id ?? "init",
       isDeleted: false,
     },
   });
@@ -71,8 +69,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ issues: [] });
   }
 
+  // add projectId to sprint table
   const activeSprints = await prisma.sprint.findMany({
     where: {
+      projectId: project.id,
       status: "ACTIVE",
     },
   });
@@ -82,22 +82,13 @@ export async function GET(req: NextRequest) {
     .filter(Boolean);
 
   // USE THIS IF RUNNING LOCALLY -----------------------
-  // const users = await prisma.defaultUser.findMany({
-  //   where: {
-  //     id: {
-  //       in: userIds,
-  //     },
-  //   },
-  // });
-  // --------------------------------------------------
-
-  // COMMENT THIS IF RUNNING LOCALLY ------------------
-  const users = (
-    await clerkClient.users.getUserList({
-      userId: userIds,
-      limit: 10,
-    })
-  ).map(filterUserForClient);
+  const users = await prisma.defaultUser.findMany({
+    where: {
+      id: {
+        in: userIds,
+      },
+    },
+  });
   // --------------------------------------------------
 
   const issuesForClient = generateIssuesForClient(
@@ -112,7 +103,8 @@ export async function GET(req: NextRequest) {
 
 // POST
 export async function POST(req: NextRequest) {
-  const { userId } = getAuth(req);
+  const userId = parseCookies(req, "user").id;
+  const project = parseCookies(req, "project");
   if (!userId) return new Response("Unauthenticated request", { status: 403 });
   const { success } = await ratelimit.limit(userId);
   if (!success) return new Response("Too many requests", { status: 429 });
@@ -159,14 +151,16 @@ export async function POST(req: NextRequest) {
   const k = issues.length + 1;
 
   const positionToInsert = calculateInsertPosition(currentSprintIssues);
+  console.log('kkkkkkkkkkkkkkkkkkkkkk', k, positionToInsert);
 
   const issue = await prisma.issue.create({
     data: {
       key: `ISSUE-${k}`,
       name: valid.name,
       type: valid.type,
-      reporterId: valid.reporterId ?? "user_2PwZmH2xP5aE0svR6hDH4AwDlcu", // Rogan as default reporter
+      reporterId: userId, // Admin as default reporter
       sprintId: valid.sprintId ?? undefined,
+      projectId: project.id,
       sprintPosition: positionToInsert,
       boardPosition,
       parentId: valid.parentId,
@@ -179,7 +173,8 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
-  const { userId } = getAuth(req);
+  const userId = parseCookies(req, "user").id;
+  const project = parseCookies(req, "project");
   if (!userId) return new Response("Unauthenticated request", { status: 403 });
   const { success } = await ratelimit.limit(userId);
   if (!success) return new Response("Too many requests", { status: 429 });
@@ -218,6 +213,7 @@ export async function PATCH(req: NextRequest) {
           isDeleted: valid.isDeleted ?? undefined,
           sprintId: valid.sprintId === undefined ? undefined : valid.sprintId,
           parentId: valid.parentId ?? undefined,
+          projectId: project.id,
         },
       });
     })

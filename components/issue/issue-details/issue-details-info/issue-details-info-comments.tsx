@@ -1,5 +1,4 @@
 import { useIssueDetails } from "@/hooks/query-hooks/use-issue-details";
-import { type UserResource } from "@clerk/types";
 import { type GetIssueCommentResponse } from "@/app/api/issues/[issueId]/comments/route";
 import {
   Editor,
@@ -8,7 +7,6 @@ import {
 import { useKeydownListener } from "@/hooks/use-keydown-listener";
 import { Fragment, useRef, useState } from "react";
 import { useIsInViewport } from "@/hooks/use-is-in-viewport";
-import { useUser } from "@clerk/clerk-react";
 import { type SerializedEditorState } from "lexical";
 import { type IssueType } from "@/utils/types";
 import { Avatar } from "@/components/avatar";
@@ -17,6 +15,8 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { EditorPreview } from "@/components/text-editor/preview";
 import { Button } from "@/components/ui/button";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
+import { DefaultUser } from "@prisma/client";
+import { useCookie } from "@/hooks/use-cookie";
 dayjs.extend(relativeTime);
 
 const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
@@ -25,7 +25,7 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
   const [isInViewport, ref] = useIsInViewport();
   const { comments, addComment } = useIssueDetails();
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
-  const { user } = useUser();
+  const user = useCookie('user')
 
   useKeydownListener(scrollRef, ["m", "M"], handleEdit);
   function handleEdit(ref: React.RefObject<HTMLElement>) {
@@ -88,7 +88,7 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
 
 const CommentPreview: React.FC<{
   comment: GetIssueCommentResponse["comment"];
-  user: UserResource | undefined | null;
+  user: DefaultUser | undefined | null;
 }> = ({ comment, user }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
@@ -175,7 +175,7 @@ const CommentPreview: React.FC<{
 
 const AddComment: React.FC<{
   onAddComment: () => void;
-  user: UserResource | undefined | null;
+  user: DefaultUser | undefined | null;
   commentsInViewport: boolean;
 }> = ({ onAddComment, user, commentsInViewport }) => {
   function handleAddComment(event: React.MouseEvent<HTMLInputElement>) {
@@ -188,9 +188,9 @@ const AddComment: React.FC<{
       className="flex w-full gap-x-2 border-t-2 border-transparent py-3 [&[data-state=notInViewport]]:border-gray-200"
     >
       <Avatar
-        src={user?.imageUrl}
+        src={user?.avatar}
         alt={
-          user ? `${user?.firstName ?? ""} ${user?.lastName ?? ""}` : "Guest"
+          user ? user.name : "Guest"
         }
       />
       <div className="w-full">

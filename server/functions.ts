@@ -1,6 +1,5 @@
-import { filterUserForClient, generateIssuesForClient } from "@/utils/helpers";
-import { type UserResource } from "@clerk/types";
-import { clerkClient } from "@clerk/nextjs";
+import { generateIssuesForClient } from "@/utils/helpers";
+
 import {
   defaultUsers,
   generateInitialUserComments,
@@ -8,29 +7,35 @@ import {
   generateInitialUserSprints,
 } from "../prisma/seed-data";
 import { prisma } from "./db";
-import { SprintStatus } from "@prisma/client";
+import { DefaultUser, SprintStatus } from "@prisma/client";
 
 export async function getInitialIssuesFromServer(
-  userId: UserResource["id"] | undefined | null
+  userId: DefaultUser["id"] | undefined | null,
+  projectId: number
 ) {
   let activeIssues = await prisma.issue.findMany({
-    where: { isDeleted: false, creatorId: userId ?? "init" },
+    where: {
+      isDeleted: false,
+      creatorId: userId ?? "init",
+      projectId: projectId,
+    },
   });
 
-  if (userId && (!activeIssues || activeIssues.length === 0)) {
-    // New user, create default issues
-    await initDefaultIssues(userId);
-    // Create comments for default issues
-    await initDefaultIssueComments(userId);
+  // if (userId && (!activeIssues || activeIssues.length === 0)) {
+  //   // New user, create default issues
+  //   await initDefaultIssues(userId);
+  //   // Create comments for default issues
+  //   await initDefaultIssueComments(userId);
 
-    const newActiveIssues = await prisma.issue.findMany({
-      where: {
-        creatorId: userId,
-        isDeleted: false,
-      },
-    });
-    activeIssues = newActiveIssues;
-  }
+  //   const newActiveIssues = await prisma.issue.findMany({
+  //     where: {
+  //       creatorId: userId,
+  //       isDeleted: false,
+  //       projectId: projectId,
+  //     },
+  //   });
+  //   activeIssues = newActiveIssues;
+  // }
 
   if (!activeIssues || activeIssues.length === 0) {
     return [];
@@ -38,6 +43,7 @@ export async function getInitialIssuesFromServer(
 
   const activeSprints = await prisma.sprint.findMany({
     where: {
+      projectId: projectId,
       status: "ACTIVE",
     },
   });
@@ -47,23 +53,13 @@ export async function getInitialIssuesFromServer(
     .filter(Boolean);
 
   // USE THIS IF RUNNING LOCALLY ----------------------
-  // const users = await prisma.defaultUser.findMany({
-  //   where: {
-  //     id: {
-  //       in: userIds,
-  //     },
-  //   },
-  // });
-  // --------------------------------------------------
-
-  // COMMENT THIS IF RUNNING LOCALLY ------------------
-  const users = (
-    await clerkClient.users.getUserList({
-      userId: userIds,
-      limit: 20,
-    })
-  ).map(filterUserForClient);
-  // --------------------------------------------------
+  const users = await prisma.defaultUser.findMany({
+    where: {
+      id: {
+        in: userIds,
+      },
+    },
+  });
 
   const issues = generateIssuesForClient(
     activeIssues,
@@ -77,33 +73,37 @@ export async function getInitialProjectFromServer() {
   const project = await prisma.project.findUnique({
     where: { key: "JIRA-CLONE" },
   });
+  // set projectId in clone tobedone
   return project;
 }
 
 export async function getInitialSprintsFromServer(
-  userId: UserResource["id"] | undefined
+  userId: DefaultUser["id"] | undefined,
+  projectId: number
 ) {
   let sprints = await prisma.sprint.findMany({
     where: {
       OR: [{ status: SprintStatus.ACTIVE }, { status: SprintStatus.PENDING }],
       creatorId: userId ?? "init",
+      projectId: projectId,
     },
     orderBy: {
       createdAt: "asc",
     },
   });
 
-  if (userId && (!sprints || sprints.length === 0)) {
-    // New user, create default sprints
-    await initDefaultSprints(userId);
+  // if (userId && (!sprints || sprints.length === 0)) {
+  //   // New user, create default sprints
+  //   await initDefaultSprints(userId);
 
-    const newSprints = await prisma.sprint.findMany({
-      where: {
-        creatorId: userId,
-      },
-    });
-    sprints = newSprints;
-  }
+  //   const newSprints = await prisma.sprint.findMany({
+  //     where: {
+  //       creatorId: userId,
+  //       projectId: projectId,
+  //     },
+  //   });
+  //   sprints = newSprints;
+  // }
   return sprints;
 }
 
@@ -115,7 +115,7 @@ export async function initProject() {
     update: {},
     create: {
       id: "init-project-id-dq8yh-d0as89hjd",
-      name: "Jira Clone Project",
+      name: "F2 Fin Operations",
       key: "JIRA-CLONE",
     },
   });
@@ -136,12 +136,13 @@ export async function initDefaultUsers() {
             email: user.email,
             name: user.name,
             avatar: user.avatar,
+            role: user.role,
           },
         })
     )
   );
 }
-export async function initDefaultProjectMembers() {
+export async function initDefaultProjectMembers(projectId: number) {
   await Promise.all(
     defaultUsers.map(
       async (user) =>
@@ -152,7 +153,7 @@ export async function initDefaultProjectMembers() {
           update: {},
           create: {
             id: user.id,
-            projectId: "init-project-id-dq8yh-d0as89hjd",
+            projectId: projectId,
           },
         })
     )

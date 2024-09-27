@@ -8,22 +8,25 @@ import {
   getInitialProjectFromServer,
   getInitialSprintsFromServer,
 } from "@/server/functions";
-import { currentUser } from "@clerk/nextjs";
+import { GetServerSideProps } from "next";
+
+import { parsePageCookies } from "@/utils/cookies";
 
 export const metadata: Metadata = {
   title: "Roadmap",
 };
 
 const RoadmapPage = async () => {
-  const user = await currentUser();
   const queryClient = getQueryClient();
+  const user = parsePageCookies("user");
+  const project = parsePageCookies("project");
 
   await Promise.all([
     await queryClient.prefetchQuery(["issues"], () =>
-      getInitialIssuesFromServer(user?.id)
+      getInitialIssuesFromServer(user?.id, project?.id)
     ),
     await queryClient.prefetchQuery(["sprints"], () =>
-      getInitialSprintsFromServer(user?.id)
+      getInitialSprintsFromServer(user?.id, project?.id)
     ),
     await queryClient.prefetchQuery(["project"], getInitialProjectFromServer),
   ]);

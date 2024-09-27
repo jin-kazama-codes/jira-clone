@@ -16,7 +16,6 @@ import { Button } from "../ui/button";
 import { useSelectedIssueContext } from "@/context/use-selected-issue-context";
 import { EmtpyIssue } from "../issue/issue-empty";
 import { type IssueType } from "@/utils/types";
-import { useUser } from "@clerk/clerk-react";
 import { LIGHT_COLORS } from "../color-picker";
 import {
   assigneeNotInFilters,
@@ -29,6 +28,7 @@ import {
 import { useFiltersContext } from "@/context/use-filters-context";
 import { ProgressBar } from "@/components/progress-bar";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
+import { useCookie } from "@/hooks/use-cookie";
 
 type CreateIssueProps = {
   name: string;
@@ -42,7 +42,8 @@ const EpicsTable: React.FC = () => {
   const [isCreatingEpic, setIsCreatingEpic] = useState(false);
   const renderContainerRef = useRef<HTMLDivElement>(null);
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
-  const { user } = useUser();
+  // const { user } = useUser();
+  const user = useCookie('user')
 
   useLayoutEffect(() => {
     if (!renderContainerRef.current) return;

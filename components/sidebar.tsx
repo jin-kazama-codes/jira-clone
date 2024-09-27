@@ -63,7 +63,7 @@ const Sidebar: React.FC = () => {
         </div>
       </div>
       <NavList label={"PLANNING"} items={planningItems} />
-      <NavList label={"DEVELOPMENT"} items={developmentItems} />
+      {/* <NavList label={"DEVELOPMENT"} items={developmentItems} /> */}
     </div>
   );
 };

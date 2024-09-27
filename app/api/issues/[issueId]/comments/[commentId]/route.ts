@@ -1,9 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma, ratelimit } from "@/server/db";
-import { clerkClient } from "@clerk/nextjs";
 import { filterUserForClient } from "@/utils/helpers";
-import { getAuth } from "@clerk/nextjs/server";
+import { parseCookies } from "@/utils/cookies";
 
 const patchCommentBodyValidator = z.object({
   content: z.string(),
@@ -13,7 +12,7 @@ export async function PATCH(
   req: NextRequest,
   { params }: { params: { commentId: string } }
 ) {
-  const { userId } = getAuth(req);
+  const userId = parseCookies(req, 'user').id;
   if (!userId) return new Response("Unauthenticated request", { status: 403 });
   const { success } = await ratelimit.limit(userId);
   if (!success) return new Response("Too many requests", { status: 429 });
@@ -42,7 +41,11 @@ export async function PATCH(
     },
   });
 
-  const author = await clerkClient.users.getUser(comment.authorId);
+  const author = await prisma.defaultUser.findUnique({
+    where: {
+      id: comment.authorId,
+    },
+  });
   const authorForClient = filterUserForClient(author);
 
   return NextResponse.json({

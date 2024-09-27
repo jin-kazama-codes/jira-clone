@@ -9,7 +9,7 @@
 - Written in modern React
 - Uses Next js 13.4 app directory structure
 - Explores basic React Server Components
-- Full user authentication lifecycle with Clerk
+- Full user authentication lifecycle with custom login
 - Rate limiting with upstash to avoid spamming
 - Modern data fetching using React-Query
 - Simple local React state management, without redux, mobx, or similar
