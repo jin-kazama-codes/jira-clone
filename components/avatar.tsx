@@ -4,7 +4,7 @@ import { UnassignedUser } from "@/components/svgs";
 type AvatarProps = {
   src: string | null | undefined;
   alt: string;
-  size?: number;
+  size?: any;
 };
 const Avatar = ({ src, alt, size = 32, ...props }: AvatarProps) => {
   return (

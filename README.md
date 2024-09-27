@@ -21,7 +21,7 @@
 ## Setting up development environment
 
 - Project uses Prisma, you can decide which database to use. \*By default it uses the 'mysql' provider
-- `git clone https://github.com/sebastianfdz/jira_clone`
+- `git clone https://github.com/jin-kazama-codes/jira-clone.git`
 - Create an empty `.env` file inside the root dir `/`, copy `/.env.example` contents into it, and fill in the variables needed.
 - `npm install`
 - `npx prisma db seed`
