@@ -1,6 +1,5 @@
 import { type IssueCountType } from "./types";
 import { type IssueType } from "@/utils/types";
-import { type clerkClient } from "@clerk/nextjs";
 import { type DefaultUser, type Issue } from "@prisma/client";
 
 type Value<T> = T extends Promise<infer U> ? U : T;
@@ -68,13 +67,14 @@ export function isNullish<T>(
 }
 
 export function filterUserForClient(
-  user: Value<ReturnType<Awaited<typeof clerkClient.users.getUser>>>
+  user: DefaultUser
 ) {
   return <DefaultUser>{
     id: user.id,
-    name: `${user.firstName ?? ""} ${user.lastName ?? ""}`,
-    email: user?.emailAddresses[0]?.emailAddress ?? "",
-    avatar: user.imageUrl,
+    name: user.name,
+    email: user.email,
+    avatar: user.avatar,
+    role: user.role,
   };
 }
 

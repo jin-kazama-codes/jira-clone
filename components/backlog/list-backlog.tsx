@@ -44,6 +44,7 @@ const BacklogListHeader: React.FC<{ issues: IssueType[] }> = ({ issues }) => {
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
 
   function handleCreateSprint() {
+    console.log('isAuthenticated', isAuthenticated);
     if (!isAuthenticated) {
       openAuthModal();
       return;
