@@ -1,12 +1,14 @@
-import { authMiddleware } from '@clerk/nextjs/server'
+import { NextResponse } from 'next/server';
 
-export default authMiddleware()
+export function middleware(request: Request) {
+  const token = request.cookies.get('user');
+
+  // Protecting the dashboard route
+  if (!token && request.nextUrl.pathname === '/project/backlog') {
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
+}
 
 export const config = {
-  matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
-    '/(api|trpc)(.*)',
-  ],
-}
+  matcher: ['/project/backlog'], // Apply middleware to the dashboard route
+};

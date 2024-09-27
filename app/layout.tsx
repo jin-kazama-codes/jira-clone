@@ -1,4 +1,3 @@
-import { ClerkProvider } from "@clerk/nextjs";
 import { type Metadata } from "next";
 import { siteConfig } from "@/config/site";
 import "@/styles/globals.css";
@@ -20,7 +19,6 @@ export const metadata: Metadata = {
     "Tailwind CSS",
     "Server Components",
     "Radix UI",
-    "Clerk",
     "TanStack",
   ],
   authors: [
@@ -45,22 +43,20 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
     <html lang="en">
       <head />
       <body>
-        <ClerkProvider>
-          <QueryProvider>
-            <AuthModalProvider>
-              <AuthModal />
-              <Toaster
-                position="bottom-left"
-                reverseOrder={false}
-                containerStyle={{
-                  height: "92vh",
-                  marginLeft: "3vw",
-                }}
-              />
-              {children}
-            </AuthModalProvider>
-          </QueryProvider>
-        </ClerkProvider>
+        <QueryProvider>
+          <AuthModalProvider>
+            {/* <AuthModal /> */}
+            <Toaster
+              position="bottom-left"
+              reverseOrder={false}
+              containerStyle={{
+                height: "92vh",
+                marginLeft: "3vw",
+              }}
+            />
+            {children}
+          </AuthModalProvider>
+        </QueryProvider>
       </body>
     </html>
   );

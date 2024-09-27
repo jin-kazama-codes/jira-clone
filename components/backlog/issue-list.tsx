@@ -9,16 +9,16 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { EmtpyIssue } from "../issue/issue-empty";
 import { type IssueType } from "@/utils/types";
 import clsx from "clsx";
-import { useUser } from "@clerk/clerk-react";
 import { useStrictModeDroppable } from "@/hooks/use-strictmode-droppable";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
+import { useCookie } from "@/hooks/use-cookie";
 
 const IssueList: React.FC<{ sprintId: string | null; issues: IssueType[] }> = ({
   sprintId,
   issues,
 }) => {
   const { createIssue, isCreating } = useIssues();
-  const { user } = useUser();
+  const user = useCookie('user');
   const [isEditing, setIsEditing] = useState(false);
   const [droppableEnabled] = useStrictModeDroppable();
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
@@ -49,7 +49,7 @@ const IssueList: React.FC<{ sprintId: string | null; issues: IssueType[] }> = ({
         type,
         parentId: null,
         sprintId,
-        reporterId: user?.id ?? null,
+        reporterId: null,
       },
       {
         onSuccess: () => {
@@ -58,9 +58,11 @@ const IssueList: React.FC<{ sprintId: string | null; issues: IssueType[] }> = ({
       }
     );
   }
+
+
   return (
     <AccordionContent className="pt-2">
-      <Droppable droppableId={sprintId ?? "backlog"} >
+      <Droppable droppableId={sprintId ?? "backlog"}>
         {({ droppableProps, innerRef, placeholder }) => (
           <div
             {...droppableProps}
@@ -68,7 +70,10 @@ const IssueList: React.FC<{ sprintId: string | null; issues: IssueType[] }> = ({
             className={clsx(issues.length == 0 && "min-h-[1px]")}
           >
             <div
-              className={clsx(issues.length && "flex flex-col gap-1 bg-white divide-y rounded-xl")}
+              className={clsx(
+                issues.length &&
+                  "flex flex-col gap-1 divide-y rounded-xl bg-white"
+              )}
             >
               {issues
                 .sort((a, b) => a.sprintPosition - b.sprintPosition)
@@ -80,17 +85,18 @@ const IssueList: React.FC<{ sprintId: string | null; issues: IssueType[] }> = ({
           </div>
         )}
       </Droppable>
-
-      <Button
-        onClick={() => setIsEditing(true)}
-        data-state={isEditing ? "closed" : "open"}
-        customColors
-        className="my-1 flex w-full rounded-xl bg-transparent hover:bg-gray-200 [&[data-state=closed]]:hidden"
-      >
-        <AiOutlinePlus className="text-sm" />
-        <span className="text-md ml-1">Create Issue</span>
-      </Button>
-
+      {(user?.role === "admin" ||
+        user?.role === "manager") && (
+          <Button
+            onClick={() => setIsEditing(true)}
+            data-state={isEditing ? "closed" : "open"}
+            customColors
+            className="my-1 flex w-full rounded-xl bg-transparent hover:bg-gray-200 [&[data-state=closed]]:hidden"
+          >
+            <AiOutlinePlus className="text-sm" />
+            <span className="text-md ml-1">Create Issue</span>
+          </Button>
+        )}
       <EmtpyIssue
         data-state={isEditing ? "open" : "closed"}
         className="[&[data-state=closed]]:hidden"

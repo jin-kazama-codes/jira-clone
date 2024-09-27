@@ -1,4 +1,3 @@
-import { useUser } from "@clerk/nextjs";
 import { FaChevronUp } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -14,6 +13,7 @@ import { useSprints } from "@/hooks/query-hooks/use-sprints";
 import { IssueAssigneeSelect } from "../../issue-select-assignee";
 import { useIssues } from "@/hooks/query-hooks/use-issues";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
+import { useCookie } from "@/hooks/use-cookie";
 
 const IssueDetailsInfoAccordion: React.FC<{ issue: IssueType }> = ({
   issue,
@@ -21,7 +21,8 @@ const IssueDetailsInfoAccordion: React.FC<{ issue: IssueType }> = ({
   const { updateIssue } = useIssues();
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
   const { sprints } = useSprints();
-  const { user } = useUser();
+
+  const user = useCookie('user')
   const [openAccordion, setOpenAccordion] = useState("details");
 
   function handleAutoAssign() {

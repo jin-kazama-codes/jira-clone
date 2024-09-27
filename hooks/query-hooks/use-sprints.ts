@@ -73,6 +73,7 @@ export const useSprints = () => {
     {
       // NO OPTIMISTIC UPDATE BECAUSE WE DON'T KNOW THE KEY OF THE NEW SPRINT
       onError: (err: AxiosError) => {
+        console.log('err', err);
         // If the mutation fails, use the context returned from onMutate to roll back
         if (err?.response?.data == "Too many requests") {
           toast.error(TOO_MANY_REQUESTS);
@@ -84,6 +85,7 @@ export const useSprints = () => {
         });
       },
       onSettled: () => {
+        console.log('settled');
         // Always refetch after error or success
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         queryClient.invalidateQueries(["sprints"]);

@@ -2,7 +2,7 @@ import { useFiltersContext } from "@/context/use-filters-context";
 import { useProject } from "@/hooks/query-hooks/use-project";
 import { Button } from "./ui/button";
 import { Avatar } from "./avatar";
-import { NotImplemented } from "./not-implemented";
+import { UserModal } from './modals/add-people/index'
 import { AddPeopleIcon } from "./svgs";
 
 const Members = () => {
@@ -47,14 +47,16 @@ const Members = () => {
         );
       })}
 
-      <NotImplemented feature="add people">
+      {/* <NotImplemented feature="add people"> */}
+      <UserModal>
         <button>
           <AddPeopleIcon
             className="ml-3 rounded-full bg-gray-200 p-1 text-gray-500"
             size={35}
           />
         </button>
-      </NotImplemented>
+        </UserModal>  
+      {/* </NotImplemented> */}
     </div>
   );
 };

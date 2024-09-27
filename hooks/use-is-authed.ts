@@ -1,9 +1,9 @@
 "use client";
 import { useAuthModalContext } from "@/context/use-auth-modal";
-import { useUser } from "@clerk/clerk-react";
+import { useCookie } from "./use-cookie";
 
 export const useIsAuthenticated = (): [string | undefined, () => void] => {
-  const { user } = useUser();
+  const user = useCookie('user');
   const { setAuthModalIsOpen } = useAuthModalContext();
 
   function openAuthModal() {

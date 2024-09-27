@@ -12,7 +12,7 @@ export const projectRoutes = {
     );
     return data?.project;
   },
-  getMembers: async ({ project_id }: { project_id: string }) => {
+  getMembers: async ({ project_id }: { project_id: number }) => {
     const { data } = await axios.get<GetProjectMembersResponse>(
       `${baseUrl}/api/project/${project_id}/members`
     );
