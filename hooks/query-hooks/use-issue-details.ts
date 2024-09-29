@@ -61,6 +61,7 @@ export const useIssueDetails = () => {
     }
   );
 
+  // PATCH
   const { mutate: updateComment, isLoading: commentUpdating } = useMutation(
     api.issues.updateIssueComment,
     {
@@ -113,12 +114,34 @@ export const useIssueDetails = () => {
       },
     }
   );
+
+  //DELETE 
+
+  const deleteComment = useMutation(
+    async ({ issueId, commentId }: { issueId: string; commentId: string }) => {
+      const response = await fetch(`/api/issues/${issueId}/comments/${commentId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to delete comment');
+      }
+      return response.json();
+    },
+    {
+      // Optimistically update the cache when the comment is deleted
+      onSuccess: () => {
+        queryClient.invalidateQueries(["comments", issueId]);
+      },
+    }
+  );
+
   return {
     comments,
     commentsLoading,
     addComment,
     isAddingComment,
     updateComment,
+    deleteComment,
     commentUpdating,
   };
 };

@@ -48,7 +48,7 @@ export async function GET(
 
 const postCommentBodyValidator = z.object({
   content: z.string(),
-  authorId: z.string(),
+  authorId: z.number(),
 });
 
 export type PostCommentBody = z.infer<typeof postCommentBodyValidator>;
