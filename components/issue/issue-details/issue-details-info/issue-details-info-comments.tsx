@@ -54,6 +54,9 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
     });
     setIsWritingComment(false);
   }
+
+  
+
   function handleCancel() {
     setIsWritingComment(false);
   }
@@ -92,7 +95,7 @@ const CommentPreview: React.FC<{
 }> = ({ comment, user }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
-  const { updateComment } = useIssueDetails();
+  const { updateComment, deleteComment } = useIssueDetails();
 
   function handleSave(state: SerializedEditorState | undefined) {
     if (!isAuthenticated) {
@@ -105,6 +108,19 @@ const CommentPreview: React.FC<{
       content: JSON.stringify(state),
     });
     setIsEditing(false);
+  }
+
+  function handleDelete() {
+    if (!isAuthenticated) {
+      openAuthModal();
+      return;
+    }
+
+    // Call deleteComment from useIssueDetails hook
+    deleteComment.mutate({
+      issueId: comment.issueId,
+      commentId: comment.id,
+    });
   }
 
   return (
@@ -161,6 +177,7 @@ const CommentPreview: React.FC<{
               Edit
             </Button>
             <Button
+              onClick={handleDelete}
               customColors
               className="bg-transparent text-xs font-medium text-gray-500 underline-offset-2 hover:underline"
             >
