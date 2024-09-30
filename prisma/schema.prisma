@@ -78,6 +78,7 @@ model Comment {
   issueId   String
   logId     String?
   authorId  Int?
+  imageURL  String?
   Issue     Issue?    @relation(fields: [issueId], references: [id])
 
   @@index([issueId])

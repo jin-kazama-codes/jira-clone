@@ -25,10 +25,7 @@ const CreateProject: React.FC = () => {
       name: '',
       key: '',
       description: '',
-    })
-    console.log('Form data:', formData);
-
-    
+    })    
   };
 
   return (
