@@ -55,3 +55,44 @@ export async function PATCH(
     },
   });
 }
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { commentId: string } }
+) {
+  const userId = parseCookies(req, "user").id;
+  if (!userId) return new Response("Unauthenticated request", { status: 403 });
+
+  const { success } = await ratelimit.limit(userId);
+  if (!success) return new Response("Too many requests", { status: 429 });
+
+  const { commentId } = params;
+
+  try {
+    // Find the comment
+    const comment = await prisma.comment.findUnique({
+      where: { id: commentId },
+    });
+
+    if (!comment) {
+      return new Response("Comment not found", { status: 404 });
+    }
+
+    
+    if (comment.authorId !== userId) {
+      return new Response("You do not have permission to delete this comment", {
+        status: 403,
+      });
+    }
+
+    // Delete the comment
+    await prisma.comment.delete({
+      where: { id: commentId },
+    });
+
+    return new Response("Comment deleted successfully", { status: 200 });
+  } catch (error) {
+    console.error("Error deleting comment:", error);
+    return new Response("Failed to delete comment", { status: 500 });
+  }
+}
