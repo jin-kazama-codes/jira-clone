@@ -12,10 +12,11 @@ import clsx from "clsx";
 export const EditorPreview: React.FC<{
   action: "description" | "comment";
   content: EditorContentType;
+  imageURL: string;
   className?: string;
-}> = ({ action, content, className }) => {
+}> = ({ action, content, imageURL, className }) => {
   const [jsonState] = useState<EditorContentType>(content);
-
+  console.log('imageURL',jsonState, imageURL);
   return (
     <EditorComposer readonly={true} jsonState={jsonState}>
       <div className="relative w-full rounded-[3px] bg-white">
@@ -35,6 +36,7 @@ export const EditorPreview: React.FC<{
             </div>
           }
         />
+        <div>{imageURL && <img height={50} width={50} src={imageURL} alt="doc" />}</div>
       </div>
       <CodeHighlightPlugin />
       <ListPlugin />

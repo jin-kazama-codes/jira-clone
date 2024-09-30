@@ -1,61 +1,55 @@
-// import { createRouter } from 'next-connect';
-// import multer from 'multer';
-// import AWS from 'aws-sdk';
-// import type { NextApiRequest, NextApiResponse } from 'next';
+// app/api/upload/route.ts
+import { NextRequest, NextResponse } from "next/server";
+import s3Client from "@/s3";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { v4 as uuid } from "uuid";
 
-// // Extend multer's File interface
-// const upload = multer();
-// const s3 = new AWS.S3({
-//   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-//   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-//   region: process.env.AWS_REGION,
-// });
+const CURRENT_DATE = Date.now();
 
-// // Create a router instance
-// const apiRoute = createRouter<NextApiRequest, NextApiResponse>();
+async function uploadImageToS3(
+  file: Buffer,
+  fileName: string
+): Promise<string> {
+  const params = {
+    Bucket: process.env.AWS_BUCKET_NAME as string,
+    Key: `${CURRENT_DATE}-${fileName}`,
+    Body: file,
+    ContentType: "image/jpeg", // Change the content type accordingly
+  };
 
-// // Middleware for error handling
-// apiRoute.use((req, res, next) => {
-//   if (!req.file) {
-//     return res.status(400).json({ error: 'No file uploaded' });
-//   }
-//   next();
-// });
+  const command = new PutObjectCommand(params);
+  await s3Client.send(command);
 
-// // Use multer for file uploads
-// apiRoute.use(upload.single('image'));
+  return fileName;
+}
 
-// apiRoute.post(async (req, res) => {
-//   // Now TypeScript recognizes req.file
-//   const fileContent = Buffer.from(req.file.buffer, 'binary');
-//   const params = {
-//     Bucket: process.env.AWS_BUCKET_NAME,
-//     Key: `${Date.now()}-${req.file.originalname}`,
-//     Body: fileContent,
-//     ContentType: req.file.mimetype,
-//     ACL: 'public-read',
-//   };
+// Main API route handler
+export async function POST(request: NextRequest, response: NextResponse) {
+  try {
+    const formData = await request.formData();
+    const file = formData.get("image") as Blob | null;
+    if (!file) {
+      return NextResponse.json(
+        { error: "File blob is required." },
+        { status: 400 }
+      );
+    }
 
-//   try {
-//     const data = await s3.upload(params).promise();
-//     const imageUrl = data.Location;
+    const mimeType = file.type;
+    const fileExtension = mimeType.split("/")[1];
 
-//     res.status(200).json({ message: 'Image uploaded successfully!', imageUrl });
-//   } catch (error) {
-//     console.error('Error uploading image:', error);
-//     res.status(500).json({ error: 'Error uploading image to S3', details: error.message });
-//   }
-// });
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const fileName = await uploadImageToS3(
+      buffer,
+      uuid() + "." + fileExtension
+    );
 
-// // Custom error handling for unhandled errors
-// apiRoute.use((error: any, req, res) => {
-//   res.status(501).json({ error: `Something went wrong! ${error.message}` });
-// });
-
-// export default apiRoute;
-
-// export const config = {
-//   api: {
-//     bodyParser: false,
-//   },
-// };
+    return NextResponse.json({
+      success: true,
+      fileUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.amazonaws.com/${CURRENT_DATE}-${fileName}`,
+    });
+  } catch (error) {
+    console.error("Error uploading image:", error);
+    NextResponse.json({ message: "Error uploading image" });
+  }
+}
