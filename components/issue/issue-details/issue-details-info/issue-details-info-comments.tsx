@@ -5,7 +5,7 @@ import {
   type EditorContentType,
 } from "@/components/text-editor/editor";
 import { useKeydownListener } from "@/hooks/use-keydown-listener";
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useIsInViewport } from "@/hooks/use-is-in-viewport";
 import { type SerializedEditorState } from "lexical";
 import { type IssueType } from "@/utils/types";
@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
 import { DefaultUser } from "@prisma/client";
 import { useCookie } from "@/hooks/use-cookie";
+import { CgAttachment } from "react-icons/cg";
 dayjs.extend(relativeTime);
 
 const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
@@ -25,7 +26,49 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
   const [isInViewport, ref] = useIsInViewport();
   const { comments, addComment } = useIssueDetails();
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
-  const user = useCookie('user')
+  const user = useCookie("user");
+
+  const [image, setImage] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [imageUrl, setImageUrl] = useState("");
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleButtonClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click(); // Trigger file input click
+    }
+  };
+
+  const handleImageUpload = async (e) => {
+    e.preventDefault();
+    let image = e.target.files ? e.target.files[0] : null;
+    if (!image) return;
+
+    const formData = new FormData();
+    formData.append("image", image);
+
+    setUploading(true);
+    try {
+      const response = await fetch("/api/attachment", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        console.error("Upload failed:", result.error);
+        return;
+      }
+
+      setUploading(false);
+      if (result.fileUrl) {
+        setImageUrl(result.fileUrl); // Save uploaded image URL
+      }
+    } catch (error) {
+      console.error("Image upload error:", error);
+      setUploading(false);
+    }
+  };
 
   useKeydownListener(scrollRef, ["m", "M"], handleEdit);
   function handleEdit(ref: React.RefObject<HTMLElement>) {
@@ -46,16 +89,19 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
       setIsWritingComment(false);
       return;
     }
-    addComment({
+    // Create the comment data object
+    const commentData = {
       issueId: issue.id,
       content: JSON.stringify(state),
-      // eslint-disable-next-line
       authorId: user!.id,
-    });
+      imageURL: imageUrl,
+    };
+
+    addComment(commentData);
+    setImage(null)
+    setImageUrl('')
     setIsWritingComment(false);
   }
-
-  
 
   function handleCancel() {
     setIsWritingComment(false);
@@ -73,11 +119,38 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
             onCancel={handleCancel}
           />
         ) : (
-          <AddComment
-            user={user}
-            onAddComment={() => handleEdit(scrollRef)}
-            commentsInViewport={isInViewport}
-          />
+          <div className="flex">
+            <AddComment
+              user={user}
+              onAddComment={() => handleEdit(scrollRef)}
+              commentsInViewport={isInViewport}
+            />
+            <form encType="multipart/form-data">
+              <input
+                type="file"
+                onChange={(e) => {
+                  e.preventDefault();
+                  setImage(e.target.files ? e.target.files[0] : null);
+                  handleImageUpload(e);
+                }}
+                accept="image/*"
+                ref={fileInputRef} // Attach the ref to the input
+                style={{ display: "none" }} // Hide the file input
+              />
+              <Button
+                type="button"
+                customColors
+                className="flex items-center whitespace-nowrap rounded-full bg-gray-100 hover:bg-gray-200"
+                onClick={handleButtonClick} // Handle button click
+              >
+                <CgAttachment className="rotate-45 text-xl" />
+              </Button>
+              <div>{image?.name}</div>
+              {/* <button type="submit" disabled={uploading || !image}>
+                {uploading ? "Uploading..." : "Upload"}
+              </button> */}
+            </form>
+          </div>
         )}
       </div>
       <div ref={ref} className="flex flex-col gap-y-5 pb-5">
@@ -123,6 +196,8 @@ const CommentPreview: React.FC<{
     });
   }
 
+  console.log('comment', comment.imageURL);
+
   return (
     <div className="flex w-full gap-x-2">
       <Avatar
@@ -165,6 +240,7 @@ const CommentPreview: React.FC<{
                 ? (JSON.parse(comment.content) as EditorContentType)
                 : undefined
             }
+            imageURL={comment.imageURL}
           />
         )}
         {comment.authorId == user?.id ? (
@@ -204,12 +280,7 @@ const AddComment: React.FC<{
       data-state={commentsInViewport ? "inViewport" : "notInViewport"}
       className="flex w-full gap-x-2 border-t-2 border-transparent py-3 [&[data-state=notInViewport]]:border-gray-200"
     >
-      <Avatar
-        src={user?.avatar}
-        alt={
-          user ? user.name : "Guest"
-        }
-      />
+      <Avatar src={user?.avatar} alt={user ? user.name : "Guest"} />
       <div className="w-full">
         <label htmlFor="add-comment" className="sr-only">
           Add Comment

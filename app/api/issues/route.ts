@@ -151,7 +151,6 @@ export async function POST(req: NextRequest) {
   const k = issues.length + 1;
 
   const positionToInsert = calculateInsertPosition(currentSprintIssues);
-  console.log('kkkkkkkkkkkkkkkkkkkkkk', k, positionToInsert);
 
   const issue = await prisma.issue.create({
     data: {
