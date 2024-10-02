@@ -51,7 +51,7 @@ const Members = () => {
         return (
           <div
             key={member.id}
-            style={{ zIndex: 10 - index }}
+            style={{ zIndex: members.length - index }}
             className="hover:!z-10"
           >
             <Button
