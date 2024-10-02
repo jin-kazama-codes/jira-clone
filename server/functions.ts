@@ -54,7 +54,7 @@ export async function getInitialIssuesFromServer(
 
 export async function getInitialProjectFromServer() {
   const project = await prisma.project.findUnique({
-    where: { key: "JIRA-CLONE" },
+    where: { key: "KARYA-IO" },
   });
   // set projectId in clone tobedone
   return project;
@@ -85,7 +85,7 @@ export async function initProject() {
     create: {
       id: "init-project-id-dq8yh-d0as89hjd",
       name: "F2 Fin Operations",
-      key: "JIRA-CLONE",
+      key: "KARYA-IO",
     },
   });
 }

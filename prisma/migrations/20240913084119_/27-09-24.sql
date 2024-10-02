@@ -392,7 +392,7 @@ INSERT INTO public."Member" (id, "projectId") VALUES (3, 1);
 -- Data for Name: Project; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public."Project" (key, name, "defaultAssignee", "imageUrl", "createdAt", "updatedAt", "deletedAt", id) VALUES ('JIRA-CLONE', 'F2 - Fintech', '1', NULL, '2024-09-27 16:05:54.878', NULL, NULL, 1);
+INSERT INTO public."Project" (key, name, "defaultAssignee", "imageUrl", "createdAt", "updatedAt", "deletedAt", id) VALUES ('KARYA-IO', 'F2 - Fintech', '1', NULL, '2024-09-27 16:05:54.878', NULL, NULL, 1);
 
 
 --

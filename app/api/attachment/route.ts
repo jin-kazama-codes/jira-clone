@@ -6,15 +6,17 @@ import { v4 as uuid } from "uuid";
 
 const CURRENT_DATE = Date.now();
 
-async function uploadImageToS3(
+async function uploadFileToS3(
   file: Buffer,
-  fileName: string
+  fileName: string,
+  contentType: string
 ): Promise<string> {
   const params = {
     Bucket: process.env.AWS_BUCKET_NAME as string,
     Key: `${CURRENT_DATE}-${fileName}`,
     Body: file,
-    ContentType: "image/jpeg", // Change the content type accordingly
+    ContentType: contentType,
+    ContentDisposition: "attachment"
   };
 
   const command = new PutObjectCommand(params);
@@ -38,10 +40,24 @@ export async function POST(request: NextRequest, response: NextResponse) {
     const mimeType = file.type;
     const fileExtension = mimeType.split("/")[1];
 
+    // Determine the appropriate content type
+    let contentType: string;
+    if (mimeType.startsWith("image/")) {
+      contentType = "image/jpeg";  // or match the specific image type
+    } else if (mimeType === "application/pdf") {
+      contentType = "application/pdf";
+    } else {
+      return NextResponse.json(
+        { error: "Unsupported file type." },
+        { status: 400 }
+      );
+    }
+
     const buffer = Buffer.from(await file.arrayBuffer());
-    const fileName = await uploadImageToS3(
+    const fileName = await uploadFileToS3(
       buffer,
-      uuid() + "." + fileExtension
+      uuid() + "." + fileExtension,
+      contentType
     );
 
     return NextResponse.json({
@@ -49,7 +65,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
       fileUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.amazonaws.com/${CURRENT_DATE}-${fileName}`,
     });
   } catch (error) {
-    console.error("Error uploading image:", error);
-    NextResponse.json({ message: "Error uploading image" });
+    console.error("Error uploading file:", error);
+    return NextResponse.json({ message: "Error uploading file" }, { status: 500 });
   }
 }
