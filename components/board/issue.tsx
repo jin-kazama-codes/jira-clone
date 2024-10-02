@@ -10,12 +10,14 @@ import { isEpic } from "@/utils/helpers";
 import { EpicName } from "../backlog/issue";
 
 import { useSelectedIssueContext } from "@/context/use-selected-issue-context";
+import { useCookie } from "@/hooks/use-cookie";
 
 const Issue: React.FC<{ issue: IssueType; index: number }> = ({
   issue,
   index,
 }) => {
   const { setIssueKey } = useSelectedIssueContext();
+  const user = useCookie('user');
 
   return (
     <Draggable draggableId={issue.id} index={index}>
@@ -33,16 +35,19 @@ const Issue: React.FC<{ issue: IssueType; index: number }> = ({
         >
           <div className="flex items-start justify-between">
             <span className="mb-2">{issue.name}</span>
-            <IssueDropdownMenu issue={issue}>
-              <DropdownTrigger
-                asChild
-                className="rounded-m flex h-fit items-center gap-x-2 bg-opacity-30 px-1.5 text-xs font-semibold focus:ring-2"
-              >
-                <div className="invisible rounded-full px-1.5 py-1.5 text-gray-700 group-hover:visible group-hover:bg-slate-100 group-hover:hover:bg-slate-300 [&[data-state=open]]:visible [&[data-state=open]]:bg-slate-700 [&[data-state=open]]:text-white">
-                  <BsThreeDots className="sm:text-xl" />
-                </div>
-              </DropdownTrigger>
-            </IssueDropdownMenu>
+            {(user?.role === "admin" ||
+              user?.role === "manager") &&
+              <IssueDropdownMenu issue={issue}>
+                <DropdownTrigger
+                  asChild
+                  className="rounded-m flex h-fit items-center gap-x-2 bg-opacity-30 px-1.5 text-xs font-semibold focus:ring-2"
+                >
+                  <div className="invisible rounded-full px-1.5 py-1.5 text-gray-700 group-hover:visible group-hover:bg-slate-100 group-hover:hover:bg-slate-300 [&[data-state=open]]:visible [&[data-state=open]]:bg-slate-700 [&[data-state=open]]:text-white">
+                    <BsThreeDots className="sm:text-xl text-black" />
+                  </div>
+                </DropdownTrigger>
+              </IssueDropdownMenu>
+            }
           </div>
           <div className="w-fit">
             {isEpic(issue.parent) ? (

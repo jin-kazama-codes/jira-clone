@@ -1,5 +1,6 @@
 import { prisma, ratelimit } from "@/server/db";
 import { parseCookies } from "@/utils/cookies";
+import { getQueryClient } from "@/utils/get-query-client";
 import { SprintStatus, type Sprint } from "@prisma/client";
 import { type NextRequest, NextResponse } from "next/server";
 
@@ -11,9 +12,12 @@ export type GetSprintsResponse = {
   sprints: Sprint[];
 };
 
+const queryClient = getQueryClient();
+
 export async function POST(req: NextRequest) {
   const userId = parseCookies(req, "user").id;
-  const projectId = parseCookies(req, "project").id;
+  const { id: projectId } = await queryClient.getQueryData(["project"]);
+
   if (!userId) return new Response("Unauthenticated request", { status: 403 });
   const { success } = await ratelimit.limit(userId);
   if (!success) return new Response("Too many requests", { status: 429 });
@@ -39,12 +43,10 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
-  const userId = parseCookies(req, "user").id;
-  const projectId = parseCookies(req, "project").id;
+  const { id: projectId } = await queryClient.getQueryData(["project"]);
   const sprints = await prisma.sprint.findMany({
     where: {
       OR: [{ status: SprintStatus.ACTIVE }, { status: SprintStatus.PENDING }],
-      creatorId: userId ?? "init",
       projectId: projectId,
     },
     orderBy: {

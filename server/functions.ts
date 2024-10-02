@@ -10,32 +10,15 @@ import { prisma } from "./db";
 import { DefaultUser, SprintStatus } from "@prisma/client";
 
 export async function getInitialIssuesFromServer(
-  userId: DefaultUser["id"] | undefined | null,
   projectId: number
 ) {
   let activeIssues = await prisma.issue.findMany({
     where: {
       isDeleted: false,
-      creatorId: userId ?? "init",
       projectId: projectId,
     },
   });
-
-  // if (userId && (!activeIssues || activeIssues.length === 0)) {
-  //   // New user, create default issues
-  //   await initDefaultIssues(userId);
-  //   // Create comments for default issues
-  //   await initDefaultIssueComments(userId);
-
-  //   const newActiveIssues = await prisma.issue.findMany({
-  //     where: {
-  //       creatorId: userId,
-  //       isDeleted: false,
-  //       projectId: projectId,
-  //     },
-  //   });
-  //   activeIssues = newActiveIssues;
-  // }
+  console.log('activeIssues', activeIssues);
 
   if (!activeIssues || activeIssues.length === 0) {
     return [];
@@ -78,13 +61,11 @@ export async function getInitialProjectFromServer() {
 }
 
 export async function getInitialSprintsFromServer(
-  userId: DefaultUser["id"] | undefined,
   projectId: number
 ) {
   let sprints = await prisma.sprint.findMany({
     where: {
       OR: [{ status: SprintStatus.ACTIVE }, { status: SprintStatus.PENDING }],
-      creatorId: userId ?? "init",
       projectId: projectId,
     },
     orderBy: {
@@ -92,18 +73,6 @@ export async function getInitialSprintsFromServer(
     },
   });
 
-  // if (userId && (!sprints || sprints.length === 0)) {
-  //   // New user, create default sprints
-  //   await initDefaultSprints(userId);
-
-  //   const newSprints = await prisma.sprint.findMany({
-  //     where: {
-  //       creatorId: userId,
-  //       projectId: projectId,
-  //     },
-  //   });
-  //   sprints = newSprints;
-  // }
   return sprints;
 }
 

@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/accordion";
 import { useSprints } from "@/hooks/query-hooks/use-sprints";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
+import { useCookie } from "@/hooks/use-cookie";
 
 const BacklogList: React.FC<{
   id: string;
@@ -42,6 +43,7 @@ const BacklogList: React.FC<{
 const BacklogListHeader: React.FC<{ issues: IssueType[] }> = ({ issues }) => {
   const { createSprint } = useSprints();
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
+  const user = useCookie('user');
 
   function handleCreateSprint() {
     console.log('isAuthenticated', isAuthenticated);
@@ -70,9 +72,10 @@ const BacklogListHeader: React.FC<{ issues: IssueType[] }> = ({ issues }) => {
       </AccordionTrigger>
       <div className="flex items-center gap-x-2 py-2">
         <IssueStatusCount issues={issues} />
-        <Button onClick={handleCreateSprint} className="!bg-black !text-white rounded-xl px-4 hover:!bg-black">
+        {(user?.role === "admin" ||
+        user?.role === "manager") && ( <Button onClick={handleCreateSprint} className="!bg-black !text-white rounded-xl px-4 hover:!bg-black">
           <span className="whitespace-nowrap text-white">Create Sprint</span>
-        </Button>
+        </Button>)}
       </div>
     </div>
   );

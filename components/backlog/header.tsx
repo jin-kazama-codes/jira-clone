@@ -25,12 +25,12 @@ const BacklogHeader: React.FC<{ project: Project }> = ({ project }) => {
           <IssueTypeFilter />
           <ClearFilters />
         </div>
-        <NotImplemented feature="insights">
+        {/* <NotImplemented feature="insights">
           <Button className="flex items-center gap-x-2 !bg-black !text-white rounded-xl px-4 hover:!bg-slate-800">
             <BiLineChart className="text-white" />
             <span className="text-sm text-white">Insights</span>
           </Button>
-        </NotImplemented>
+        </NotImplemented> */}
       </div>
     </div>
   );

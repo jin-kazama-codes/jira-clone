@@ -10,6 +10,7 @@ import { z } from "zod";
 import { type GetIssuesResponse } from "../route";
 import { filterUserForClient } from "@/utils/helpers";
 import { parseCookies } from "@/utils/cookies";
+import { getQueryClient } from "@/utils/get-query-client";
 
 export type GetIssueDetailsResponse = {
   issue: GetIssuesResponse["issues"][number] | null;
@@ -67,7 +68,9 @@ type ParamsType = {
 
 export async function PATCH(req: NextRequest, { params }: ParamsType) {
   const userId = parseCookies(req, 'user').id;
-  const projectId = parseCookies(req, 'project').id;
+  const queryClient = getQueryClient();
+  const { id: projectId } = await queryClient.getQueryData(["project"]);
+
   if (!userId) return new Response("Unauthenticated request", { status: 403 });
   const { success } = await ratelimit.limit(userId);
   if (!success) return new Response("Too many requests", { status: 429 });

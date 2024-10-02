@@ -23,6 +23,9 @@ import { useSprints } from "@/hooks/query-hooks/use-sprints";
 import { toast } from "../toast";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
 import { getPluralEnd } from "@/utils/helpers";
+import { useCookie } from "@/hooks/use-cookie";
+
+const user = useCookie('user');
 
 const SprintList: React.FC<{
   sprint: Sprint;
@@ -142,19 +145,23 @@ const SprintListHeader: React.FC<{ issues: IssueType[]; sprint: Sprint }> = ({
         <div className="flex items-center gap-x-2">
           <IssueStatusCount issues={issues} />
           <SprintActionButton sprint={sprint} issues={issues} />
-          <SprintDropdownMenu
-            setUpdateModalIsOpen={setUpdateModalIsOpen}
-            setDeleteModalIsOpen={setDeleteModalIsOpen}
-          >
-            <DropdownTrigger
-              asChild
-              className="flex items-center gap-x-1 px-1.5 py-0.5 text-xs font-semibold focus:ring-2"
+          {(user?.role === "admin" ||
+            user?.role === "manager") &&
+            <SprintDropdownMenu
+              setUpdateModalIsOpen={setUpdateModalIsOpen}
+              setDeleteModalIsOpen={setDeleteModalIsOpen}
             >
-              <div className="rounded-full px-1.5 py-1.5 text-black hover:cursor-pointer hover:bg-gray-300 [&[data-state=open]]:bg-gray-300 ">
-                <BsThreeDots className="sm:text-xl " />
-              </div>
-            </DropdownTrigger>
-          </SprintDropdownMenu>
+              <DropdownTrigger
+                asChild
+                className="flex items-center gap-x-1 px-1.5 py-0.5 text-xs font-semibold focus:ring-2"
+              >
+                <div className="rounded-full px-1.5 py-1.5 text-black hover:cursor-pointer hover:bg-gray-300 [&[data-state=open]]:bg-gray-300 ">
+
+                  <BsThreeDots className="sm:text-xl " />
+                </div>
+              </DropdownTrigger>
+            </SprintDropdownMenu>
+          }
         </div>
       </div>
     </Fragment>
@@ -165,7 +172,9 @@ const SprintActionButton: React.FC<{ sprint: Sprint; issues: IssueType[] }> = ({
   sprint,
   issues,
 }) => {
-  if (sprint.status === "ACTIVE") {
+
+  if (sprint.status === "ACTIVE" && (user?.role === "admin" ||
+    user?.role === "manager")) {
     return (
       <CompleteSprintModal issues={issues} sprint={sprint}>
         <Button className="!bg-black !text-white rounded-xl px-4 hover:!bg-black">
@@ -175,7 +184,8 @@ const SprintActionButton: React.FC<{ sprint: Sprint; issues: IssueType[] }> = ({
     );
   }
 
-  if (sprint.status === "PENDING") {
+  if (sprint.status === "PENDING" && (user?.role === "admin" ||
+    user?.role === "manager")) {
     return (
       <StartSprintModal issueCount={issues.length} sprint={sprint}>
         <Button className="!bg-black !text-white rounded-xl px-4 hover:!bg-black">

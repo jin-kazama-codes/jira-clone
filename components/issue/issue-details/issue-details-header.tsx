@@ -7,12 +7,14 @@ import { type IssueType } from "@/utils/types";
 import { NotImplemented } from "@/components/not-implemented";
 import { Button } from "@/components/ui/button";
 import { BsThreeDots } from "react-icons/bs";
+import { useCookie } from "@/hooks/use-cookie";
 
 const IssueDetailsHeader: React.FC<{
   issue: IssueType;
   setIssueKey: React.Dispatch<React.SetStateAction<string | null>>;
   isInViewport: boolean;
 }> = ({ issue, setIssueKey, isInViewport }) => {
+  const user = useCookie('user');
   if (!issue) return <div />;
   return (
     <div
@@ -21,7 +23,7 @@ const IssueDetailsHeader: React.FC<{
     >
       <IssuePath issue={issue} setIssueKey={setIssueKey} />
       <div className="relative flex items-center gap-x-0.5">
-        <NotImplemented feature="watch">
+        {/* <NotImplemented feature="watch">
           <Button customColors className="bg-transparent rounded-full hover:bg-gray-200">
             <MdRemoveRedEye className="text-xl" />
           </Button>
@@ -35,17 +37,20 @@ const IssueDetailsHeader: React.FC<{
           <Button customColors className="bg-transparent rounded-full hover:bg-gray-200">
             <MdOutlineShare className="text-xl" />
           </Button>
-        </NotImplemented>
-        <IssueDropdownMenu issue={issue}>
-          <DropdownTrigger
-            asChild
-            className="rounded-m flex items-center gap-x-1 bg-opacity-30 p-2 text-xs font-semibold focus:ring-2 [&[data-state=open]]:bg-gray-700 [&[data-state=open]]:text-white"
-          >
-            <div className="rounded-full text-gray-800 hover:bg-gray-200">
-              <BsThreeDots className="sm:text-xl" />
-            </div>
-          </DropdownTrigger>
-        </IssueDropdownMenu>
+        </NotImplemented> */}
+        {(user?.role === "admin" ||
+          user?.role === "manager") &&
+          <IssueDropdownMenu issue={issue}>
+            <DropdownTrigger
+              asChild
+              className="rounded-m flex h-fit items-center gap-x-2 bg-opacity-30 px-1.5 text-xs font-semibold focus:ring-2"
+            >
+              <div className="invisible rounded-full px-1.5 py-1.5 text-gray-700 group-hover:visible group-hover:bg-slate-100 group-hover:hover:bg-slate-300 [&[data-state=open]]:visible [&[data-state=open]]:bg-slate-700 [&[data-state=open]]:text-white">
+                <BsThreeDots className="sm:text-xl text-black" />
+              </div>
+            </DropdownTrigger>
+          </IssueDropdownMenu>
+        }
         <Button
           customColors
           className="bg-transparent  rounded-full hover:bg-gray-200"

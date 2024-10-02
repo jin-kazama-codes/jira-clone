@@ -32,7 +32,7 @@ const IssueDetailsInfoActions: React.FC<{
           </span>
         </Button>
       </TooltipWrapper>
-      <NotImplemented feature="link">
+      {/* <NotImplemented feature="link">
         <Button
           customColors
           className="flex items-center whitespace-nowrap rounded-full bg-gray-100 hover:bg-gray-200"
@@ -45,15 +45,15 @@ const IssueDetailsInfoActions: React.FC<{
             {variant === "sm" ? null : "Link issue"}
           </span>
         </Button>
-      </NotImplemented>
-      <NotImplemented feature="add apps">
+      </NotImplemented> */}
+      {/* <NotImplemented feature="add apps">
         <Button
           customColors
           className="flex items-center whitespace-nowrap rounded-full bg-gray-100 hover:bg-gray-200"
         >
           <BsThreeDots className="text-xl" />
         </Button>
-      </NotImplemented>
+      </NotImplemented> */}
     </div>
   );
 };

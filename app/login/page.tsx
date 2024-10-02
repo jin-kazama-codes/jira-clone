@@ -6,8 +6,7 @@ import { useProject } from '@/hooks/query-hooks/use-project';
 
 const Login: React.FC = () => {
   const router = useRouter();
-  const { project } = useProject();
-  
+
   const [isMounted, setIsMounted] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -33,36 +32,37 @@ const Login: React.FC = () => {
     e.preventDefault();
 
     try {
-        const response = await axios.post('/api/auth/login', formData, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        console.log("user:",response.data.user)
+      const response = await axios.post('/api/auth/login', formData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      console.log("user:", response.data.user)
 
-        if (response.status === 200 && isMounted) {
-            let token = response.data.user ;
-            document.cookie = `user=${JSON.stringify(token)}; path=/; secure; SameSite=Strict`;
-            document.cookie = `project=${JSON.stringify(project)}; path=/; secure; SameSite=Strict`;
-          // Redirect after successful login
-          router.push('/project/backlog');
-        } else {
-          setError(response.data.error || 'Login failed');
-        }
-      } catch (error: any) {
-        if (error.response) {
-          setError(error.response.data.error || 'Login failed');
-        } else {
-          setError('An error occurred during login');
-        }
+      if (response.status === 200 && isMounted) {
+        let token = response.data.user;
+        document.cookie = `user=${JSON.stringify(token)}; path=/; secure; SameSite=Strict`;
+        // document.cookie = `project=${JSON.stringify(project)}; path=/; secure; SameSite=Strict`;
+        // Redirect after successful login
+        console.log("redirect to backlog");
+        router.push('/project/backlog');
+      } else {
+        setError(response.data.error || 'Login failed');
       }
+    } catch (error: any) {
+      if (error.response) {
+        setError(error.response.data.error || 'Login failed');
+      } else {
+        setError('An error occurred during login');
+      }
+    }
   };
 
   if (!isMounted) {
     return null; // Prevent rendering the component until fully mounted
   }
 
-  
+
 
   return (
     <div className="container mx-auto max-w-md py-12">

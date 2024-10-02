@@ -4,6 +4,7 @@ import { Button } from "./ui/button";
 import { Avatar } from "./avatar";
 import { UserModal } from './modals/add-people/index'
 import { AddPeopleIcon } from "./svgs";
+import { useCookie } from "@/hooks/use-cookie";
 
 const Members = () => {
   const { members } = useProject();
@@ -14,6 +15,7 @@ const Members = () => {
     avatar: undefined,
     email: "",
   };
+  const user = useCookie('user');
 
   function handleAssigneeFilter(id: string) {
     setAssignees((prev) => {
@@ -48,14 +50,16 @@ const Members = () => {
       })}
 
       {/* <NotImplemented feature="add people"> */}
-      <UserModal>
-        <button>
-          <AddPeopleIcon
-            className="ml-3 rounded-full bg-gray-200 p-1 text-gray-500"
-            size={35}
-          />
-        </button>
-        </UserModal>  
+      {(user?.role === "admin" ||
+        user?.role === "manager") && (
+          <UserModal>
+            <button>
+              <AddPeopleIcon
+                className="ml-3 rounded-full bg-gray-200 p-1 text-gray-500"
+                size={35}
+              />
+            </button>
+          </UserModal>)}
       {/* </NotImplemented> */}
     </div>
   );

@@ -8,7 +8,6 @@ import {
   getInitialProjectFromServer,
   getInitialSprintsFromServer,
 } from "@/server/functions";
-import { parsePageCookies } from "@/utils/cookies";
 
 export const metadata: Metadata = {
   title: "Backlog",
@@ -16,17 +15,17 @@ export const metadata: Metadata = {
 
 const BacklogPage = async () => {
   const queryClient = getQueryClient();
-  const user = parsePageCookies("user");
-  const project = parsePageCookies("project");
-  
+
   await Promise.all([
-    await queryClient.prefetchQuery(["issues"], () =>
-      getInitialIssuesFromServer(user?.id, project?.id)
-    ),
-    await queryClient.prefetchQuery(["sprints"], () =>
-      getInitialSprintsFromServer(user?.id, project?.id)
-    ),
     await queryClient.prefetchQuery(["project"], getInitialProjectFromServer),
+    await queryClient.prefetchQuery(["issues"], async () => {
+      const { id: projectId } = await queryClient.getQueryData(["project"]);
+      return getInitialIssuesFromServer(projectId);
+    }),
+    await queryClient.prefetchQuery(["sprints"], async () => {
+      const { id: projectId } = await queryClient.getQueryData(["project"]);
+      return getInitialSprintsFromServer(projectId);
+    }),
   ]);
 
   const dehydratedState = dehydrate(queryClient);

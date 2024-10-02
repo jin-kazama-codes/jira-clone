@@ -12,6 +12,7 @@ import {
   generateIssuesForClient,
 } from "@/utils/helpers";
 import { parseCookies } from "@/utils/cookies";
+import { getQueryClient } from "@/utils/get-query-client";
 
 const postIssuesBodyValidator = z.object({
   name: z.string(),
@@ -56,11 +57,13 @@ export type GetIssuesResponse = {
   issues: IssueT[];
 };
 
+const queryClient = getQueryClient();
+
 export async function GET(req: NextRequest) {
-  const project = parseCookies(req, "project");
+  const { id: projectId } = await queryClient.getQueryData(["project"]);
   const activeIssues = await prisma.issue.findMany({
     where: {
-      projectId: project.id ?? "init",
+      projectId: projectId,
       isDeleted: false,
     },
   });
@@ -72,7 +75,7 @@ export async function GET(req: NextRequest) {
   // add projectId to sprint table
   const activeSprints = await prisma.sprint.findMany({
     where: {
-      projectId: project.id,
+      projectId: projectId,
       status: "ACTIVE",
     },
   });
@@ -103,8 +106,9 @@ export async function GET(req: NextRequest) {
 
 // POST
 export async function POST(req: NextRequest) {
+  const { id: projectId } = await queryClient.getQueryData(["project"]);
   const userId = parseCookies(req, "user").id;
-  const project = parseCookies(req, "project");
+  
   if (!userId) return new Response("Unauthenticated request", { status: 403 });
   const { success } = await ratelimit.limit(userId);
   if (!success) return new Response("Too many requests", { status: 429 });
@@ -159,7 +163,7 @@ export async function POST(req: NextRequest) {
       type: valid.type,
       reporterId: userId, // Admin as default reporter
       sprintId: valid.sprintId ?? undefined,
-      projectId: project.id,
+      projectId: projectId,
       sprintPosition: positionToInsert,
       boardPosition,
       parentId: valid.parentId,
@@ -173,7 +177,8 @@ export async function POST(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   const userId = parseCookies(req, "user").id;
-  const project = parseCookies(req, "project");
+  const { id: projectId } = await queryClient.getQueryData(["project"]);
+ 
   if (!userId) return new Response("Unauthenticated request", { status: 403 });
   const { success } = await ratelimit.limit(userId);
   if (!success) return new Response("Too many requests", { status: 429 });
@@ -212,7 +217,7 @@ export async function PATCH(req: NextRequest) {
           isDeleted: valid.isDeleted ?? undefined,
           sprintId: valid.sprintId === undefined ? undefined : valid.sprintId,
           parentId: valid.parentId ?? undefined,
-          projectId: project.id,
+          projectId: projectId,
         },
       });
     })

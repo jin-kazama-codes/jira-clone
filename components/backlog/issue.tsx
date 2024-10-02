@@ -17,6 +17,7 @@ import { type IssueType } from "@/utils/types";
 import { hasChildren, isEpic, hexToRgba } from "@/utils/helpers";
 import { IssueAssigneeSelect } from "../issue/issue-select-assignee";
 import { DARK_COLORS, LIGHT_COLORS } from "../color-picker";
+import { useCookie } from "@/hooks/use-cookie";
 
 const getIssueKeyColorClass = (type: String) => {
   switch (type) {
@@ -31,7 +32,7 @@ const getIssueKeyColorClass = (type: String) => {
     case "SUBTASK":
       return "bg-task";
     default:
-      return "bg-gray-200"; 
+      return "bg-gray-200";
   }
 };
 
@@ -43,6 +44,7 @@ const Issue: React.FC<{
   const inputRef = useRef<HTMLInputElement>(null);
   const { setIssueKey, issueKey } = useSelectedIssueContext();
   const issueKeyColorClass = getIssueKeyColorClass(issue.type);
+  const user = useCookie('user');
 
   return (
     <Draggable draggableId={issue.id} index={index}>
@@ -69,7 +71,7 @@ const Issue: React.FC<{
             data-state={isEditing ? "editing" : "not-editing"}
             className="flex w-fit rounded-xl items-center gap-x-2 [&[data-state=editing]]:w-full [&[data-state=not-editing]]:overflow-x-hidden"
           >
-            <IssueIcon issueType={issue.type}/>
+            <IssueIcon issueType={issue.type} />
             <div
               data-state={issue.status}
               className={clsx(
@@ -119,16 +121,19 @@ const Issue: React.FC<{
               issueId={issue.id}
             />
             <IssueAssigneeSelect issue={issue} avatarOnly />
-            <IssueDropdownMenu issue={issue}>
-              <DropdownTrigger
-                asChild
-                className=" flex items-center gap-x-2 bg-opacity-30 px-1.5 text-xs font-semibold  "
-              >
-                <div className="invisible !rounded-full px-1.5 py-1.5 !bg-gray-300 group-hover:visible group-hover:bg-gray-300 group-hover:hover:bg-gray-300 [&[data-state=open]]:visible [&[data-state=open]]:bg-gray-300">
-                  <BsThreeDots className="sm:text-xl text-black" />
-                </div>
-              </DropdownTrigger>
-            </IssueDropdownMenu>
+            {(user?.role === "admin" ||
+              user?.role === "manager") &&
+              <IssueDropdownMenu issue={issue}>
+                <DropdownTrigger
+                  asChild
+                  className=" flex items-center gap-x-2 bg-opacity-30 px-1.5 text-xs font-semibold  "
+                >
+                  <div className="invisible !rounded-full px-1.5 py-1.5 !bg-gray-300 group-hover:visible group-hover:bg-gray-300 group-hover:hover:bg-gray-300 [&[data-state=open]]:visible [&[data-state=open]]:bg-gray-300">
+                    <BsThreeDots className="sm:text-xl text-black" />
+                  </div>
+                </DropdownTrigger>
+              </IssueDropdownMenu>
+            }
           </div>
         </div>
       )}

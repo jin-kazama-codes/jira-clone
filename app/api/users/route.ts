@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { PrismaClient } from '@prisma/client'
-import { parseCookies } from '@/utils/cookies'
+import { getQueryClient } from '@/utils/get-query-client'
 
 
 const prisma = new PrismaClient()
@@ -10,9 +10,10 @@ export async function POST(req: Request) {
 
     const { name, email } = await req.json()
 
-    const projectId = parseCookies(req,"project").id
+    const queryClient = getQueryClient();
+    const { id: projectId } = await queryClient.getQueryData(["project"]);
 
-    
+
     const user = await prisma.defaultUser.create({
       data: {
         name,
@@ -21,14 +22,14 @@ export async function POST(req: Request) {
     })
 
     const member = await prisma.member.create({
-        data: {
-          id: user.id, 
-          projectId: parseInt(projectId), 
-        },
-      })
-  
-      
-      return NextResponse.json({ user, member }, { status: 201 })
+      data: {
+        id: user.id,
+        projectId: parseInt(projectId),
+      },
+    })
+
+
+    return NextResponse.json({ user, member }, { status: 201 })
   } catch (error) {
     console.error(error)
     return NextResponse.json({ error: 'Failed to add user' }, { status: 500 })
