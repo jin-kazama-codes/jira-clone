@@ -18,6 +18,7 @@ import { useIsAuthenticated } from "@/hooks/use-is-authed";
 import { DefaultUser } from "@prisma/client";
 import { useCookie } from "@/hooks/use-cookie";
 import { CgAttachment } from "react-icons/cg";
+import { MdDelete } from "react-icons/md";
 dayjs.extend(relativeTime);
 
 const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
@@ -98,9 +99,14 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
     };
 
     addComment(commentData);
-    setImage(null)
-    setImageUrl('')
+    setImage(null);
+    setImageUrl("");
     setIsWritingComment(false);
+  }
+
+  function handleDelete() {
+    setImage(null);
+    setImageUrl("");
   }
 
   function handleCancel() {
@@ -119,13 +125,13 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
             onCancel={handleCancel}
           />
         ) : (
-          <div className="flex">
+          <div className="">
             <AddComment
               user={user}
               onAddComment={() => handleEdit(scrollRef)}
               commentsInViewport={isInViewport}
             />
-            <form encType="multipart/form-data">
+            <form encType="multipart/form-data" className="ml-10">
               <input
                 type="file"
                 onChange={(e) => {
@@ -133,22 +139,33 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
                   setImage(e.target.files ? e.target.files[0] : null);
                   handleImageUpload(e);
                 }}
-                accept="image/*"
+                accept="image/*, application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, text/plain"
                 ref={fileInputRef} // Attach the ref to the input
                 style={{ display: "none" }} // Hide the file input
               />
-              <Button
-                type="button"
-                customColors
-                className="flex items-center whitespace-nowrap rounded-full bg-gray-100 hover:bg-gray-200"
-                onClick={handleButtonClick} // Handle button click
-              >
-                <CgAttachment className="rotate-45 text-xl" />
-              </Button>
-              <div>{image?.name}</div>
-              {/* <button type="submit" disabled={uploading || !image}>
-                {uploading ? "Uploading..." : "Upload"}
-              </button> */}
+              <div className="flex items-center gap-8">
+                {uploading && !image ?  (<div className="loader"></div>) : (<Button
+                  type="button"
+                  customColors
+                  className="flex gap-2 whitespace-nowrap rounded-lg border hover:bg-gray-100"
+                  onClick={handleButtonClick} // Handle button click
+                >
+                  <CgAttachment className="rotate-45 text-xl" />
+                  <span className="">Attach</span>
+                </Button>)}
+                
+
+                <div className="flex items-center gap-2">
+                <div className="whitespace-nowrap font-mono text-sm">
+                  {image?.name}
+                </div>
+                {image && (
+                  <span onClick={handleDelete} className="cursor-pointer">
+                    <MdDelete className="text-lg text-red-600" />
+                  </span>
+                )}
+                </div>
+              </div>
             </form>
           </div>
         )}
@@ -196,17 +213,15 @@ const CommentPreview: React.FC<{
     });
   }
 
-  console.log('comment', comment.imageURL);
-
   return (
     <div className="flex w-full gap-x-2">
       <Avatar
         src={comment.author?.avatar ?? ""}
         alt={`${comment.author?.name ?? "Guest"}`}
       />
-      <div className="w-full">
+      <div className="w-full border rounded-xl p-2 px-3">
         <div className="flex items-center gap-x-3 text-xs">
-          <span className="font-semibold text-gray-600 ">
+          <span className="font-bold text-gray-600 ">
             {comment.author?.name}
           </span>
           <span className="text-gray-500">
@@ -233,6 +248,7 @@ const CommentPreview: React.FC<{
             className="mt-2"
           />
         ) : (
+          
           <EditorPreview
             action="comment"
             content={
@@ -280,8 +296,10 @@ const AddComment: React.FC<{
       data-state={commentsInViewport ? "inViewport" : "notInViewport"}
       className="flex w-full gap-x-2 border-t-2 border-transparent py-3 [&[data-state=notInViewport]]:border-gray-200"
     >
-      <Avatar src={user?.avatar} alt={user ? user.name : "Guest"} />
-      <div className="w-full">
+      <div className="mt-2">
+        <Avatar src={user?.avatar} alt={user ? user.name : "Guest"} />
+      </div>
+      <div className="w-11/12">
         <label htmlFor="add-comment" className="sr-only">
           Add Comment
         </label>
@@ -292,14 +310,14 @@ const AddComment: React.FC<{
           placeholder="Add a comment..."
           className="w-full rounded-xl border border-gray-300 px-4 py-2 placeholder:text-sm"
         />
-        <p className="my-2 text-xs text-gray-500">
+        {/* <p className="my-2 text-xs text-gray-500">
           <span className="font-bold">Pro tip:</span>
           <span> press </span>
           <span className="rounded-full bg-gray-300 px-1 py-0.5 font-bold">
             M
           </span>
           <span> to comment </span>
-        </p>
+        </p> */}
       </div>
     </div>
   );

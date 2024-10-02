@@ -35,6 +35,7 @@ const config = {
       "images.unsplash.com",
       "avatars.githubusercontent.com",
       "img.clerk.com",
+      'karya-io.s3.amazonaws.com',
     ],
   },
   /**

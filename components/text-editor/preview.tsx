@@ -8,6 +8,7 @@ import CodeHighlightPlugin from "./plugins/code-highlight-plugin";
 import { EditorComposer } from "./context/lexical-composer";
 import { type EditorContentType } from "./editor";
 import clsx from "clsx";
+import ImageModal from "../modals/image-preview";
 
 export const EditorPreview: React.FC<{
   action: "description" | "comment";
@@ -16,10 +17,28 @@ export const EditorPreview: React.FC<{
   className?: string;
 }> = ({ action, content, imageURL, className }) => {
   const [jsonState] = useState<EditorContentType>(content);
-  console.log('imageURL',jsonState, imageURL);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleImageClick = () => {
+    setIsModalOpen(true); // Open the modal
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // Close the modal
+  };
+
+  const isImage = (url: string) => {
+    return /\.(jpg|jpeg|png|gif|bmp|svg)$/i.test(url);
+  };
+
+  const isDocument = (url: string) => {
+    return /\.(pdf|doc|docx)$/i.test(url);
+  };
+
   return (
     <EditorComposer readonly={true} jsonState={jsonState}>
-      <div className="relative w-full rounded-[3px] bg-white">
+      <div className={`w-full rounded-md bg-white ${action === "comment" ? 'flex' : 'relative'}`}>
         <RichTextPlugin
           ErrorBoundary={LexicalErrorBoundary}
           contentEditable={
@@ -36,10 +55,38 @@ export const EditorPreview: React.FC<{
             </div>
           }
         />
-        <div>{imageURL && <img height={50} width={50} src={imageURL} alt="doc" />}</div>
+                {action === "comment" && (
+          <div className="mr-5">
+            {imageURL && isImage(imageURL) && (
+              <img
+                height={50}
+                width={50}
+                src={imageURL}
+                alt="image-preview"
+                onClick={handleImageClick} // Open modal on click
+                className="cursor-pointer"
+              />
+            )}
+            {imageURL && isDocument(imageURL) && (
+              <a
+                href={imageURL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 underline"
+              >
+                View Document
+              </a>
+            )}
+          </div>
+        )}
+
+        
       </div>
+      
       <CodeHighlightPlugin />
       <ListPlugin />
+
+      <ImageModal isOpen={isModalOpen} onClose={handleCloseModal} imageUrl={imageURL} />
     </EditorComposer>
   );
 };
