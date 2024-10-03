@@ -7,9 +7,8 @@ export type GetProjectResponse = {
   project: Project | null;
 };
 
-const projectData = parsePageCookies('project')
-
 export async function GET() {
+  const projectData = parsePageCookies('project')
   const project = await prisma.project.findUnique({
     where: {
       key: projectData.key,
