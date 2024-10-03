@@ -20,15 +20,15 @@ const UserModal: React.FC<UserModalProps> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const userData = {
-      name,
-      email,
-    };
+    // Reset error state
+    setError(null);
+
+    const userData = { name, email };
 
     try {
       const response = await fetch("/api/users", {
@@ -39,15 +39,23 @@ const UserModal: React.FC<UserModalProps> = ({ children }) => {
         body: JSON.stringify(userData),
       });
 
+
       if (response.ok) {
         const result = await response.json();
         console.log("User added:", result.user);
+
         setIsOpen(false);
+
+        setName("");
+        setEmail("");
       } else {
-        console.error("Failed to add user");
+        const result = await response.json();
+        console.log("Result add", result)
+        setError(result.error || "Failed to add user");
       }
-    } catch (error) {
-      console.error("Error adding user:", error);
+    } catch (err) {
+      console.error("Error adding user:", err);
+      setError("An unexpected error occurred. Please try again.");
     }
   };
 
@@ -94,9 +102,10 @@ const UserModal: React.FC<UserModalProps> = ({ children }) => {
                 className="mb-3 mt-1 rounded-md bg-slate-100 px-2 py-1"
               />
             </div>
+            {error && <p className="mt-2 text-red-500">{error}</p>}
             <Button
               type="submit"
-              className="flex  w-full justify-center rounded-xl !bg-black text-white"
+              className="flex w-full justify-center rounded-xl !bg-black text-white"
             >
               Add
             </Button>

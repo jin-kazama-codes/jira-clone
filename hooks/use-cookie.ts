@@ -7,7 +7,6 @@ export const useCookie = (cookieParam: string) => {
   if (cookieObj) {
     try {
       const cookieVal = cookieObj.split("=")[1];
-
       if (cookieVal) {
         return JSON.parse(cookieVal);
       } else {

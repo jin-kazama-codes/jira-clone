@@ -7,18 +7,18 @@ import {
   generateInitialUserSprints,
 } from "../prisma/seed-data";
 import { prisma } from "./db";
-import { DefaultUser, SprintStatus } from "@prisma/client";
+import { SprintStatus } from "@prisma/client";
+import { parsePageCookies } from "@/utils/cookies";
 
-export async function getInitialIssuesFromServer(
-  projectId: number
-) {
+export async function getInitialIssuesFromServer() {
+  const PROJECT = parsePageCookies("project");
+  console.log("PROJECT ISSUES", PROJECT);
   let activeIssues = await prisma.issue.findMany({
     where: {
       isDeleted: false,
-      projectId: projectId,
+      projectId: PROJECT.id,
     },
   });
-  console.log('activeIssues', activeIssues);
 
   if (!activeIssues || activeIssues.length === 0) {
     return [];
@@ -26,7 +26,7 @@ export async function getInitialIssuesFromServer(
 
   const activeSprints = await prisma.sprint.findMany({
     where: {
-      projectId: projectId,
+      projectId: PROJECT.id,
       status: "ACTIVE",
     },
   });
@@ -53,20 +53,21 @@ export async function getInitialIssuesFromServer(
 }
 
 export async function getInitialProjectFromServer() {
-  const project = await prisma.project.findUnique({
-    where: { key: "KARYA-IO" },
-  });
+  const PROJECT = parsePageCookies("project");
+  // const project = await prisma.project.findUnique({
+  //   where: { key: PROJECT.key },
+  // });
   // set projectId in clone tobedone
-  return project;
+  console.log("INitial Project", PROJECT);
+  return PROJECT;
 }
 
-export async function getInitialSprintsFromServer(
-  projectId: number
-) {
+export async function getInitialSprintsFromServer() {
+  const PROJECT = parsePageCookies("project");
   let sprints = await prisma.sprint.findMany({
     where: {
       OR: [{ status: SprintStatus.ACTIVE }, { status: SprintStatus.PENDING }],
-      projectId: projectId,
+      projectId: PROJECT.id,
     },
     orderBy: {
       createdAt: "asc",
