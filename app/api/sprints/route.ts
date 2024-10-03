@@ -16,7 +16,7 @@ const queryClient = getQueryClient();
 
 export async function POST(req: NextRequest) {
   const userId = parseCookies(req, "user").id;
-  const { id: projectId } = await queryClient.getQueryData(["project"]);
+  const { id: projectId } = parseCookies(req, "project");
 
   if (!userId) return new Response("Unauthenticated request", { status: 403 });
   const { success } = await ratelimit.limit(userId);
@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
-  const { id: projectId } = await queryClient.getQueryData(["project"]);
+  const { id: projectId } = parseCookies(req, "project");
   const sprints = await prisma.sprint.findMany({
     where: {
       OR: [{ status: SprintStatus.ACTIVE }, { status: SprintStatus.PENDING }],

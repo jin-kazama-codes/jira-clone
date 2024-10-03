@@ -1,12 +1,15 @@
 "use client";
 import { api } from "@/utils/api";
 import { useQuery } from "@tanstack/react-query";
+import { useCookie } from "../use-cookie";
 
 export const useProject = () => {
-  const { data: project, isLoading: projectIsLoading } = useQuery(
-    ["project"],
-    api.project.getProject
-  );
+  const project = useCookie("project");
+  console.log('cookie project', project);
+  // const { data: project, isLoading: projectIsLoading } = useQuery(
+  //   ["project"],
+  //   api.project.getProject
+  // );
   const { data: members } = useQuery(
     ["project-members"],
     () => api.project.getMembers({ project_id: project?.id ?? "" }),
@@ -17,7 +20,7 @@ export const useProject = () => {
 
   return {
     project,
-    projectIsLoading,
+    // projectIsLoading,
     members,
   };
 };

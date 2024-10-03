@@ -60,7 +60,7 @@ export type GetIssuesResponse = {
 const queryClient = getQueryClient();
 
 export async function GET(req: NextRequest) {
-  const { id: projectId } = await queryClient.getQueryData(["project"]);
+  const { id: projectId } = parseCookies(req, "project");
   const activeIssues = await prisma.issue.findMany({
     where: {
       projectId: projectId,
@@ -106,9 +106,9 @@ export async function GET(req: NextRequest) {
 
 // POST
 export async function POST(req: NextRequest) {
-  const { id: projectId } = await queryClient.getQueryData(["project"]);
+  const { id: projectId } = parseCookies(req, "project");
   const userId = parseCookies(req, "user").id;
-  
+
   if (!userId) return new Response("Unauthenticated request", { status: 403 });
   const { success } = await ratelimit.limit(userId);
   if (!success) return new Response("Too many requests", { status: 429 });
@@ -177,8 +177,8 @@ export async function POST(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   const userId = parseCookies(req, "user").id;
-  const { id: projectId } = await queryClient.getQueryData(["project"]);
- 
+  const { id: projectId } = parseCookies(req, "project");
+
   if (!userId) return new Response("Unauthenticated request", { status: 403 });
   const { success } = await ratelimit.limit(userId);
   if (!success) return new Response("Too many requests", { status: 429 });

@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useRouter } from 'next/navigation';
-
+import { usePathname, useRouter } from 'next/navigation';
 import { useFullURL } from "@/hooks/use-full-url";
 import Link from "next/link";
 import { useCookie } from "@/hooks/use-cookie";
@@ -9,6 +8,8 @@ import { useCookie } from "@/hooks/use-cookie";
 const TopNavbar: React.FC = () => {
   const user = useCookie('user');
   const router = useRouter();
+  const pathname = usePathname();
+  const hideButton = pathname === "/project";
 
   function handleLogout() {
     // Clear all cookies by setting their expiration date to the past
@@ -19,6 +20,8 @@ const TopNavbar: React.FC = () => {
     });
     router.push('/login');
   }
+
+
 
   return (
     <div className="flex h-12 w-full items-center justify-between border-b px-4">
@@ -31,13 +34,13 @@ const TopNavbar: React.FC = () => {
         />
         <span className="text-sm font-medium text-gray-600">F2 - Fintech</span>
         {(user?.role === "admin" ||
-          user?.role === "manager") && (
+          user?.role === "manager") && !hideButton && (
             <Link
-              href={"/project/create"}
+              href={"/project"}
               className="ml-5 rounded-xl !bg-black px-2 py-1 !text-white hover:!bg-slate-700"
             >
               <span className="whitespace-nowrap text-sm text-white">
-                Create Project
+                Projects
               </span>
             </Link>
           )}

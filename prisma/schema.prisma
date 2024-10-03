@@ -86,7 +86,7 @@ model Comment {
 
 model DefaultUser {
   name     String
-  email    String
+  email    String  @unique
   avatar   String?
   password String? @default("member@f2-fin")
   role     role?   @default(member)
