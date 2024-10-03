@@ -20,6 +20,7 @@ type NavItemType = {
 
 const Sidebar: React.FC = () => {
   const { project } = useProject();
+  console.log('project Sidebar', project);
   const planningItems = [
     {
       id: "roadmap",

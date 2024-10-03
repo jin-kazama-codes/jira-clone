@@ -7,30 +7,28 @@
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
-  experimental: { appDir: true },
   typescript: {
     ignoreBuildErrors: true,
   },
   eslint: {
     ignoreDuringBuilds: true
   },
-  redirects: async () => {
-    return [
-      {
-        source: "/project",
-        destination: "/project/backlog",
-        permanent: true,
-      },
-      {
-        source: "/",
-        destination: "/project/backlog",
-        permanent: true,
-      },
-    ];
-  },
+  // redirects: async () => {
+  //   return [
+  //     {
+  //       source: "/project",
+  //       destination: "/project",
+  //       permanent: true,
+  //     },
+  //     {
+  //       source: "/",
+  //       destination: "/project",
+  //       permanent: true,
+  //     },
+  //   ];
+  // },
   images: {
     domains: [
-      "images.clerk.dev",
       "www.gravatar.com",
       "images.unsplash.com",
       "avatars.githubusercontent.com",

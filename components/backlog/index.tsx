@@ -11,6 +11,7 @@ import { useProject } from "@/hooks/query-hooks/use-project";
 
 const Backlog: React.FC = () => {
   const { project } = useProject();
+  console.log("USE PROJECTT", project)
   const { issueKey, setIssueKey } = useSelectedIssueContext();
   const renderContainerRef = React.useRef<HTMLDivElement>(null);
 
