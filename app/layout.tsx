@@ -4,7 +4,6 @@ import "@/styles/globals.css";
 import Toaster from "@/components/toast";
 import QueryProvider from "@/utils/provider";
 import { AuthModalProvider } from "@/context/use-auth-modal";
-import { AuthModal } from "@/components/modals/auth";
 
 export const metadata: Metadata = {
   title: {
@@ -23,11 +22,11 @@ export const metadata: Metadata = {
   ],
   authors: [
     {
-      name: "Sebastian Fernandez",
-      url: "https://sebastianfdz.com",
+      name: "Jin Kazama",
+      url: "#",
     },
   ],
-  creator: "Sebastian Fernandez",
+  creator: "Jin Kazama",
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -45,7 +44,6 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
       <body>
         <QueryProvider>
           <AuthModalProvider>
-            {/* <AuthModal /> */}
             <Toaster
               position="bottom-left"
               reverseOrder={false}

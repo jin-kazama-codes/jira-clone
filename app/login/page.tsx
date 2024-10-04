@@ -1,16 +1,16 @@
-'use client';
-import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import axios from 'axios';
-import { useProject } from '@/hooks/query-hooks/use-project';
+"use client";
+import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { setCookie } from "@/utils/helpers";
 
 const Login: React.FC = () => {
   const router = useRouter();
 
   const [isMounted, setIsMounted] = useState(false);
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
 
   const [error, setError] = useState<string | null>(null);
@@ -20,7 +20,9 @@ const Login: React.FC = () => {
     setIsMounted(true);
   }, []);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -32,28 +34,25 @@ const Login: React.FC = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('/api/auth/login', formData, {
+      const response = await axios.post("/api/auth/login", formData, {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
-      console.log("user:", response.data.user)
 
       if (response.status === 200 && isMounted) {
         let token = response.data.user;
-        document.cookie = `user=${JSON.stringify(token)}; path=/; secure; SameSite=Strict`;
-        // document.cookie = `project=${JSON.stringify(project)}; path=/; secure; SameSite=Strict`;
+        setCookie("user", token);
         // Redirect after successful login
-        console.log("redirect to backlog");
-        router.push('/project/backlog');
+        router.push("/project");
       } else {
-        setError(response.data.error || 'Login failed');
+        setError(response.data.error || "Login failed");
       }
     } catch (error: any) {
       if (error.response) {
-        setError(error.response.data.error || 'Login failed');
+        setError(error.response.data.error || "Login failed");
       } else {
-        setError('An error occurred during login');
+        setError("An error occurred during login");
       }
     }
   };
@@ -62,16 +61,21 @@ const Login: React.FC = () => {
     return null; // Prevent rendering the component until fully mounted
   }
 
-
-
   return (
     <div className="container mx-auto max-w-md py-12">
       <div className="space-y-6">
         <div className="text-center">
-          <h1 className="text-3xl font-bold tracking-tight">Login to Continue</h1>
-          <p className="text-muted-foreground text-lg">Fill out the form below to get started.</p>
+          <h1 className="text-3xl font-bold tracking-tight">
+            Login to Continue
+          </h1>
+          <p className="text-muted-foreground text-lg">
+            Fill out the form below to get started.
+          </p>
         </div>
-        <form onSubmit={handleSubmit} className="shadow-lg p-6 mt-5 bg-white rounded-xl">
+        <form
+          onSubmit={handleSubmit}
+          className="mt-5 rounded-xl bg-white p-6 shadow-lg"
+        >
           <div className="grid gap-4">
             <div className="flex flex-col">
               <label htmlFor="email" className="text-sm font-medium">
@@ -82,7 +86,7 @@ const Login: React.FC = () => {
                 name="email"
                 type="text"
                 placeholder="Enter your email"
-                className="border border-gray-300 mt-3 rounded-xl px-3 py-2 focus:border-primary focus:ring-primary"
+                className="focus:border-primary focus:ring-primary mt-3 rounded-xl border border-gray-300 px-3 py-2"
                 onChange={handleChange}
                 value={formData.email}
                 required
@@ -97,18 +101,18 @@ const Login: React.FC = () => {
                 name="password"
                 type="password"
                 placeholder="Enter your password"
-                className="border border-gray-300 mt-3 rounded-xl px-3 py-2 focus:border-primary focus:ring-primary"
+                className="focus:border-primary focus:ring-primary mt-3 rounded-xl border border-gray-300 px-3 py-2"
                 onChange={handleChange}
                 value={formData.password}
                 required
               />
             </div>
           </div>
-          {error && <p className="text-red-500 mt-2">{error}</p>}
-          <div className="flex justify-end mt-4">
+          {error && <p className="mt-2 text-red-500">{error}</p>}
+          <div className="mt-4 flex justify-end">
             <button
               type="submit"
-              className="bg-black hover:bg-slate-800 text-white px-4 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
+              className="focus:ring-primary rounded-xl bg-black px-4 py-2 text-white hover:bg-slate-800 focus:outline-none focus:ring-2"
             >
               Login
             </button>

@@ -66,9 +66,7 @@ export function isNullish<T>(
   return value == null || value == undefined;
 }
 
-export function filterUserForClient(
-  user: DefaultUser
-) {
+export function filterUserForClient(user: DefaultUser) {
   return <DefaultUser>{
     id: user.id,
     name: user.name,
@@ -211,3 +209,11 @@ export function getPluralEnd<T>(arr: T[]) {
   if (arr.length == 0) return "s";
   return arr.length > 1 ? "s" : "";
 }
+
+export const setCookie = (param: string, obj: {}) => {
+  // Set project in cookie when a project is clicked
+  const cookieValue = JSON.stringify(obj);
+  const expiryDate = new Date();
+  expiryDate.setDate(expiryDate.getDate() + 7); // Cookie expires in 7 days
+  document.cookie = `${param}=${cookieValue}; expires=${expiryDate.toUTCString()}; path=/; secure; SameSite=Strict`;
+};

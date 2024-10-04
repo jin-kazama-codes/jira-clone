@@ -1,14 +1,24 @@
-import { NextResponse } from 'next/server';
-
-export function middleware(request: Request) {
-  const token = request.cookies.get('user');
-
-  // Protecting the dashboard route
-  if (!token && request.nextUrl.pathname === '/project/backlog') {
-    return NextResponse.redirect(new URL('/login', request.url));
+import { NextResponse } from "next/server";
+import { NextRequest } from "next/server";
+import { cookies } from "next/headers";
+// Adjust the path according to your project structure
+export function middleware(request: NextRequest) {
+  const cookieStore = cookies();
+  const token = cookieStore.get("user")?.value;
+  // Define routes that do not require authentication
+  const publicPaths = ["/login"];
+  // Check if the user is authenticated
+  if (!token && !publicPaths.includes(request.nextUrl.pathname)) {
+    // Redirect to the login page if not authenticated
+    return NextResponse.redirect(new URL("/login", request.url));
   }
+  // Allow the request to proceed if authenticated
+  return NextResponse.next();
 }
-
+// Specify the paths that this middleware should apply to
 export const config = {
-  matcher: ['/project/backlog'], // Apply middleware to the dashboard route
+  matcher: [
+    // Apply to all routes except those specified
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+  ],
 };

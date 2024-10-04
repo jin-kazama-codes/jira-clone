@@ -67,27 +67,27 @@ type ParamsType = {
 };
 
 export async function PATCH(req: NextRequest, { params }: ParamsType) {
-  const userId = parseCookies(req, 'user').id;
+  const userId = parseCookies(req, "user").id;
   const queryClient = getQueryClient();
-  const { id: projectId } = await queryClient.getQueryData(["project"]);
+  const { id: projectId } = parseCookies(req, "project");
 
   if (!userId) return new Response("Unauthenticated request", { status: 403 });
   const { success } = await ratelimit.limit(userId);
   if (!success) return new Response("Too many requests", { status: 429 });
   const { issueId } = params;
-  console.log('valid issue', issueId)
+  console.log("valid issue", issueId);
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const body = await req.json();
-  console.log('valid body', body)
+  console.log("valid body", body);
   const validated = patchIssueBodyValidator.safeParse(body);
-  console.log('valid validated', validated)
+  console.log("valid validated", validated);
 
   if (!validated.success) {
     // eslint-disable-next-line
     const message = "Invalid body. " + validated.error.errors[0]?.message ?? "";
     return new Response(message, { status: 400 });
   }
-  console.log('valid validated  2', validated);
+  console.log("valid validated  2", validated);
   const { data: valid } = validated;
 
   const currentIssue = await prisma.issue.findUnique({
@@ -140,7 +140,7 @@ export async function PATCH(req: NextRequest, { params }: ParamsType) {
 }
 
 export async function DELETE(req: NextRequest, { params }: ParamsType) {
-  const userId = parseCookies(req, 'user').id;
+  const userId = parseCookies(req, "user").id;
   if (!userId) return new Response("Unauthenticated request", { status: 403 });
   const { success } = await ratelimit.limit(userId);
   if (!success) return new Response("Too many requests", { status: 429 });
