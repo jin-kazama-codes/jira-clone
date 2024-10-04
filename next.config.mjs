@@ -13,20 +13,20 @@ const config = {
   eslint: {
     ignoreDuringBuilds: true
   },
-  // redirects: async () => {
-  //   return [
-  //     {
-  //       source: "/project",
-  //       destination: "/project",
-  //       permanent: true,
-  //     },
-  //     {
-  //       source: "/",
-  //       destination: "/project",
-  //       permanent: true,
-  //     },
-  //   ];
-  // },
+  redirects: async () => {
+    return [
+      // {
+      //   source: "/project",
+      //   destination: "/project",
+      //   permanent: true,
+      // },
+      {
+        source: "/",
+        destination: "/project",
+        permanent: true,
+      },
+    ];
+  },
   images: {
     domains: [
       "www.gravatar.com",
