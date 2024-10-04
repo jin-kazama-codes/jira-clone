@@ -8,9 +8,6 @@ import { SearchBar } from "@/components/filter-search-bar";
 import { Members } from "../members";
 import { ClearFilters } from "../filter-issue-clear";
 import { SprintFilter } from "../filter-sprint";
-import { NotImplemented } from "../not-implemented";
-import { Button } from "../ui/button";
-import { BiLineChart } from "react-icons/bi";
 
 const BoardHeader: React.FC<{ project: Project }> = ({ project }) => {
   const { search, setSearch } = useFiltersContext();
