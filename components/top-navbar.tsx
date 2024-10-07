@@ -1,15 +1,16 @@
 "use client";
 import Image from "next/image";
 import { usePathname, useRouter } from 'next/navigation';
-import { useFullURL } from "@/hooks/use-full-url";
 import Link from "next/link";
 import { useCookie } from "@/hooks/use-cookie";
+import { useFiltersContext } from "@/context/use-filters-context";
 
 const TopNavbar: React.FC = () => {
   const user = useCookie('user');
   const router = useRouter();
   const pathname = usePathname();
   const hideButton = pathname === "/project";
+  const { assignees, setAssignees } = useFiltersContext();
 
   function handleLogout() {
     // Clear all cookies by setting their expiration date to the past
@@ -21,7 +22,21 @@ const TopNavbar: React.FC = () => {
     router.push('/login');
   }
 
+  const filterAssignee = () => {
+    console.log('test filter assignee', user.id);
+    setAssignees((prev) => {
+      return [user.id];
+    });
+  }
 
+  const ClearfilterAssignee = () => {
+    console.log('test filter assignee', user.id);
+    setAssignees((prev) => {
+      return [];
+    });
+  }
+
+  console.log('test ass', assignees)
 
   return (
     <div className="flex h-12 w-full items-center justify-between border-b px-4">
@@ -33,17 +48,30 @@ const TopNavbar: React.FC = () => {
           height={25}
         />
         <span className="text-sm font-medium text-gray-600">F2 - Fintech</span>
-        {(user?.role === "admin" ||
-          user?.role === "manager") && !hideButton && (
-            <Link
-              href={"/project"}
-              className="ml-5 rounded-xl !bg-black px-2 py-1 !text-white hover:!bg-slate-700"
-            >
-              <span className="whitespace-nowrap text-sm text-white">
-                Projects
-              </span>
-            </Link>
-          )}
+        {!hideButton && (
+          <Link
+            href={"/project"}
+            className="ml-5 rounded-xl !bg-black px-2 py-1 !text-white hover:!bg-slate-700"
+          >
+            <span className="whitespace-nowrap text-sm text-white">
+              Projects
+            </span>
+          </Link>
+        )}
+        {assignees.length === 0 &&
+          <button onClick={() => filterAssignee()} className="ml-5 rounded-xl !bg-black px-2 py-1 !text-white hover:!bg-slate-700">
+            <span className="whitespace-nowrap text-sm text-white">
+              My Tasks
+            </span>
+          </button>
+        }
+        {assignees.length !== 0 && 
+        <button onClick={() => ClearfilterAssignee()} className="ml-5 rounded-xl !bg-black px-2 py-1 !text-white hover:!bg-slate-700">
+          <span className="whitespace-nowrap text-sm text-white">
+            All Tasks
+          </span>
+        </button>
+        }
       </div>
       <div className="flex items-center gap-x-5">
         {user ? (
