@@ -72,7 +72,7 @@ const IssueList: React.FC<{ sprintId: string | null; issues: IssueType[] }> = ({
             <div
               className={clsx(
                 issues.length &&
-                  "flex flex-col gap-1 divide-y rounded-xl bg-white"
+                "flex flex-col gap-1 divide-y rounded-xl bg-white"
               )}
             >
               {issues
@@ -85,18 +85,15 @@ const IssueList: React.FC<{ sprintId: string | null; issues: IssueType[] }> = ({
           </div>
         )}
       </Droppable>
-      {(user?.role === "admin" ||
-        user?.role === "manager") && (
-          <Button
-            onClick={() => setIsEditing(true)}
-            data-state={isEditing ? "closed" : "open"}
-            customColors
-            className="my-1 flex w-full rounded-xl bg-transparent hover:bg-gray-200 [&[data-state=closed]]:hidden"
-          >
-            <AiOutlinePlus className="text-sm" />
-            <span className="text-md ml-1">Create Issue</span>
-          </Button>
-        )}
+      <Button
+        onClick={() => setIsEditing(true)}
+        data-state={isEditing ? "closed" : "open"}
+        customColors
+        className="my-1 flex w-full rounded-xl bg-transparent hover:bg-gray-200 [&[data-state=closed]]:hidden"
+      >
+        <AiOutlinePlus className="text-sm" />
+        <span className="text-md ml-1">Create Issue</span>
+      </Button>
       <EmtpyIssue
         data-state={isEditing ? "open" : "closed"}
         className="[&[data-state=closed]]:hidden"
