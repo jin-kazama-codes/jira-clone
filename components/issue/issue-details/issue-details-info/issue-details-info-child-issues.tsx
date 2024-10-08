@@ -86,6 +86,7 @@ const ChildIssueList: React.FC<{
             new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
         )
         .map((issue) => {
+          console.log("isssuee key", issue)
           return <ChildIssue key={issue.key} issue={issue} />;
         })}
       <EmtpyIssue
