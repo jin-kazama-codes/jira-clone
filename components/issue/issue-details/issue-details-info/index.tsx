@@ -47,8 +47,6 @@ const SmallIssueDetailsInfo = React.forwardRef<
   const [isEditing, setIsEditing] = useState(false);
   const [isAddingChildIssue, setIsAddingChildIssue] = useState(false);
 
-  console.log("isueee>", issue);
-
   return (
     <Fragment>
       <div className="flex items-center gap-x-2">
@@ -117,8 +115,6 @@ const LargeIssueDetails = React.forwardRef<
   const nameRef = useRef<HTMLInputElement>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isAddingChildIssue, setIsAddingChildIssue] = useState(false);
-
-  console.log("issueeess>>>", issue);
 
   return (
     <Split
