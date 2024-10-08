@@ -68,7 +68,6 @@ type ParamsType = {
 
 export async function PATCH(req: NextRequest, { params }: ParamsType) {
   const userId = parseCookies(req, "user").id;
-  const queryClient = getQueryClient();
   const { id: projectId } = parseCookies(req, "project");
 
   if (!userId) return new Response("Unauthenticated request", { status: 403 });

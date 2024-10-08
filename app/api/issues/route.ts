@@ -12,7 +12,6 @@ import {
   generateIssuesForClient,
 } from "@/utils/helpers";
 import { parseCookies } from "@/utils/cookies";
-import { getQueryClient } from "@/utils/get-query-client";
 
 const postIssuesBodyValidator = z.object({
   name: z.string(),
@@ -56,8 +55,6 @@ type IssueT = Issue & {
 export type GetIssuesResponse = {
   issues: IssueT[];
 };
-
-const queryClient = getQueryClient();
 
 export async function GET(req: NextRequest) {
   const { id: projectId } = parseCookies(req, "project");
@@ -106,7 +103,7 @@ export async function GET(req: NextRequest) {
 
 // POST
 export async function POST(req: NextRequest) {
-  const { id: projectId } = parseCookies(req, "project");
+  const { id: projectId, key: KEY } = parseCookies(req, "project");
   const userId = parseCookies(req, "user").id;
 
   if (!userId) return new Response("Unauthenticated request", { status: 403 });
@@ -128,7 +125,7 @@ export async function POST(req: NextRequest) {
 
   const issues = await prisma.issue.findMany({
     where: {
-      creatorId: userId,
+      projectId: projectId,
     },
   });
 
@@ -158,7 +155,7 @@ export async function POST(req: NextRequest) {
 
   const issue = await prisma.issue.create({
     data: {
-      key: `ISSUE-${k}`,
+      key: `${KEY}-${k}`,
       name: valid.name,
       type: valid.type,
       reporterId: userId, // Admin as default reporter

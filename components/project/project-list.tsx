@@ -16,6 +16,9 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects }) => {
   const handleProjectClick = (project: Project) => {
     setCookie("project", project);
     router.push("/project/backlog");
+    setTimeout(() => {
+      window.location.reload();
+    }, 200)
   };
 
   return (
