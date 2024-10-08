@@ -3,6 +3,7 @@
 import { setCookie } from "@/utils/helpers";
 import { Project } from "@prisma/client";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 type ProjectList = Project[];
 
@@ -16,10 +17,11 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects }) => {
   const handleProjectClick = (project: Project) => {
     setCookie("project", project);
     router.push("/project/backlog");
-    setTimeout(() => {
-      window.location.reload();
-    }, 200)
   };
+
+  useEffect(() => {
+    router.refresh();
+  }, [])
 
   return (
     <div className="rounded-xl border bg-white pb-5">
