@@ -12,7 +12,6 @@ import { parsePageCookies } from "@/utils/cookies";
 
 export async function getInitialIssuesFromServer() {
   const PROJECT = parsePageCookies("project");
-  console.log("PROJECT ISSUES", PROJECT);
   let activeIssues = await prisma.issue.findMany({
     where: {
       isDeleted: false,
@@ -58,7 +57,6 @@ export async function getInitialProjectFromServer() {
   //   where: { key: PROJECT.key },
   // });
   // set projectId in clone tobedone
-  console.log("INitial Project", PROJECT);
   return PROJECT;
 }
 
