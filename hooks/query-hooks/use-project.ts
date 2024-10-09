@@ -5,7 +5,6 @@ import { useCookie } from "../use-cookie";
 
 export const useProject = () => {
   const project = useCookie("project");
-  console.log('cookie project', project);
   // const { data: project, isLoading: projectIsLoading } = useQuery(
   //   ["project"],
   //   api.project.getProject

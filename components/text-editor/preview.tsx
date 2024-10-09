@@ -13,19 +13,23 @@ import ImageModal from "../modals/image-preview";
 export const EditorPreview: React.FC<{
   action: "description" | "comment";
   content: EditorContentType;
-  imageURL: string;
+  imageURL?: string;
   className?: string;
 }> = ({ action, content, imageURL, className }) => {
   const [jsonState] = useState<EditorContentType>(content);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-  const handleImageClick = () => {
+  const images = imageURL ? imageURL.split(",").map((url) => url.trim()) : [];
+
+  const handleImageClick = (image: string) => {
+    setSelectedImage(image);
     setIsModalOpen(true); // Open the modal
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false); // Close the modal
+    setSelectedImage(null);
   };
 
   const isImage = (url: string) => {
@@ -36,9 +40,13 @@ export const EditorPreview: React.FC<{
     return /\.(pdf|doc|docx)$/i.test(url);
   };
 
+  let documentIndex = 1;
+
   return (
     <EditorComposer readonly={true} jsonState={jsonState}>
-      <div className={`w-full rounded-md bg-white ${action === "comment" ? 'flex' : 'relative'}`}>
+      <div
+        className={`w-full rounded-md bg-white relative`}
+      >
         <RichTextPlugin
           ErrorBoundary={LexicalErrorBoundary}
           contentEditable={
@@ -55,38 +63,46 @@ export const EditorPreview: React.FC<{
             </div>
           }
         />
-                {action === "comment" && (
-          <div className="mr-5">
-            {imageURL && isImage(imageURL) && (
-              <img
-                height={50}
-                width={50}
-                src={imageURL}
-                alt="image-preview"
-                onClick={handleImageClick} // Open modal on click
-                className="cursor-pointer"
-              />
-            )}
-            {imageURL && isDocument(imageURL) && (
-              <a
-                href={imageURL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 underline"
-              >
-                View Document
-              </a>
-            )}
+        {action === "comment" && (
+          <div className="flex my-2 gap-4 flex-nowrap">
+            {images &&
+              images.map((image, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  {isImage(image) && (
+                    <img
+                      height={50}
+                      width={50}
+                      src={image}
+                      alt={`image-preview-${index}`}
+                      onClick={() => handleImageClick(image)} 
+                      className="cursor-pointer"
+                    />
+                  )}
+
+                  {isDocument(image) && (
+                    <a
+                      href={image}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 underline"
+                    >
+                      View Document {documentIndex++}
+                    </a>
+                  )}
+                </div>
+              ))}
           </div>
         )}
-
-        
       </div>
-      
+
       <CodeHighlightPlugin />
       <ListPlugin />
 
-      <ImageModal isOpen={isModalOpen} onClose={handleCloseModal} imageUrl={imageURL} />
+      <ImageModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        imageUrl={selectedImage}
+      />
     </EditorComposer>
   );
 };

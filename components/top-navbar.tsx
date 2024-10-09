@@ -37,8 +37,6 @@ const TopNavbar: React.FC = () => {
     });
   }
 
-  console.log('test ass', assignees)
-
   return (
     <div className="flex h-12 w-full items-center justify-between border-b px-4">
       <div className="flex items-center gap-x-2">

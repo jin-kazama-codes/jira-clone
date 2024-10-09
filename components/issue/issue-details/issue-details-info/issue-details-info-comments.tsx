@@ -29,9 +29,9 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
   const user = useCookie("user");
 
-  const [image, setImage] = useState<File | null>(null);
+  const [image, setImage] = useState<File[] | null>([]);
   const [uploading, setUploading] = useState(false);
-  const [imageUrl, setImageUrl] = useState("");
+  const [imageUrl, setImageUrl] = useState<String[] | null>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleButtonClick = () => {
@@ -40,34 +40,52 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
     }
   };
 
-  const handleImageUpload = async (e) => {
-    e.preventDefault();
-    let image = e.target.files ? e.target.files[0] : null;
-    if (!image) return;
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
 
-    const formData = new FormData();
-    formData.append("image", image);
+    if (!files || files.length === 0 || files.length > 5) {
+      alert("You can upload up to 5 files.");
+      setImage(null)
+      return;
+    }
 
-    setUploading(true);
-    try {
-      const response = await fetch("/api/attachment", {
-        method: "POST",
-        body: formData,
-      });
+    const fileURLs: string[] = [];
 
-      const result = await response.json();
-      if (!response.ok) {
-        console.error("Upload failed:", result.error);
-        return;
+    // Loop through each file and upload to S3
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      // Prepare formData for the API request
+      setUploading(true);
+      const formData = new FormData();
+      formData.append("image", file);
+
+      // Upload to the backend (S3) and get the file URL
+      try {
+        const response = await fetch("/api/attachment", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          fileURLs.push(data.fileUrl);
+        } else {
+          console.error("Upload failed:", data.error);
+        }
+      } catch (error) {
+        console.error("Error uploading file:", error);
       }
+    }
 
-      setUploading(false);
-      if (result.fileUrl) {
-        setImageUrl(result.fileUrl); // Save uploaded image URL
-      }
-    } catch (error) {
-      console.error("Image upload error:", error);
-      setUploading(false);
+    setUploading(false);
+
+    // After all files are uploaded, update the state with the file URLs
+    if (fileURLs.length > 0) {
+      setImageUrl(fileURLs);
+      console.log("Uploaded file URLs:", fileURLs);
+    } else {
+      console.error("No file URLs returned.");
     }
   };
 
@@ -90,23 +108,32 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
       setIsWritingComment(false);
       return;
     }
+
+    const stringifiedImageUrl = imageUrl?.join(", ");
+
     // Create the comment data object
     const commentData = {
       issueId: issue.id,
       content: JSON.stringify(state),
       authorId: user!.id,
-      imageURL: imageUrl,
+      imageURL: stringifiedImageUrl,
     };
 
     addComment(commentData);
     setImage(null);
-    setImageUrl("");
+    setImageUrl([]);
     setIsWritingComment(false);
   }
 
-  function handleDelete() {
-    setImage(null);
-    setImageUrl("");
+  function handleDelete(index: number) {
+    const updatedImages = [...image];
+    updatedImages.splice(index, 1);
+
+    const updatedImageUrls = [...imageUrl];
+    updatedImageUrls.splice(index, 1);
+
+    setImage(updatedImages);
+    setImageUrl(updatedImageUrls);
   }
 
   function handleCancel() {
@@ -136,35 +163,48 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
                 type="file"
                 onChange={(e) => {
                   e.preventDefault();
-                  setImage(e.target.files ? e.target.files[0] : null);
+                  const selectedFiles = e.target.files
+                    ? Array.from(e.target.files)
+                    : [];
+                  setImage(selectedFiles); // Set the selected files in state
                   handleImageUpload(e);
                 }}
+                multiple
                 accept="image/*, application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, text/plain"
                 ref={fileInputRef} // Attach the ref to the input
                 style={{ display: "none" }} // Hide the file input
               />
-              <div className="flex items-center gap-8">
-                {uploading && !image ?  (<div className="loader"></div>) : (<Button
-                  type="button"
-                  customColors
-                  className="flex gap-2 whitespace-nowrap rounded-lg border hover:bg-gray-100"
-                  onClick={handleButtonClick} // Handle button click
-                >
-                  <CgAttachment className="rotate-45 text-xl" />
-                  <span className="">Attach</span>
-                </Button>)}
-                
-
-                <div className="flex items-center gap-2">
-                <div className="whitespace-nowrap font-mono text-sm">
-                  {image?.name}
-                </div>
-                {image && (
-                  <span onClick={handleDelete} className="cursor-pointer">
-                    <MdDelete className="text-lg text-red-600" />
-                  </span>
+              <div className="">
+                {uploading && !image ? (
+                  <div className="loader"></div>
+                ) : (
+                  <Button
+                    type="button"
+                    customColors
+                    className="flex gap-2 whitespace-nowrap rounded-lg border hover:bg-gray-100"
+                    onClick={handleButtonClick} // Handle button click
+                  >
+                    <CgAttachment className="rotate-45 text-xl" />
+                    <span className="">Attach</span>
+                  </Button>
                 )}
-                </div>
+                {image && (
+                  <div className="flex items-center flex-wrap mt-2 gap-2">
+                    {image.map((img, index) => (
+                      <div key={index} className="flex items-center gap-2 ">
+                        <div className="whitespace-nowrap font-mono text-sm">
+                          {img?.name}{" "}
+                        </div>
+                        <span
+                          onClick={() => handleDelete(index)}
+                          className="cursor-pointer"
+                        >
+                          <MdDelete className="text-lg text-red-600" />
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </form>
           </div>
@@ -219,7 +259,7 @@ const CommentPreview: React.FC<{
         src={comment.author?.avatar ?? ""}
         alt={`${comment.author?.name ?? "Guest"}`}
       />
-      <div className="w-full border rounded-xl p-2 px-3">
+      <div className="w-full rounded-xl border p-2 px-3">
         <div className="flex items-center gap-x-3 text-xs">
           <span className="font-bold text-gray-600 ">
             {comment.author?.name}
@@ -248,7 +288,6 @@ const CommentPreview: React.FC<{
             className="mt-2"
           />
         ) : (
-          
           <EditorPreview
             action="comment"
             content={
