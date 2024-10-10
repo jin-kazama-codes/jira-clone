@@ -41,12 +41,12 @@ const Sidebar: React.FC = () => {
     },
   ];
 
-  const developmentItems = [
+  const configurationItems = [
     {
-      id: "development",
-      label: "Development",
+      id: "settings",
+      label: "Settings",
       icon: DevelopmentIcon,
-      href: `/project/`,
+      href: `/project/settings`,
     },
   ];
   return (
@@ -63,7 +63,7 @@ const Sidebar: React.FC = () => {
         </div>
       </div>
       <NavList label={"PLANNING"} items={planningItems} />
-      {/* <NavList label={"DEVELOPMENT"} items={developmentItems} /> */}
+      <NavList label={"CONFIGURATION"} items={configurationItems} />
     </div>
   );
 };

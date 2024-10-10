@@ -101,9 +101,60 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({ issues: issuesForClient });
 }
 
+const createChildIssues = async (
+  KEY,
+  k,
+  userId,
+  projectId,
+  positionToInsert,
+  boardPosition,
+  issue
+) => {
+  // get parent issue the oldest because that will have child issues
+  const childIssue = await prisma.issue.findFirst({
+    where: {
+      projectId: projectId,
+      isDeleted: false,
+      parentId: {
+        not: null, 
+      },
+    },
+  });
+
+  // create child issues for the current issue
+  if (childIssue?.parentId) {
+    // get child issues using the parentIssue id as parentId
+    const childIssues = await prisma.issue.findMany({
+      where: {
+        projectId: projectId,
+        isDeleted: false,
+        parentId: childIssue.parentId,
+      },
+    });
+
+    childIssues.map(async (child, index) => {
+      await prisma.issue.create({
+        data: {
+          key: `${KEY}-${k + index + 1}`,
+          name: child.name,
+          type: child.type,
+          reporterId: userId, // Admin as default reporter
+          sprintId: child.sprintId ?? undefined,
+          projectId: projectId,
+          sprintPosition: positionToInsert + index + 1,
+          boardPosition: boardPosition + index + 1,
+          parentId: issue.id,
+          sprintColor: child.sprintColor,
+          creatorId: userId,
+        },
+      });
+    });
+  }
+};
+
 // POST
 export async function POST(req: NextRequest) {
-  const { id: projectId, key: KEY } = parseCookies(req, "project");
+  const { id: projectId, key: KEY, cloneChild } = parseCookies(req, "project");
   const userId = parseCookies(req, "user").id;
 
   if (!userId) return new Response("Unauthenticated request", { status: 403 });
@@ -168,6 +219,20 @@ export async function POST(req: NextRequest) {
       creatorId: userId,
     },
   });
+
+  // create child issues by default
+  if (cloneChild && issue?.parentId === null) {
+    console.log("INSIDE CLONE CHILD");
+    await createChildIssues(
+      KEY,
+      k,
+      userId,
+      projectId,
+      positionToInsert,
+      boardPosition,
+      issue
+    );
+  }
   // return NextResponse.json<PostIssueResponse>({ issue });
   return NextResponse.json({ issue });
 }
