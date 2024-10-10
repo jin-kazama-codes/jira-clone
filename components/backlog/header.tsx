@@ -19,7 +19,7 @@ const BacklogHeader: React.FC<{ project: Project }> = ({ project }) => {
       <h1>Backlog </h1>
       <div className="my-3 flex items-center justify-between">
         <div className="flex items-center gap-x-5">
-          <SearchBar search={search} setSearch={setSearch} placeholder={'Search Roadmap'}/>
+          <SearchBar search={search} setSearch={setSearch} placeholder={'Search Backlog'}/>
           <Members />
           <EpicFilter />
           <IssueTypeFilter />

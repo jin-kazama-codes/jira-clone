@@ -20,7 +20,7 @@ const RoadmapHeader: React.FC<{ project: Project }> = ({ project }) => {
       <h1>Roadmap </h1>
       <div className="my-3 flex items-center justify-between">
         <div className="flex items-center gap-x-5">
-          <SearchBar search={search} setSearch={setSearch} />
+          <SearchBar search={search} setSearch={setSearch} placeholder={'Search Roadmap'}/>
           <Members />
           <EpicFilter />
           <IssueTypeFilter />
