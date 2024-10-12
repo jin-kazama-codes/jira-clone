@@ -11,14 +11,12 @@ import { type IssueType } from "@/utils/types";
 import clsx from "clsx";
 import { useStrictModeDroppable } from "@/hooks/use-strictmode-droppable";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
-import { useCookie } from "@/hooks/use-cookie";
 
 const IssueList: React.FC<{ sprintId: string | null; issues: IssueType[] }> = ({
   sprintId,
   issues,
 }) => {
   const { createIssue, isCreating } = useIssues();
-  const user = useCookie('user');
   const [isEditing, setIsEditing] = useState(false);
   const [droppableEnabled] = useStrictModeDroppable();
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
