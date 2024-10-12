@@ -45,6 +45,12 @@ const Board: React.FC = () => {
     sprints: filterSprints,
   } = useFiltersContext();
 
+  const activeSprint = sprints.find((sprint) => sprint.status === "ACTIVE");
+
+// If you need only the `sprintId` of the active sprint
+const activeSprintId = activeSprint ? activeSprint.id : null;
+  
+
   const filterIssues = useCallback(
     (issues: IssueType[] | undefined, status: IssueStatus) => {
       if (!issues) return [];
@@ -62,11 +68,11 @@ const Board: React.FC = () => {
           if (issueSprintNotInFilters({ issue, sprintIds: filterSprints })) {
             return false;
           }
+          
           return true;
         }
         return false;
       });
-
       return filteredIssues;
     },
     [search, assignees, epics, issueTypes, filterSprints]
@@ -75,6 +81,7 @@ const Board: React.FC = () => {
   const { updateIssue } = useIssues();
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
 
+  console.log("filteredIssues")
   useLayoutEffect(() => {
     if (!renderContainerRef.current) return;
     const calculatedHeight = renderContainerRef.current.offsetTop + 20;
@@ -105,6 +112,8 @@ const Board: React.FC = () => {
     });
   };
 
+  
+
   return (
     <Fragment>
       <IssueDetailsModal />
@@ -116,6 +125,7 @@ const Board: React.FC = () => {
         >
           {STATUSES.map((status) => (
             <IssueList
+              sprintId={activeSprintId}
               key={status}
               status={status}
               issues={filterIssues(issues, status)}

@@ -4,6 +4,18 @@ import { parseCookies } from "@/utils/cookies";
 
 const prisma = new PrismaClient();
 
+export async function GET() {
+  try {
+
+    const users = await prisma.defaultUser.findMany();
+
+    return NextResponse.json({ users }, { status: 200 });
+  } catch (error) {
+    console.error("ERROR", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const { name, email } = await req.json();

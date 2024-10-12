@@ -8,6 +8,8 @@ import { SearchBar } from "@/components/filter-search-bar";
 import { Members } from "../members";
 import { ClearFilters } from "../filter-issue-clear";
 import { SprintFilter } from "../filter-sprint";
+import { IssueTypeGroupBy } from "../filter-issue-groupby";
+
 
 const BoardHeader: React.FC<{ project: Project }> = ({ project }) => {
   const { search, setSearch } = useFiltersContext();
@@ -23,6 +25,7 @@ const BoardHeader: React.FC<{ project: Project }> = ({ project }) => {
           <IssueTypeFilter />
           <SprintFilter />
           <ClearFilters />
+          {/* <IssueTypeGroupBy /> */}
         </div>
         {/* <NotImplemented feature="insights">
           <Button className="flex items-center gap-x-2 !bg-black !text-white rounded-xl px-4 hover:!bg-slate-800">
