@@ -1,6 +1,5 @@
 import { prisma, ratelimit } from "@/server/db";
 import { parseCookies } from "@/utils/cookies";
-import { getQueryClient } from "@/utils/get-query-client";
 import { SprintStatus, type Sprint } from "@prisma/client";
 import { type NextRequest, NextResponse } from "next/server";
 
@@ -11,8 +10,6 @@ export type PostSprintResponse = {
 export type GetSprintsResponse = {
   sprints: Sprint[];
 };
-
-const queryClient = getQueryClient();
 
 export async function POST(req: NextRequest) {
   const userId = parseCookies(req, "user").id;
@@ -36,6 +33,7 @@ export async function POST(req: NextRequest) {
       description: "",
       creatorId: userId,
       projectId: projectId,
+      sprintPosition: k,
     },
   });
   // return NextResponse.json<PostSprintResponse>({ sprint });
@@ -44,13 +42,26 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   const { id: projectId } = parseCookies(req, "project");
+  console.log("reqqqqq", req);
+  const where = {
+    OR: [{ status: SprintStatus.ACTIVE }, { status: SprintStatus.PENDING }],
+    projectId: projectId,
+  };
+  // Get the query parameters
+  const { searchParams } = new URL(req.url);
+
+  // Get the position from the query parameters
+  const pos = searchParams.get("position");
+  const position = parseInt(pos)
+  if (position) {
+    where.sprintPosition = position;
+    console.log('reqqqqq WHERE', where);
+  }
+
   const sprints = await prisma.sprint.findMany({
-    where: {
-      OR: [{ status: SprintStatus.ACTIVE }, { status: SprintStatus.PENDING }],
-      projectId: projectId,
-    },
+    where,
     orderBy: {
-      createdAt: "asc",
+      sprintPosition: "asc",
     },
   });
 

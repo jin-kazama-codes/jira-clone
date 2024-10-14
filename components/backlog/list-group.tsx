@@ -74,6 +74,7 @@ const ListGroup: React.FC<{ className?: string }> = ({ className }) => {
       }),
     });
   };
+  console.log("SPRINTS", sprints)
 
   if (!sprints) return <div />;
   return (

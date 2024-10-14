@@ -8,7 +8,7 @@ import {
 } from "../prisma/seed-data";
 import { prisma } from "./db";
 import { SprintStatus } from "@prisma/client";
-import { parsePageCookies } from "@/utils/cookies";
+import { parseCookies, parsePageCookies } from "@/utils/cookies";
 
 export async function getInitialIssuesFromServer() {
   const PROJECT = parsePageCookies("project");
@@ -68,7 +68,7 @@ export async function getInitialSprintsFromServer() {
       projectId: PROJECT.id,
     },
     orderBy: {
-      createdAt: "asc",
+      sprintPosition: "asc",
     },
   });
 
@@ -180,4 +180,15 @@ export async function initDefaultSprints(userId: string) {
         })
     )
   );
+}
+
+export async function previousSprint(projectId , previousSprintPosition: number) {
+  const prevSprint = await prisma.sprint.findMany({
+    where: {
+      projectId: projectId,
+      sprintPosition: previousSprintPosition,
+    },
+  });
+
+  return prevSprint[0].id;
 }

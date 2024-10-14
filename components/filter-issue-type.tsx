@@ -23,7 +23,7 @@ const IssueTypeFilter: React.FC = () => {
     issueType: IssueType["type"]
   ) {
     if (e.target.checked) {
-      setIssueTypes((prev) => [...prev, issueType]);
+      setIssueTypes((prev) => [...prev, issueType]);  
     } else {
       setIssueTypes((prev) => prev.filter((type) => type !== issueType));
     }
