@@ -1,5 +1,5 @@
 "use client";
-import React, { Fragment, useLayoutEffect } from "react";
+import React, { Fragment, useEffect, useLayoutEffect } from "react";
 import Split from "react-split";
 import { ListGroup } from "./list-group";
 import { IssueDetails } from "../issue/issue-details";

@@ -6,13 +6,15 @@ const prisma = new PrismaClient();
 
 export async function GET() {
   try {
-
     const users = await prisma.defaultUser.findMany();
 
     return NextResponse.json({ users }, { status: 200 });
   } catch (error) {
     console.error("ERROR", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
 
@@ -28,7 +30,7 @@ export async function POST(req: Request) {
     if (existingUser) {
       const existingMember = await prisma.member.findFirst({
         where: {
-          id: existingUser.id, 
+          id: existingUser.id,
           projectId,
         },
       });
@@ -46,7 +48,10 @@ export async function POST(req: Request) {
           },
         });
 
-        return NextResponse.json({ user: existingUser, member: newMember }, { status: 201 });
+        return NextResponse.json(
+          { user: existingUser, member: newMember },
+          { status: 201 }
+        );
       }
     } else {
       const newUser = await prisma.defaultUser.create({
@@ -55,15 +60,21 @@ export async function POST(req: Request) {
 
       const newMember = await prisma.member.create({
         data: {
-          id: newUser.id, 
+          id: newUser.id,
           projectId,
         },
       });
 
-      return NextResponse.json({ user: newUser, member: newMember }, { status: 201 });
+      return NextResponse.json(
+        { user: newUser, member: newMember },
+        { status: 201 }
+      );
     }
   } catch (error) {
     console.error("ERROR", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }

@@ -47,9 +47,7 @@ const Board: React.FC = () => {
 
   const activeSprint = sprints.find((sprint) => sprint.status === "ACTIVE");
 
-// If you need only the `sprintId` of the active sprint
-const activeSprintId = activeSprint ? activeSprint.id : null;
-  
+  const activeSprintId = activeSprint ? activeSprint.id : null;
 
   const filterIssues = useCallback(
     (issues: IssueType[] | undefined, status: IssueStatus) => {
@@ -68,7 +66,7 @@ const activeSprintId = activeSprint ? activeSprint.id : null;
           if (issueSprintNotInFilters({ issue, sprintIds: filterSprints })) {
             return false;
           }
-          
+
           return true;
         }
         return false;
@@ -81,7 +79,7 @@ const activeSprintId = activeSprint ? activeSprint.id : null;
   const { updateIssue } = useIssues();
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
 
-  console.log("filteredIssues")
+  console.log("filteredIssues");
   useLayoutEffect(() => {
     if (!renderContainerRef.current) return;
     const calculatedHeight = renderContainerRef.current.offsetTop + 20;
@@ -111,8 +109,6 @@ const activeSprintId = activeSprint ? activeSprint.id : null;
       }),
     });
   };
-
-  
 
   return (
     <Fragment>

@@ -148,6 +148,7 @@ const SprintListHeader: React.FC<{ issues: IssueType[]; sprint: Sprint }> = ({
           {(user?.role === "admin" ||
             user?.role === "manager") &&
             <SprintDropdownMenu
+              sprint={sprint}
               setUpdateModalIsOpen={setUpdateModalIsOpen}
               setDeleteModalIsOpen={setDeleteModalIsOpen}
             >
