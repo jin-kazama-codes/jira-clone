@@ -68,7 +68,7 @@ export async function getInitialSprintsFromServer() {
       projectId: PROJECT.id,
     },
     orderBy: {
-      sprintPosition: "asc",
+      position: "asc",
     },
   });
 
@@ -182,7 +182,10 @@ export async function initDefaultSprints(userId: string) {
   );
 }
 
-export async function previousSprint(projectId , previousSprintPosition: number) {
+export async function previousSprint(
+  projectId,
+  previousSprintPosition: number
+) {
   const prevSprint = await prisma.sprint.findMany({
     where: {
       projectId: projectId,
@@ -192,3 +195,5 @@ export async function previousSprint(projectId , previousSprintPosition: number)
 
   return prevSprint[0].id;
 }
+
+

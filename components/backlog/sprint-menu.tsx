@@ -28,30 +28,31 @@ const SprintDropdownMenu: React.FC<SprintDropdownMenuProps> = ({
   setUpdateModalIsOpen,
   setDeleteModalIsOpen,
 }) => {
-  const { updateSprint } = useSprints();
+  const { sprints,updateSprint } = useSprints();
+
+  const lastPosition = sprints.length;
 
   const menuOptions: MenuOptionType[] = [
     { id: "edit", label: "Edit Sprint" },
     { id: "delete", label: "Delete Sprint" },
-    { id: "up", label: "Move Sprint Up" },
-    { id: "down", label: "Move Sprint Down" },
+    ...(sprint.position > 1 ? [{ id: "up", label: "Move Sprint Up" }] : []),
+    ...(sprint.position !== lastPosition
+      ? [{ id: "down", label: "Move Sprint Down" }]
+      : []),
   ];
 
-  const previousSprint = async(
-    position: number
-  ) => {
+  const previousSprint = async (position: number) => {
     const response = await fetch(`/api/sprints?position=${position}`);
 
     const data = await response.json();
-    console.log("RESPONSE", data)
-  
+
     return data.sprints[0].id;
-  }
+  };
 
   const handleMove = async (sprint, direction: "up" | "down") => {
     // const projectId = useCookie("project").id;
     const currentSprintId = sprint.id;
-    const currentSprintPosition = sprint.sprintPosition;
+    const currentSprintPosition = sprint.position;
     const previousSprintPosition =
       direction === "up"
         ? currentSprintPosition - 1
@@ -62,11 +63,11 @@ const SprintDropdownMenu: React.FC<SprintDropdownMenuProps> = ({
     // Swap positions
     updateSprint({
       sprintId: currentSprintId,
-      sprintPosition: previousSprintPosition,
+      position: previousSprintPosition,
     });
     updateSprint({
       sprintId: previousSprintId,
-      sprintPosition: currentSprintPosition,
+      position: currentSprintPosition,
     });
   };
 

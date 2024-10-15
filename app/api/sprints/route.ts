@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
       description: "",
       creatorId: userId,
       projectId: projectId,
-      sprintPosition: k,
+      position: k,
     },
   });
   // return NextResponse.json<PostSprintResponse>({ sprint });
@@ -42,7 +42,6 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   const { id: projectId } = parseCookies(req, "project");
-  console.log("reqqqqq", req);
   const where = {
     OR: [{ status: SprintStatus.ACTIVE }, { status: SprintStatus.PENDING }],
     projectId: projectId,
@@ -54,17 +53,17 @@ export async function GET(req: NextRequest) {
   const pos = searchParams.get("position");
   const position = parseInt(pos)
   if (position) {
-    where.sprintPosition = position;
-    console.log('reqqqqq WHERE', where);
+    where.position = position;
   }
 
   const sprints = await prisma.sprint.findMany({
     where,
     orderBy: {
-      sprintPosition: "asc",
+      position: "asc",
     },
   });
 
   // return NextResponse.json<GetSprintsResponse>({ sprints });
   return NextResponse.json({ sprints });
 }
+

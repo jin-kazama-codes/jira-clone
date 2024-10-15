@@ -66,7 +66,7 @@ model Sprint {
   status      SprintStatus @default(PENDING)
   projectId   Int?
   creatorId   Int?
-  sprintPosition Int?       
+  position    Int?       
   issues      Issue[]
 }
 
