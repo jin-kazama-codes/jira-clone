@@ -17,6 +17,7 @@ import { Avatar } from "../avatar";
 import { toast } from "../toast";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
 import { type DefaultUser } from "@prisma/client";
+import { TooltipWrapper } from "../ui/tooltip";
 
 const IssueAssigneeSelect: React.FC<{
   issue: IssueType;
@@ -35,6 +36,16 @@ const IssueAssigneeSelect: React.FC<{
   const [selected, setSelected] = useState<DefaultUser["id"] | null>(
     issue.assignee?.id ?? null
   );
+
+  function getInitials(name: string) {
+    const nameParts = name.split(" ");
+    const initials = nameParts.map((part) => part.charAt(0)).join("");
+    return initials.toUpperCase();
+  }
+  function getColorFromLocalStorage(memberId: string | number) {
+    const savedColorMap = JSON.parse(localStorage.getItem("colorMap")) || {};
+    return savedColorMap[memberId] || "#ccc"; 
+  }
   function handleSelectChange(value: DefaultUser["id"]) {
     if (!isAuthenticated) {
       openAuthModal();
@@ -58,6 +69,7 @@ const IssueAssigneeSelect: React.FC<{
       }
     );
   }
+
   return (
     <Select onValueChange={handleSelectChange}>
       <SelectTrigger
@@ -72,16 +84,22 @@ const IssueAssigneeSelect: React.FC<{
       >
         <SelectValue asChild>
           <Fragment>
-            <Avatar
-              size={avatarSize}
-              src={issue.assignee?.avatar}
-              alt={`${issue.assignee?.name ?? "Unassigned"}`}
-            />
-            {avatarOnly ? null : (
-              <span className="rounded-md bg-opacity-30 px-2 text-sm">
-                {issue.assignee?.name ?? "Unassigned"}
-              </span>
-            )}
+            <TooltipWrapper
+              text={
+                issue.assignee?.name ? issue.assignee?.name : unassigned.name
+              }
+            >
+              <div
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-300"
+                style={{ backgroundColor: issue.assignee?.id ? getColorFromLocalStorage(issue.assignee.id) : getColorFromLocalStorage(unassigned.id) }}
+              >
+                <span className="font-bold text-white">
+                  {issue.assignee?.name
+                    ? getInitials(issue.assignee?.name)
+                    : getInitials(unassigned.name)}
+                </span>
+              </div>
+            </TooltipWrapper>
           </Fragment>
         </SelectValue>
       </SelectTrigger>
@@ -90,26 +108,44 @@ const IssueAssigneeSelect: React.FC<{
           <SelectViewport className="w-full rounded-md border border-gray-300 bg-white pt-2 shadow-md">
             <SelectGroup>
               {members &&
-                [...members, unassigned].map((member) => (
-                  <SelectItem
-                    key={member.id}
-                    value={member.id}
-                    data-state={member.id == selected ? "checked" : "unchecked"}
-                    className={clsx(
-                      "border-l-[3px] border-transparent py-2 pl-2 pr-8 text-sm hover:cursor-default hover:border-blue-600 hover:bg-gray-100 focus:outline-none [&[data-state=checked]]:border-blue-600"
-                    )}
-                  >
-                    <div className="flex items-center">
-                      <Avatar
-                        src={member?.avatar}
-                        alt={`${member?.name ?? "Unassigned"}`}
-                      />
-                      <span className="rounded-md bg-opacity-30 px-2 text-sm">
-                        {member.name}
-                      </span>
-                    </div>
-                  </SelectItem>
-                ))}
+                [...members, unassigned].map((member) => {
+                  const initials = getInitials(member.name);
+                  return (
+                    <SelectItem
+                      key={member.id}
+                      value={member.id}
+                      data-state={
+                        member.id == selected ? "checked" : "unchecked"
+                      }
+                      className={clsx(
+                        "border-l-[3px] border-transparent py-2 pl-2 pr-8 text-sm hover:cursor-default hover:border-blue-600 hover:bg-gray-100 focus:outline-none [&[data-state=checked]]:border-blue-600"
+                      )}
+                    >
+                      <div className="flex items-center">
+                        {member.avatar ? (
+                          <Avatar
+                            src={member.avatar}
+                            alt={`${member.name ?? "Unassigned"}`}
+                          />
+                        ) : (
+                          <TooltipWrapper text={member.name}>
+                            <div
+                              className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-300"
+                              style={{ backgroundColor: member?.id ? getColorFromLocalStorage(member.id) : getColorFromLocalStorage(unassigned.id) }}
+                            >
+                              <span className="font-bold text-white">
+                                {initials}
+                              </span>
+                            </div>
+                          </TooltipWrapper>
+                        )}
+                        <span className="rounded-md bg-opacity-30 px-2 text-sm">
+                          {member.name}
+                        </span>
+                      </div>
+                    </SelectItem>
+                  );
+                })}
             </SelectGroup>
           </SelectViewport>
         </SelectContent>

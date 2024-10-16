@@ -2,15 +2,27 @@ import { useFiltersContext } from "@/context/use-filters-context";
 import { useProject } from "@/hooks/query-hooks/use-project";
 import { Button } from "./ui/button";
 import { Avatar } from "./avatar";
-import { UserModal } from './modals/add-people/index'
+import { UserModal } from "./modals/add-people/index";
 import { AddPeopleIcon } from "./svgs";
 import { useCookie } from "@/hooks/use-cookie";
 import { TooltipWrapper } from "./ui/tooltip";
 
 const colorPalette = [
-  "#4A9D8E", "#6A9AB8", "#8F7BAE", "#D5A8A1", "#C28C86", "#A0C9C4",
-  "#6BB9A6", "#9BBF98", "#8E94C7", "#C18B91", "#7A8F97", "#B19EB1",
-  "#6D9DC5", "#A8C9A6", "#89A9B4"
+  "#4A9D8E",
+  "#6A9AB8",
+  "#8F7BAE",
+  "#D5A8A1",
+  "#C28C86",
+  "#A0C9C4",
+  "#6BB9A6",
+  "#9BBF98",
+  "#8E94C7",
+  "#C18B91",
+  "#7A8F97",
+  "#B19EB1",
+  "#6D9DC5",
+  "#A8C9A6",
+  "#89A9B4",
 ];
 
 const Members = () => {
@@ -22,7 +34,7 @@ const Members = () => {
     avatar: undefined,
     email: "",
   };
-  const user = useCookie('user');
+  const user = useCookie("user");
 
   function handleAssigneeFilter(id: string) {
     setAssignees((prev) => {
@@ -37,8 +49,19 @@ const Members = () => {
     return initials.toUpperCase();
   }
 
-  function getColorForInitial(index: number) {
-    return colorPalette[index % colorPalette.length];
+  function getColorForInitial(memberId: number, index: number) {
+    const savedColorMap = JSON.parse(localStorage.getItem("colorMap")) || {};
+
+    if (savedColorMap[memberId]) {
+      return savedColorMap[memberId];
+    }
+
+    const newColor = colorPalette[index % colorPalette.length];
+
+    const updatedColorMap = { ...savedColorMap, [memberId]: newColor };
+    localStorage.setItem("colorMap", JSON.stringify(updatedColorMap));
+
+    return newColor;
   }
 
   if (!members) return <div />;
@@ -47,7 +70,7 @@ const Members = () => {
     <div className="flex items-center">
       {[...members, unassigned].map((member, index) => {
         const initials = getInitials(member.name);
-        const bgColor = getColorForInitial(index); // Use color palette based on index
+        const bgColor = getColorForInitial(member.id, index); // Use color palette based on index
         return (
           <div
             key={member.id}
@@ -67,12 +90,12 @@ const Members = () => {
                 <Avatar src={member.avatar} alt={`${member.name}`} />
               ) : (
                 <TooltipWrapper text={member.name}>
-                <div
-                  className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-300"
-                  style={{ backgroundColor: bgColor }}
-                >
-                  <span className="text-white font-bold">{initials}</span>
-                </div>
+                  <div
+                    className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-300"
+                    style={{ backgroundColor: bgColor }}
+                  >
+                    <span className="font-bold text-white">{initials}</span>
+                  </div>
                 </TooltipWrapper>
               )}
             </Button>
@@ -81,16 +104,16 @@ const Members = () => {
       })}
 
       {/* <NotImplemented feature="add people"> */}
-      {(user?.role === "admin" ||
-        user?.role === "manager") && (
-          <UserModal>
-            <button>
-              <AddPeopleIcon
-                className="ml-3 rounded-full bg-gray-200 p-1 text-gray-500"
-                size={35}
-              />
-            </button>
-          </UserModal>)}
+      {(user?.role === "admin" || user?.role === "manager") && (
+        <UserModal>
+          <button>
+            <AddPeopleIcon
+              className="ml-3 rounded-full bg-gray-200 p-1 text-gray-500"
+              size={35}
+            />
+          </button>
+        </UserModal>
+      )}
       {/* </NotImplemented> */}
     </div>
   );
