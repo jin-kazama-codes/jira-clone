@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useIssues } from "@/hooks/query-hooks/use-issues";
 import { type IssueType } from "@/utils/types";
 import { type MenuOptionType } from "@/utils/types";
@@ -20,6 +20,8 @@ import {
   ContextPortal,
 } from "@/components/ui/context-menu";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
+import { useSprints } from "@/hooks/query-hooks/use-sprints";
+import { string } from "zod";
 
 type MenuOptionsType = {
   actions: MenuOptionType[];
@@ -41,7 +43,16 @@ const IssueDropdownMenu: React.FC<{
   issue: IssueType;
 }> = ({ children, issue }) => {
   const { deleteIssue, updateIssue } = useIssues();
+  const { sprints } = useSprints();
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
+  let backlogObj;
+  if (issue.sprintId) {
+    backlogObj = {
+      id: "backlog",
+      name: "Backlog",
+      key: "backlog",
+    };
+  }
 
   const handleIssueAction = (
     id: MenuOptionType["id"],
@@ -57,10 +68,24 @@ const IssueDropdownMenu: React.FC<{
       deleteIssue({ issueId: issue.id });
     }
     if (id == "move-to") {
-      updateIssue({
-        issueId: issue.id,
-        sprintId,
-      });
+      const storedIssues = JSON.parse(
+        localStorage.getItem("Selected Issue") || "[]"
+      );
+      if (storedIssues.length) {
+        storedIssues?.forEach((id: string) => {
+          updateIssue({
+            issueId: id,
+            sprintId,
+          });
+        });
+      } else {
+        // when only a single issue is moved to another sprint
+        updateIssue({
+          issueId: issue.id,
+          sprintId,
+        });
+      }
+      localStorage.removeItem("Selected Issue");
     }
   };
   return (
@@ -91,30 +116,30 @@ const IssueDropdownMenu: React.FC<{
             ))}
           </DropdownGroup>
           {/* TODO: Implement "move to" actions */}
-          {/* <DropdownLabel className="p-2 text-xs font-normal text-gray-400">
+          <DropdownLabel className="p-2 text-xs font-normal text-gray-400">
             MOVE TO
           </DropdownLabel>
           <DropdownGroup>
             {[
-              ...(sprints ?? []),
-              {
-                id: "backlog",
-                name: "Backlog",
-                key: "backlog",
-              },
-            ].map((sprint) => (
-              <DropdownItem
-                onClick={(e) => handleIssueAction("move-to", e, sprint.key)}
-                key={sprint.id}
-                textValue={sprint.name}
-                className={clsx(
-                  "border-transparent p-2 text-sm hover:cursor-default hover:bg-gray-100"
-                )}
-              >
-                <span className={clsx("pr-2 text-sm")}>{sprint.name}</span>
-              </DropdownItem>
-            ))}
-          </DropdownGroup> */}
+              ...(sprints?.filter((sprint) => sprint.id !== issue.sprintId) ??
+                []),
+              backlogObj,
+            ].map((sprint) => {
+              if (!sprint?.id) return;
+              return (
+                <DropdownItem
+                  onClick={(e) => handleIssueAction("move-to", e, sprint.id)}
+                  key={sprint.id}
+                  textValue={sprint.name}
+                  className={clsx(
+                    "border-transparent p-2 text-sm hover:cursor-default hover:bg-gray-100"
+                  )}
+                >
+                  <span className={clsx("pr-2 text-sm")}>{sprint.name}</span>
+                </DropdownItem>
+              );
+            })}
+          </DropdownGroup>
         </DropdownContent>
       </DropdownPortal>
     </Dropdown>

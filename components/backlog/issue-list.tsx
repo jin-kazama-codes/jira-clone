@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useIssues } from "@/hooks/query-hooks/use-issues";
 import { Droppable } from "react-beautiful-dnd";
 import { AccordionContent } from "../ui/accordion";
@@ -19,12 +19,16 @@ const IssueList: React.FC<{ sprintId: string | null; issues: IssueType[] }> = ({
   const { createIssue, isCreating } = useIssues();
   const [isEditing, setIsEditing] = useState(false);
   const [droppableEnabled] = useStrictModeDroppable();
+  const [checkedIssue, setCheckedIssue] = useState<string[]>([]);
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
 
-  if (!droppableEnabled) {
-    return null;
-  }
+  // Clear localStorage and set checkedIssue on mount
+  useEffect(() => {
+    localStorage.removeItem("Selected Issue");
+    setCheckedIssue([]);
+  }, []);
 
+  // Function to handle issue creation
   function handleCreateIssue({
     name,
     type,
@@ -57,6 +61,39 @@ const IssueList: React.FC<{ sprintId: string | null; issues: IssueType[] }> = ({
     );
   }
 
+  // Handle checking issues
+  const handleCheck = (issueId: string) => {
+    setCheckedIssue((prevCheckedIssue) => {
+      const updatedCheckedIssue = prevCheckedIssue.includes(issueId)
+        ? prevCheckedIssue.filter((id) => id !== issueId)
+        : [...prevCheckedIssue, issueId];
+
+      let storageIssues: string[] = JSON.parse(
+        localStorage.getItem("Selected Issue") || "[]"
+      );
+
+      // Update local storage on check/uncheck of issue
+      if (updatedCheckedIssue.includes(issueId)) {
+        if (!storageIssues.includes(issueId)) {
+          storageIssues.push(issueId);
+        }
+      } else {
+        // on uncheck
+        const index = storageIssues.indexOf(issueId);
+        if (index > -1) {
+          storageIssues.splice(index, 1);
+        }
+      }
+
+      localStorage.setItem("Selected Issue", JSON.stringify(storageIssues));
+
+      return updatedCheckedIssue;
+    });
+  };
+
+  if (!droppableEnabled) {
+    return null;
+  }
 
   return (
     <AccordionContent className="pt-2">
@@ -65,18 +102,24 @@ const IssueList: React.FC<{ sprintId: string | null; issues: IssueType[] }> = ({
           <div
             {...droppableProps}
             ref={innerRef}
-            className={clsx(issues.length == 0 && "min-h-[1px]")}
+            className={clsx(issues.length === 0 && "min-h-[1px]")}
           >
             <div
               className={clsx(
                 issues.length &&
-                "flex flex-col gap-1 divide-y rounded-xl bg-white"
+                  "flex flex-col gap-1 divide-y rounded-xl bg-white"
               )}
             >
               {issues
                 .sort((a, b) => a.sprintPosition - b.sprintPosition)
                 .map((issue, index) => (
-                  <Issue key={issue.id} index={index} issue={issue} />
+                  <Issue
+                    onChecked={checkedIssue.includes(issue.id)}
+                    onHandleCheck={() => handleCheck(issue.id)}
+                    key={issue.id}
+                    index={index}
+                    issue={issue}
+                  />
                 ))}
             </div>
             {placeholder}
