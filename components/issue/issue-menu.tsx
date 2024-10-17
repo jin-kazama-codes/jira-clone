@@ -46,9 +46,10 @@ const IssueDropdownMenu: React.FC<{
   const { sprints } = useSprints();
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
   let backlogObj;
+
   if (issue.sprintId) {
     backlogObj = {
-      id: "backlog",
+      id: null,
       name: "Backlog",
       key: "backlog",
     };
@@ -123,9 +124,10 @@ const IssueDropdownMenu: React.FC<{
             {[
               ...(sprints?.filter((sprint) => sprint.id !== issue.sprintId) ??
                 []),
-              backlogObj,
-            ].map((sprint) => {
-              if (!sprint?.id) return;
+                backlogObj && issue.sprintId !== null ? backlogObj : null,
+              ]
+                .filter(Boolean).map((sprint) => {
+              // if (!sprint?.id) return;
               return (
                 <DropdownItem
                   onClick={(e) => handleIssueAction("move-to", e, sprint.id)}
