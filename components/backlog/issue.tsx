@@ -39,12 +39,17 @@ const getIssueKeyColorClass = (type: String) => {
 const Issue: React.FC<{
   issue: IssueType;
   index: number;
-}> = ({ index, issue }) => {
+  onChecked: boolean;
+  onHandleCheck: () => void;
+}> = ({ index, issue, onHandleCheck, onChecked }) => {
   const [isEditing, setIsEditing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const { setIssueKey, issueKey } = useSelectedIssueContext();
   const issueKeyColorClass = getIssueKeyColorClass(issue.type);
-  const user = useCookie('user');
+  const user = useCookie("user");
+
+  
+
 
   return (
     <Draggable draggableId={issue.id} index={index}>
@@ -57,25 +62,39 @@ const Issue: React.FC<{
           {...draggableProps}
           {...dragHandleProps}
           className={clsx(
-            isDragging
-              ? "border-[0.3px] border-gray-300 rounded-xl bg-gray-100"
-              : "bg-slate-50 border-[0.3px] border-slate-200",
-            "group flex w-full max-w-full items-center rounded-xl justify-between   px-3 py-1.5 text-sm hover:bg-gray-300 [&[data-state=selected]]:bg-gray-300"
+            onChecked
+            ? "bg-gray-200"
+            : isDragging
+              ? "rounded-xl border-[0.3px] border-gray-300 bg-gray-100"
+              : "border-[0.3px] border-slate-200 bg-slate-50",
+            "group flex w-full max-w-full items-center justify-between rounded-xl   px-3 py-1.5 text-sm hover:bg-gray-300 [&[data-state=selected]]:bg-gray-300"
           )}
           style={{
             borderBottomWidth: "0.3px", // Ensuring the bottom border is visible
-            borderBottomColor: isDragging ? "rgb(209 213 219)" : "rgb(226 232 240)", // Color matches the side borders
+            borderBottomColor: isDragging
+              ? "rgb(209 213 219)"
+              : "rgb(226 232 240)", // Color matches the side borders
           }}
         >
+          <input
+            type="checkbox"
+            checked={onChecked}
+            onClick={(e) => e.stopPropagation()} // Prevent parent click event from triggering
+            onChange={(e) => {
+              e.stopPropagation(); // Prevent click event from propagating on checkbox change
+              onHandleCheck();
+            }}
+            className="form-checkbox mr-3 h-3 w-3 rounded-sm"
+          />
           <div
             data-state={isEditing ? "editing" : "not-editing"}
-            className="flex w-fit rounded-xl items-center gap-x-2 [&[data-state=editing]]:w-full [&[data-state=not-editing]]:overflow-x-hidden"
+            className="flex w-fit items-center gap-x-2 rounded-xl [&[data-state=editing]]:w-full [&[data-state=not-editing]]:overflow-x-hidden"
           >
             <IssueIcon issueType={issue.type} />
             <div
               data-state={issue.status}
               className={clsx(
-                "whitespace-nowrap text-white px-2 py-0.5 rounded-xl",
+                "whitespace-nowrap rounded-xl px-2 py-0.5 text-white",
                 issueKeyColorClass
               )}
             >
@@ -121,19 +140,19 @@ const Issue: React.FC<{
               issueId={issue.id}
             />
             <IssueAssigneeSelect issue={issue} avatarOnly />
-            {(user?.role === "admin" ||
-              user?.role === "manager") &&
-              <IssueDropdownMenu issue={issue}>
+            {(user?.role === "admin" || user?.role === "manager") && (
+              <IssueDropdownMenu  issue={issue}>
                 <DropdownTrigger
+                  
                   asChild
                   className=" flex items-center gap-x-2 bg-opacity-30 px-1.5 text-xs font-semibold  "
                 >
-                  <div className="invisible !rounded-full px-1.5 py-1.5 !bg-gray-300 group-hover:visible group-hover:bg-gray-300 group-hover:hover:bg-gray-300 [&[data-state=open]]:visible [&[data-state=open]]:bg-gray-300">
-                    <BsThreeDots className="sm:text-xl text-black" />
+                  <div  className="invisible !rounded-full !bg-gray-300 px-1.5 py-1.5 group-hover:visible group-hover:bg-gray-300 group-hover:hover:bg-gray-300 [&[data-state=open]]:visible [&[data-state=open]]:bg-gray-300">
+                    <BsThreeDots  className="text-black sm:text-xl" />
                   </div>
                 </DropdownTrigger>
               </IssueDropdownMenu>
-            }
+            )}
           </div>
         </div>
       )}
