@@ -8,7 +8,7 @@ import {
 } from "../prisma/seed-data";
 import { prisma } from "./db";
 import { SprintStatus } from "@prisma/client";
-import { parseCookies, parsePageCookies } from "@/utils/cookies";
+import { parsePageCookies } from "@/utils/cookies";
 
 export async function getInitialIssuesFromServer() {
   const PROJECT = parsePageCookies("project");
