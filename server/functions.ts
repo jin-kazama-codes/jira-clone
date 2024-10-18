@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { generateIssuesForClient } from "@/utils/helpers";
 
 import {
@@ -51,13 +52,8 @@ export async function getInitialIssuesFromServer() {
   return issues;
 }
 
-export async function getInitialProjectFromServer() {
-  const PROJECT = parsePageCookies("project");
-  // const project = await prisma.project.findUnique({
-  //   where: { key: PROJECT.key },
-  // });
-  // set projectId in clone tobedone
-  return PROJECT;
+export function getInitialProjectFromServer() {
+  return parsePageCookies("project");
 }
 
 export async function getInitialSprintsFromServer() {

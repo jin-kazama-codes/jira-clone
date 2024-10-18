@@ -25,9 +25,9 @@ import {
 import { IssueList } from "./issue-list";
 import { IssueDetailsModal } from "../modals/board-issue-details";
 import { useSprints } from "@/hooks/query-hooks/use-sprints";
-import { useProject } from "@/hooks/query-hooks/use-project";
 import { useFiltersContext } from "@/context/use-filters-context";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
+import { useCookie } from "@/hooks/use-cookie";
 
 const STATUSES: IssueStatus[] = ["TODO", "IN_PROGRESS", "DONE"];
 
@@ -36,7 +36,8 @@ const Board: React.FC = () => {
 
   const { issues } = useIssues();
   const { sprints } = useSprints();
-  const { project } = useProject();
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const project = useCookie("project");
   const {
     search,
     assignees,
@@ -48,8 +49,6 @@ const Board: React.FC = () => {
   const activeSprint = sprints.find((sprint) => sprint.status === "ACTIVE");
 
   const activeSprintId = activeSprint ? activeSprint.id : null;
-
-  console.log("SPRINT", activeSprintId)
 
   const filterIssues = useCallback(
     (issues: IssueType[] | undefined, status: IssueStatus) => {
@@ -81,7 +80,6 @@ const Board: React.FC = () => {
   const { updateIssue } = useIssues();
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
   const [showChild, setShowChild] = useState(true)
-  console.log("filteredIssues");
   useLayoutEffect(() => {
     if (!renderContainerRef.current) return;
     const calculatedHeight = renderContainerRef.current.offsetTop + 20;

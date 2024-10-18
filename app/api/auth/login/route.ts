@@ -34,8 +34,6 @@ export async function PATCH(request: Request) {
   try {
     const { projectId, name, cloneChild } = await request.json();
 
-    console.log("Request Data:", { projectId, name, cloneChild });
-
     // Ensure that projectId, name, and cloneChild are provided
     if (!projectId || !name || typeof cloneChild !== "boolean") {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });

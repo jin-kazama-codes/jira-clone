@@ -68,7 +68,6 @@ export async function POST(
   const body = await req.json();
 
   const validated = postCommentBodyValidator.safeParse(body);
-  console.log('validated', validated);
 
   if (!validated.success) {
     const message =
@@ -77,8 +76,6 @@ export async function POST(
   }
 
   const { data: valid } = validated;
-
-  console.log('valid', valid);
 
   const comment = await prisma.comment.create({
     data: {

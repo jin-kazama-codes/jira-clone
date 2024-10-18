@@ -16,7 +16,10 @@ export const useIssues = () => {
     ["issues"],
     ({ signal }) => api.issues.getIssues({ signal }),
     {
-      refetchOnMount: false,
+      enabled: true, // Only fetch if project ID is present
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      cacheTime: 10 * 60 * 1000, // Cache for 10 minutes
+      retry: 1, // Retry only once if the query fails
     }
   );
 

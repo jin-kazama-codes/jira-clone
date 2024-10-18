@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 
 interface UserModalProps {
   children: ReactNode;
+  refetch: Function;
 }
 
 interface User {
@@ -21,7 +22,7 @@ interface User {
   email: string;
 }
 
-const UserModal: React.FC<UserModalProps> = ({ children }) => {
+const UserModal: React.FC<UserModalProps> = ({ children, refetch }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -85,7 +86,7 @@ const UserModal: React.FC<UserModalProps> = ({ children }) => {
 
       if (response.ok) {
         const result = await response.json();
-        console.log("User added:", result.user);
+        refetch(); // Manually trigger refetch to get the latest members list
 
         setIsOpen(false);
         setName("");

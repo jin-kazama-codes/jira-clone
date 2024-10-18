@@ -222,7 +222,6 @@ export async function POST(req: NextRequest) {
 
   // create child issues by default
   if (cloneChild && issue?.parentId === null) {
-    console.log("INSIDE CLONE CHILD");
     await createChildIssues(
       KEY,
       k,

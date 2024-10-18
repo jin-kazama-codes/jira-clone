@@ -9,7 +9,7 @@ import {
   SelectViewport,
 } from "@/components/ui/select";
 import clsx from "clsx";
-import { useProject } from "@/hooks/query-hooks/use-project";
+import { useMembers } from "@/hooks/query-hooks/use-members";
 import { type IssueType } from "@/utils/types";
 import { Fragment, useState } from "react";
 import { useIssues } from "@/hooks/query-hooks/use-issues";
@@ -24,7 +24,7 @@ const IssueAssigneeSelect: React.FC<{
   avatarSize?: number;
   avatarOnly?: boolean;
 }> = ({ issue, avatarSize, avatarOnly = false }) => {
-  const { members } = useProject();
+  const { members } = useMembers();
   const { updateIssue, isUpdating } = useIssues();
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
   const unassigned = {

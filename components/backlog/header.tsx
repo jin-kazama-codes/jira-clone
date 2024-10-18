@@ -7,9 +7,6 @@ import { IssueTypeFilter } from "@/components/filter-issue-type";
 import { SearchBar } from "@/components/filter-search-bar";
 import { Members } from "../members";
 import { ClearFilters } from "../filter-issue-clear";
-import { NotImplemented } from "../not-implemented";
-import { Button } from "../ui/button";
-import { BiLineChart } from "react-icons/bi";
 
 const BacklogHeader: React.FC<{ project: Project }> = ({ project }) => {
   const { search, setSearch } = useFiltersContext();
@@ -21,16 +18,10 @@ const BacklogHeader: React.FC<{ project: Project }> = ({ project }) => {
         <div className="flex items-center gap-x-5">
           <SearchBar search={search} setSearch={setSearch} placeholder={'Search Backlog'}/>
           <Members />
-          <EpicFilter />
+          {/* <EpicFilter /> */}
           <IssueTypeFilter />
           <ClearFilters />
         </div>
-        {/* <NotImplemented feature="insights">
-          <Button className="flex items-center gap-x-2 !bg-black !text-white rounded-xl px-4 hover:!bg-slate-800">
-            <BiLineChart className="text-white" />
-            <span className="text-sm text-white">Insights</span>
-          </Button>
-        </NotImplemented> */}
       </div>
     </div>
   );
