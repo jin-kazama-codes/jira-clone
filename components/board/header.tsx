@@ -8,10 +8,12 @@ import { SearchBar } from "@/components/filter-search-bar";
 import { Members } from "../members";
 import { ClearFilters } from "../filter-issue-clear";
 import { SprintFilter } from "../filter-sprint";
-import { IssueTypeGroupBy } from "../filter-issue-groupby";
 
-
-const BoardHeader: React.FC<{ project: Project }> = ({ project }) => {
+const BoardHeader: React.FC<{ project: Project }> = ({
+  project,
+  setChild,
+  showChild,
+}) => {
   const { search, setSearch } = useFiltersContext();
   return (
     <div className="flex h-fit flex-col">
@@ -19,12 +21,28 @@ const BoardHeader: React.FC<{ project: Project }> = ({ project }) => {
       <h1>Active sprints </h1>
       <div className="my-3 flex items-center justify-between">
         <div className="flex items-center gap-x-5">
-          <SearchBar search={search} setSearch={setSearch} placeholder="Search Board"/>
+          <SearchBar
+            search={search}
+            setSearch={setSearch}
+            placeholder="Search Board"
+          />
           <Members />
           <EpicFilter />
           <IssueTypeFilter />
           <SprintFilter />
           <ClearFilters />
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              checked={showChild}
+              onChange={() => {
+                setChild(!showChild);
+              }}
+              name="showChild"
+              className="form-checkbox mr-3 h-3 w-3 rounded-sm"
+            />
+            Show child issues
+          </label>
           {/* <IssueTypeGroupBy /> */}
         </div>
         {/* <NotImplemented feature="insights">
