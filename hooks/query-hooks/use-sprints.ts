@@ -10,11 +10,14 @@ export const useSprints = () => {
   const queryClient = useQueryClient();
 
   // GET
-  const { data: sprints, isLoading: sprintsLoading } = useQuery(
+  const { data: sprints, isLoading: sprintsLoading, refetch } = useQuery(
     ["sprints"],
     api.sprints.getSprints,
     {
-      refetchOnMount: false,
+      enabled: true, // Only fetch if project ID is present
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      cacheTime: 10 * 60 * 1000, // Cache for 10 minutes
+      retry: 1, // Retry only once if the query fails
     }
   );
 
@@ -73,7 +76,6 @@ export const useSprints = () => {
     {
       // NO OPTIMISTIC UPDATE BECAUSE WE DON'T KNOW THE KEY OF THE NEW SPRINT
       onError: (err: AxiosError) => {
-        console.log('err', err);
         // If the mutation fails, use the context returned from onMutate to roll back
         if (err?.response?.data == "Too many requests") {
           toast.error(TOO_MANY_REQUESTS);
@@ -85,7 +87,6 @@ export const useSprints = () => {
         });
       },
       onSettled: () => {
-        console.log('settled');
         // Always refetch after error or success
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         queryClient.invalidateQueries(["sprints"]);
@@ -132,6 +133,7 @@ export const useSprints = () => {
 
   return {
     sprints,
+    refetch,
     sprintsLoading,
     updateSprint,
     isUpdating,

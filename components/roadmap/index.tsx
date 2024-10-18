@@ -3,17 +3,18 @@ import React, { Fragment, useLayoutEffect, useRef } from "react";
 import { useSelectedIssueContext } from "@/context/use-selected-issue-context";
 import "@/styles/split.css";
 import { RoadmapHeader } from "./header";
-import { useProject } from "@/hooks/query-hooks/use-project";
 import Split from "react-split";
 import { IssueDetails } from "../issue/issue-details";
 import { notFound } from "next/navigation";
 import { EpicsTable } from "./epics-table";
+import { useCookie } from "@/hooks/use-cookie";
 
 const Roadmap: React.FC = () => {
   const { issueKey, setIssueKey } = useSelectedIssueContext();
   const renderContainerRef = useRef<HTMLDivElement>(null);
 
-  const { project } = useProject();
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const project = useCookie("project");
 
   useLayoutEffect(() => {
     if (!renderContainerRef.current) return;

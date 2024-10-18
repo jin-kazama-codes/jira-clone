@@ -83,7 +83,6 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
     // After all files are uploaded, update the state with the file URLs
     if (fileURLs.length > 0) {
       setImageUrl(fileURLs);
-      console.log("Uploaded file URLs:", fileURLs);
     } else {
       console.error("No file URLs returned.");
     }

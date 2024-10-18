@@ -9,7 +9,7 @@ import {
 } from "./ui/navigation-menu";
 import { usePathname } from "next/navigation";
 import { FaChessPawn, FaChevronRight } from "react-icons/fa";
-import { useProject } from "@/hooks/query-hooks/use-project";
+import { useCookie } from "@/hooks/use-cookie";
 
 type NavItemType = {
   id: string;
@@ -19,7 +19,8 @@ type NavItemType = {
 };
 
 const Sidebar: React.FC = () => {
-  const { project } = useProject();
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const project = useCookie("project");
   const planningItems = [
     {
       id: "roadmap",
@@ -57,7 +58,7 @@ const Sidebar: React.FC = () => {
         </div>
         <div>
           <h2 className="-mb-[0.5px] text-md font-semibold text-gray-600">
-            {project?.name ?? "Project Name"}
+            {project?.name}
           </h2>
           <p className="text-xs text-gray-500">Task Management App</p>
         </div>

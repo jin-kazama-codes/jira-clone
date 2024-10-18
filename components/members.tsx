@@ -1,5 +1,5 @@
 import { useFiltersContext } from "@/context/use-filters-context";
-import { useProject } from "@/hooks/query-hooks/use-project";
+import { useMembers } from "@/hooks/query-hooks/use-members";
 import { Button } from "./ui/button";
 import { Avatar } from "./avatar";
 import { UserModal } from "./modals/add-people/index";
@@ -26,7 +26,7 @@ const colorPalette = [
 ];
 
 const Members = () => {
-  const { members } = useProject();
+  const { members, refetch } = useMembers();
   const { assignees, setAssignees } = useFiltersContext();
   const unassigned = {
     id: "unassigned",
@@ -105,7 +105,7 @@ const Members = () => {
 
       {/* <NotImplemented feature="add people"> */}
       {(user?.role === "admin" || user?.role === "manager") && (
-        <UserModal>
+        <UserModal refetch={refetch}>
           <button>
             <AddPeopleIcon
               className="ml-3 rounded-full bg-gray-200 p-1 text-gray-500"
