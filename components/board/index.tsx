@@ -1,5 +1,5 @@
 "use client";
-import React, { Fragment, useCallback, useLayoutEffect, useRef } from "react";
+import React, { Fragment, useCallback, useLayoutEffect, useRef, useState } from "react";
 import { type IssueStatus } from "@prisma/client";
 import "@/styles/split.css";
 import { BoardHeader } from "./header";
@@ -49,6 +49,8 @@ const Board: React.FC = () => {
 
   const activeSprintId = activeSprint ? activeSprint.id : null;
 
+  console.log("SPRINT", activeSprintId)
+
   const filterIssues = useCallback(
     (issues: IssueType[] | undefined, status: IssueStatus) => {
       if (!issues) return [];
@@ -78,7 +80,7 @@ const Board: React.FC = () => {
 
   const { updateIssue } = useIssues();
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
-
+  const [showChild, setShowChild] = useState(true)
   console.log("filteredIssues");
   useLayoutEffect(() => {
     if (!renderContainerRef.current) return;
@@ -113,7 +115,7 @@ const Board: React.FC = () => {
   return (
     <Fragment>
       <IssueDetailsModal />
-      <BoardHeader project={project} />
+      <BoardHeader showChild={showChild} setChild={setShowChild} project={project} />
       <DragDropContext onDragEnd={onDragEnd}>
         <div
           ref={renderContainerRef}
@@ -125,6 +127,7 @@ const Board: React.FC = () => {
               key={status}
               status={status}
               issues={filterIssues(issues, status)}
+              showChild={showChild}
             />
           ))}
         </div>

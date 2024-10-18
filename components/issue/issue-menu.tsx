@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/context-menu";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
 import { useSprints } from "@/hooks/query-hooks/use-sprints";
-import { string } from "zod";
 
 type MenuOptionsType = {
   actions: MenuOptionType[];
@@ -45,6 +44,7 @@ const IssueDropdownMenu: React.FC<{
   const { deleteIssue, updateIssue } = useIssues();
   const { sprints } = useSprints();
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
+  const [currentPath, setCurrentPath] = useState<string | undefined>(undefined);
   let backlogObj;
 
   if (issue.sprintId) {
@@ -54,6 +54,14 @@ const IssueDropdownMenu: React.FC<{
       key: "backlog",
     };
   }
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setCurrentPath(window.location.pathname);
+    }
+  }, []);
+
+  const isBacklogPage = currentPath === "/project/backlog";
 
   const handleIssueAction = (
     id: MenuOptionType["id"],
@@ -89,6 +97,7 @@ const IssueDropdownMenu: React.FC<{
       localStorage.removeItem("Selected Issue");
     }
   };
+
   return (
     <Dropdown>
       {children}
@@ -117,31 +126,41 @@ const IssueDropdownMenu: React.FC<{
             ))}
           </DropdownGroup>
           {/* TODO: Implement "move to" actions */}
-          <DropdownLabel className="p-2 text-xs font-normal text-gray-400">
-            MOVE TO
-          </DropdownLabel>
-          <DropdownGroup>
-            {[
-              ...(sprints?.filter((sprint) => sprint.id !== issue.sprintId) ??
-                []),
-                backlogObj && issue.sprintId !== null ? backlogObj : null,
-              ]
-                .filter(Boolean).map((sprint) => {
-              // if (!sprint?.id) return;
-              return (
-                <DropdownItem
-                  onClick={(e) => handleIssueAction("move-to", e, sprint.id)}
-                  key={sprint.id}
-                  textValue={sprint.name}
-                  className={clsx(
-                    "border-transparent p-2 text-sm hover:cursor-default hover:bg-gray-100"
-                  )}
-                >
-                  <span className={clsx("pr-2 text-sm")}>{sprint.name}</span>
-                </DropdownItem>
-              );
-            })}
-          </DropdownGroup>
+          {isBacklogPage && (
+            <>
+              <DropdownLabel className="p-2 text-xs font-normal text-gray-400">
+                MOVE TO
+              </DropdownLabel>
+              <DropdownGroup>
+                {[
+                  ...(sprints?.filter(
+                    (sprint) => sprint.id !== issue.sprintId
+                  ) ?? []),
+                  backlogObj && issue.sprintId !== null ? backlogObj : null,
+                ]
+                  .filter(Boolean)
+                  .map((sprint) => {
+                    // if (!sprint?.id) return;
+                    return (
+                      <DropdownItem
+                        onClick={(e) =>
+                          handleIssueAction("move-to", e, sprint.id)
+                        }
+                        key={sprint.id}
+                        textValue={sprint.name}
+                        className={clsx(
+                          "border-transparent p-2 text-sm hover:cursor-default hover:bg-gray-100"
+                        )}
+                      >
+                        <span className={clsx("pr-2 text-sm")}>
+                          {sprint.name}
+                        </span>
+                      </DropdownItem>
+                    );
+                  })}
+              </DropdownGroup>
+            </>
+          )}
         </DropdownContent>
       </DropdownPortal>
     </Dropdown>
