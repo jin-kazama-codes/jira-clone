@@ -24,14 +24,12 @@ const TopNavbar: React.FC = () => {
   }
 
   const filterAssignee = () => {
-    console.log('test filter assignee', user.id);
     setAssignees((prev) => {
       return [user.id];
     });
   }
 
   const ClearfilterAssignee = () => {
-    console.log('test filter assignee', user.id);
     setAssignees((prev) => {
       return [];
     });

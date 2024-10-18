@@ -17,15 +17,9 @@ const BoardPage = async () => {
   const queryClient = getQueryClient();
 
   await Promise.all([
+    await queryClient.prefetchQuery(["issues"], getInitialIssuesFromServer),
+    await queryClient.prefetchQuery(["sprints"], getInitialSprintsFromServer),
     await queryClient.prefetchQuery(["project"], getInitialProjectFromServer),
-    await queryClient.prefetchQuery(["issues"], async () => {
-      const { id: projectId } = await queryClient.getQueryData(["project"]);
-      return getInitialIssuesFromServer(projectId);
-    }),
-    await queryClient.prefetchQuery(["sprints"], async () => {
-      const { id: projectId } = await queryClient.getQueryData(["project"]);
-      return getInitialSprintsFromServer(projectId);
-    }),
   ]);
 
   const dehydratedState = dehydrate(queryClient);

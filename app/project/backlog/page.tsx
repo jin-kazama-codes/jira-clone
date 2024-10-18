@@ -17,12 +17,10 @@ const BacklogPage = async () => {
   const queryClient = getQueryClient();
 
   await Promise.all([
-    await queryClient.prefetchQuery(["issues"], () =>
-      getInitialIssuesFromServer()
-    ),
-    await queryClient.prefetchQuery(["sprints"], () =>
-      getInitialSprintsFromServer()
-    ),
+    await queryClient.prefetchQuery(["issues"], getInitialIssuesFromServer),
+
+    await queryClient.prefetchQuery(["sprints"], getInitialSprintsFromServer),
+
     await queryClient.prefetchQuery(["project"], getInitialProjectFromServer),
   ]);
 

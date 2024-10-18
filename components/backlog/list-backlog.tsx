@@ -46,7 +46,6 @@ const BacklogListHeader: React.FC<{ issues: IssueType[] }> = ({ issues }) => {
   const user = useCookie('user');
 
   function handleCreateSprint() {
-    console.log('isAuthenticated', isAuthenticated);
     if (!isAuthenticated) {
       openAuthModal();
       return;

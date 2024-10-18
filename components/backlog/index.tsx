@@ -4,13 +4,14 @@ import Split from "react-split";
 import { ListGroup } from "./list-group";
 import { IssueDetails } from "../issue/issue-details";
 import { useSelectedIssueContext } from "@/context/use-selected-issue-context";
-import "@/styles/split.css";
 import clsx from "clsx";
 import { BacklogHeader } from "./header";
-import { useProject } from "@/hooks/query-hooks/use-project";
+import { useCookie } from "@/hooks/use-cookie";
+import "@/styles/split.css";
 
 const Backlog: React.FC = () => {
-  const { project } = useProject();
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const project = useCookie("project");
   const { issueKey, setIssueKey } = useSelectedIssueContext();
   const renderContainerRef = React.useRef<HTMLDivElement>(null);
 
@@ -21,7 +22,6 @@ const Backlog: React.FC = () => {
   }, []);
 
   if (!project) return null;
-
   return (
     <Fragment>
       <BacklogHeader project={project} />
