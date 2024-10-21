@@ -1,5 +1,11 @@
 "use client";
-import React, { Fragment, useCallback, useLayoutEffect, useRef, useState } from "react";
+import React, {
+  Fragment,
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { type IssueStatus } from "@prisma/client";
 import "@/styles/split.css";
 import { BoardHeader } from "./header";
@@ -13,6 +19,8 @@ import { type IssueType } from "@/utils/types";
 import {
   assigneeNotInFilters,
   epicNotInFilters,
+  getPluralEnd,
+  hasChildren,
   insertItemIntoArray,
   isEpic,
   isNullish,
@@ -28,6 +36,10 @@ import { useSprints } from "@/hooks/query-hooks/use-sprints";
 import { useFiltersContext } from "@/context/use-filters-context";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
 import { useCookie } from "@/hooks/use-cookie";
+import { statusMap } from "../issue/issue-select-status";
+import clsx from "clsx";
+import { IssueIcon } from "../issue/issue-icon";
+import { useSelectedIssueContext } from "@/context/use-selected-issue-context";
 
 const STATUSES: IssueStatus[] = ["TODO", "IN_PROGRESS", "DONE"];
 
@@ -51,15 +63,14 @@ const Board: React.FC = () => {
   const activeSprintId = activeSprint ? activeSprint.id : null;
 
   const filterIssues = useCallback(
-    (issues: IssueType[] | undefined, status: IssueStatus) => {
+    (issues: IssueType[] | undefined, status: IssueStatus | null = null) => {
       if (!issues) return [];
-      const filteredIssues = issues.filter((issue) => {
-        if (
-          issue.status === status &&
-          issue.sprintIsActive &&
-          !isEpic(issue) &&
-          !isSubtask(issue)
-        ) {
+      let filteredWithStatus = issues;
+      if (status) {
+        filteredWithStatus = issues.filter((issue) => issue.status === status);
+      }
+      const filteredIssues = filteredWithStatus.filter((issue) => {
+        if (issue.sprintIsActive && !isEpic(issue) && !isSubtask(issue)) {
           if (issueNotInSearch({ issue, search })) return false;
           if (assigneeNotInFilters({ issue, assignees })) return false;
           if (epicNotInFilters({ issue, epics })) return false;
@@ -79,7 +90,7 @@ const Board: React.FC = () => {
 
   const { updateIssue } = useIssues();
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
-  const [showChild, setShowChild] = useState(true)
+  const [showChild, setShowChild] = useState(false);
   useLayoutEffect(() => {
     if (!renderContainerRef.current) return;
     const calculatedHeight = renderContainerRef.current.offsetTop + 20;
@@ -90,19 +101,20 @@ const Board: React.FC = () => {
     return null;
   }
 
-  const onDragEnd = (result: DropResult) => {
+  const onDragEnd = (result: DropResult, childIssues = []) => {
     if (!isAuthenticated) {
       openAuthModal();
       return;
     }
     const { destination, source } = result;
     if (isNullish(destination) || isNullish(source)) return;
-
     updateIssue({
       issueId: result.draggableId,
       status: destination.droppableId as IssueStatus,
       boardPosition: calculateIssueBoardPosition({
-        activeIssues: issues.filter((issue) => issue.sprintIsActive),
+        activeIssues: showChild
+          ? childIssues
+          : issues.filter((issue) => issue.sprintIsActive),
         destination,
         source,
         droppedIssueId: result.draggableId,
@@ -110,26 +122,127 @@ const Board: React.FC = () => {
     });
   };
 
+  const { setIssueKey } = useSelectedIssueContext();
+
+  const child = issues
+  .filter((issue) => issue.sprintIsActive && issue.children && issue.children.length > 0)
+  .flatMap((issue) => issue.children)
+
+
   return (
     <Fragment>
       <IssueDetailsModal />
-      <BoardHeader showChild={showChild} setChild={setShowChild} project={project} />
-      <DragDropContext onDragEnd={onDragEnd}>
-        <div
-          ref={renderContainerRef}
-          className="relative flex w-full max-w-full gap-x-4 overflow-y-auto"
-        >
-          {STATUSES.map((status) => (
-            <IssueList
-              sprintId={activeSprintId}
-              key={status}
-              status={status}
-              issues={filterIssues(issues, status)}
-              showChild={showChild}
-            />
-          ))}
+      <BoardHeader
+        showChild={showChild}
+        setChild={setShowChild}
+        project={project}
+      />
+
+      {/* CHILD ISSUE VIEW  */}
+      {showChild && (
+        // STATUS
+        <div className="relative flex w-[1090px] max-w-full flex-col gap-x-4 overflow-y-auto p-2">
+          <div className="flex gap-x-4">
+            {STATUSES.map((status) => (
+              <>
+                <div
+                  className={clsx(
+                    " h-max min-h-fit w-[350px] rounded-xl  border-x-2  px-1.5  "
+                  )}
+                >
+                  <h2 className="text-md sticky top-[0.5px] -mx-1.5 -mt-1.5 mb-0  rounded-t-md border-y-2 bg-white px-2 py-3 font-semibold text-gray-500">
+                    {statusMap[status]}{" "}
+                    { showChild ?
+                        child.filter((childIssue) => childIssue.status === status).length
+                     : issues.filter(
+                          (issue) =>
+                            issue.sprintIsActive && issue.status === status
+                        ).length}
+                    {` ISSUE${getPluralEnd(issues).toUpperCase()}`}
+                  </h2>
+                </div>
+              </>
+            ))}
+          </div>
+          {/* ISSUES - REPEAT */}
+          <div className="mt-0 flex w-full max-w-full flex-col">
+            {filterIssues(issues, null).map((issue, index) => {
+              let childIssues = [];
+              if (hasChildren(issue)) {
+                childIssues = issue.children;
+              }
+              return (
+                <>
+                  <div
+                    onClick={() => setIssueKey(issue.key)}
+                    className="flex cursor-pointer items-center   gap-x-4 border-x-2 border-y bg-slate-50 px-2 py-2"
+                  >
+                    <IssueIcon issueType={issue.type} />
+                    <span className="text-xs font-medium text-gray-600">
+                      {issue.key}
+                    </span>
+                    <span>{issue.name}</span>
+                    <span>({issue.children.length} Subtask)</span>
+                    <span className="rounded-xl bg-slate-300 px-3 text-sm">
+                      Parent
+                    </span>
+                  </div>
+                  <DragDropContext
+                    key={index + 1}
+                    onDragEnd={(result: DropResult) =>
+                      onDragEnd(result, childIssues)
+                    }
+                  >
+                    <div
+                      ref={renderContainerRef}
+                      className="relative flex w-full max-w-full gap-x-4 overflow-y-auto"
+                    >
+                      {STATUSES.map((status) => (
+                        <div
+                          className={clsx(
+                            " h-max min-h-fit w-[350px] rounded-xl border-x-2 border-b-2 px-1.5 pb-3"
+                          )}
+                          key={status}
+                        >
+                          <IssueList
+                            parentId={issue.id}
+                            sprintId={activeSprintId}
+                            key={`${issue.id}-${status}`}
+                            status={status}
+                            issues={childIssues?.filter(
+                              (childIssue) => childIssue.status === status
+                            )}
+                            showChild={showChild}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </DragDropContext>
+                </>
+              );
+            })}
+          </div>
         </div>
-      </DragDropContext>
+      )}
+      {/* PARENT ISSUE VIEW  */}
+      {!showChild && (
+        <DragDropContext onDragEnd={onDragEnd}>
+          <div
+            ref={renderContainerRef}
+            className="relative flex w-full max-w-full gap-x-4 overflow-y-auto  p-2"
+          >
+            {STATUSES.map((status) => (
+              <IssueList
+                sprintId={activeSprintId}
+                key={status}
+                status={status}
+                issues={filterIssues(issues, status)}
+                showChild={showChild}
+              />
+            ))}
+          </div>
+        </DragDropContext>
+      )}
     </Fragment>
   );
 };
