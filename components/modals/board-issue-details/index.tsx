@@ -30,7 +30,7 @@ const IssueDetailsModal: React.FC = () => {
       <ModalPortal>
         <ModalOverlay />
         <ModalContent className="h-fit max-h-[80vh] w-[80vw] overflow-hidden">
-          <IssueDetails issueKey={issueKey} setIssueKey={setIssueKey} />
+          <IssueDetails issueKey={issueKey} />
         </ModalContent>
       </ModalPortal>
     </Modal>
