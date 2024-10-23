@@ -217,3 +217,61 @@ export const setCookie = (param: string, obj: {}) => {
   expiryDate.setDate(expiryDate.getDate() + 7); // Cookie expires in 7 days
   document.cookie = `${param}=${cookieValue}; expires=${expiryDate.toUTCString()}; path=/; secure; SameSite=Strict`;
 };
+
+export const timeStringToMinutes = (timeString?: string) => {
+  if (!timeString) return 0; // Return 0 if timeString is null or undefined
+
+  const timeRegex = /(?:(\d+)w)?\s*(?:(\d+)d)?\s*(?:(\d+)h)?\s*(?:(\d+)m)?/;
+  const matches = timeString.match(timeRegex);
+
+  const weeks = parseInt(matches?.[1] || 0, 10) * 10080; // 1 week = 10080 minutes
+  const days = parseInt(matches?.[2] || 0, 10) * 1440;   // 1 day = 1440 minutes
+  const hours = parseInt(matches?.[3] || 0, 10) * 60;     // 1 hour = 60 minutes
+  const minutes = parseInt(matches?.[4] || 0, 10);
+
+  return weeks + days + hours + minutes;
+};
+
+export const minutesToTimeString = (totalMinutes) => {
+  const weeks = Math.floor(totalMinutes / 10080);
+  const days = Math.floor((totalMinutes % 10080) / 1440);
+  const hours = Math.floor((totalMinutes % 1440) / 60);
+  const minutes = totalMinutes % 60;
+
+  return `${weeks > 0 ? `${weeks}w ` : ""}${days > 0 ? `${days}d ` : ""}${
+    hours > 0 ? `${hours}h ` : ""
+  }${minutes > 0 ? `${minutes}m` : ""}`.trim();
+};
+
+export const calculateTimeRemaining = (timeSpent, estimateTime) => {
+  const timeSpentMinutes = timeStringToMinutes(timeSpent);
+  const estimateTimeMinutes = timeStringToMinutes(estimateTime);
+
+  const remainingMinutes = estimateTimeMinutes - timeSpentMinutes;
+  if(remainingMinutes > 0 ){
+    return minutesToTimeString(remainingMinutes)
+  } else if(remainingMinutes == 0){
+    return '0m'
+  }else{
+    return 'Overdue'
+  }
+};
+
+export const calculatePercentage = (timeSpent?: string, estimateTime?: string) => {
+  const timeSpentMinutes = timeStringToMinutes(timeSpent);
+  const estimateTimeMinutes = timeStringToMinutes(estimateTime);
+
+  if (estimateTimeMinutes === 0) return 0; // Prevent division by zero
+
+  return (timeSpentMinutes / estimateTimeMinutes) * 100;
+};
+
+export const combineTimeSpent = (existingTimeSpent: string, newTimeSpent: string) => {
+
+    const existingMinutes = timeStringToMinutes(existingTimeSpent)
+    const newMinutes = timeStringToMinutes(newTimeSpent)
+
+    const totalMinutes =  existingMinutes + newMinutes
+
+    return minutesToTimeString(totalMinutes)
+}

@@ -33,7 +33,7 @@ const Backlog: React.FC = () => {
           minSize={issueKey ? 400 : 0}
         >
           <ListGroup className={clsx(issueKey && "pb-5 pr-4")} />
-          <IssueDetails setIssueKey={setIssueKey} issueKey={issueKey} />
+          <IssueDetails issueKey={issueKey} />
         </Split>
       </div>
     </Fragment>
