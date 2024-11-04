@@ -59,6 +59,7 @@ const BacklogIcon: React.FC<{ className?: string; size?: number }> = ({
     </svg>
   );
 };
+
 const RoadmapIcon: React.FC<{ className?: string; size?: number }> = ({
   className,
   size,
@@ -120,6 +121,42 @@ const DevelopmentIcon: React.FC<{ className?: string; size?: number }> = ({
         fill="currentColor"
         fillRule="evenodd"
       ></path>
+    </svg>
+  );
+};
+
+const VelocityIcon: React.FC<{ className?: string; size?: number }> = ({
+  className,
+  size,
+}) => {
+  return (
+    <svg
+      className={className}
+      width={size ?? 24}
+      height={size ?? 24}
+      viewBox="0 0 24 24"
+      role="presentation"
+    >
+      <path
+        d="M21 20H4a1 1 0 01-1-1V5a1 1 0 011-1h17a1 1 0 011 1v14a1 1 0 01-1 1zM5 18h15V6H5v12z"
+        fill="currentColor"
+        fillRule="evenodd"
+      />
+      {/* Bar charts with increasing height to show velocity trend */}
+      <path
+        d="M7 16h2v-3H7v3zm4 0h2V9h-2v7zm4 0h2V7h-2v9z"
+        fill="currentColor"
+        fillRule="evenodd"
+      />
+      {/* Trend line indicating velocity increase */}
+      <path
+        d="M8 12.5l3.5-4L15.5 11l2-2"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 };
@@ -473,6 +510,51 @@ const UnassignedUser: React.FC<{ className?: string; size?: number }> = ({
   );
 };
 
+const BurndownIcon: React.FC<{ className?: string; size?: number }> = ({
+  className,
+  size,
+}) => {
+  return (
+    <svg
+      className={className}
+      width={size ?? 24}
+      height={size ?? 24}
+      viewBox="0 0 24 24"
+      role="presentation"
+    >
+      {/* Chart container */}
+      <path
+        d="M21 20H4a1 1 0 01-1-1V5a1 1 0 011-1h17a1 1 0 011 1v14a1 1 0 01-1 1zM5 18h15V6H5v12z"
+        fill="currentColor"
+        fillRule="evenodd"
+      />
+      {/* Ideal burndown line */}
+      <path
+        d="M7 8L19 16"
+        stroke="currentColor"
+        strokeWidth="1"
+        strokeDasharray="2,2"
+        fill="none"
+        strokeLinecap="round"
+      />
+      {/* Actual burndown line */}
+      <path
+        d="M7 8l4 2 3 4 5 2"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      {/* Data points */}
+      <circle cx="7" cy="8" r="1.5" fill="currentColor" />
+      <circle cx="11" cy="10" r="1.5" fill="currentColor" />
+      <circle cx="14" cy="14" r="1.5" fill="currentColor" />
+      <circle cx="19" cy="16" r="1.5" fill="currentColor" />
+    </svg>
+  );
+};
+
 export {
   ChildrenTreeIcon,
   BacklogIcon,
@@ -484,4 +566,6 @@ export {
   AddPeopleIcon,
   SubTaskIcon,
   UnassignedUser,
+  VelocityIcon,
+  BurndownIcon
 };

@@ -32,10 +32,10 @@ export async function POST(request: Request) {
 
 export async function PATCH(request: Request) {
   try {
-    const { projectId, name, cloneChild } = await request.json();
+    const { projectId, name, cloneChild, workingDays } = await request.json();
 
     // Ensure that projectId, name, and cloneChild are provided
-    if (!projectId || !name || typeof cloneChild !== "boolean") {
+    if (!projectId || !name || typeof cloneChild !== "boolean" || !workingDays) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
@@ -49,7 +49,7 @@ export async function PATCH(request: Request) {
 
     const updatedProject = await prisma.project.update({
       where: { id: parseInt(projectId) },
-      data: { name, cloneChild }, // Update both name and cloneChild
+      data: { name, cloneChild, workingDays }, // Update both name and cloneChild
     });
 
     return NextResponse.json(

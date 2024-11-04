@@ -18,6 +18,7 @@ import { hasChildren, isEpic, hexToRgba } from "@/utils/helpers";
 import { IssueAssigneeSelect } from "../issue/issue-select-assignee";
 import { DARK_COLORS, LIGHT_COLORS } from "../color-picker";
 import { useCookie } from "@/hooks/use-cookie";
+import { OriginalEstimate } from "../original-estimate";
 
 const getIssueKeyColorClass = (type: String) => {
   switch (type) {
@@ -43,13 +44,11 @@ const Issue: React.FC<{
   onHandleCheck: () => void;
 }> = ({ index, issue, onHandleCheck, onChecked }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [isEditingEstimate, setIsEditingEstimate] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const { setIssueKey, issueKey } = useSelectedIssueContext();
   const issueKeyColorClass = getIssueKeyColorClass(issue.type);
   const user = useCookie("user");
-
-  
-
 
   return (
     <Draggable draggableId={issue.id} index={index}>
@@ -63,8 +62,8 @@ const Issue: React.FC<{
           {...dragHandleProps}
           className={clsx(
             onChecked
-            ? "bg-gray-200"
-            : isDragging
+              ? "bg-gray-200"
+              : isDragging
               ? "rounded-xl border-[0.3px] border-gray-300 bg-gray-100"
               : "border-[0.3px] border-slate-200 bg-slate-50",
             "group flex w-full max-w-full items-center justify-between rounded-xl   px-3 py-1.5 text-sm hover:bg-gray-300 [&[data-state=selected]]:bg-gray-300"
@@ -130,29 +129,35 @@ const Issue: React.FC<{
           <IssueContextMenu isEditing={isEditing} className="flex-auto">
             <ContextTrigger className="h-8 w-full" />
           </IssueContextMenu>
-          <div className="relative ml-2 flex min-w-fit items-center justify-end gap-x-2">
-            {hasChildren(issue) ? (
-              <ChildrenTreeIcon className="p-0.5 text-gray-600" />
-            ) : null}
-            <IssueSelectStatus
-              key={issue.id + issue.status}
-              currentStatus={issue.status}
-              issueId={issue.id}
-            />
-            <IssueAssigneeSelect issue={issue} avatarOnly />
-            {(user?.role === "admin" || user?.role === "manager") && (
-              <IssueDropdownMenu  issue={issue}>
-                <DropdownTrigger
-                  
-                  asChild
-                  className=" flex items-center gap-x-2 bg-opacity-30 px-1.5 text-xs font-semibold  "
-                >
-                  <div  className="invisible !rounded-full !bg-gray-300 px-1.5 py-1.5 group-hover:visible group-hover:bg-gray-300 group-hover:hover:bg-gray-300 [&[data-state=open]]:visible [&[data-state=open]]:bg-gray-300">
-                    <BsThreeDots  className="text-black sm:text-xl" />
-                  </div>
-                </DropdownTrigger>
-              </IssueDropdownMenu>
-            )}
+          <div className="relative ml-2 flex min-w-fit items-center justify-end gap-x-6">
+            <div className="flex w-32 justify-end items-center gap-x-2">
+              {hasChildren(issue) ? (
+                <ChildrenTreeIcon className="p-0.5 text-gray-600" />
+              ) : null}
+              <IssueSelectStatus
+                key={issue.id + issue.status}
+                currentStatus={issue.status}
+                issueId={issue.id}
+              />
+            </div>
+            <div className="w-20 flex justify-center items-center" onClick={e => e.stopPropagation()}>
+              <OriginalEstimate setIsEditing={setIsEditingEstimate} isEditing={isEditingEstimate} page="backlog" issue={issue} className="bg-gray-300 px-2  rounded-xl" />
+            </div>
+            <div className="flex w-20 justify-end items-center gap-x-2">
+              <IssueAssigneeSelect issue={issue} avatarOnly />
+              {(user?.role === "admin" || user?.role === "manager") && (
+                <IssueDropdownMenu issue={issue}>
+                  <DropdownTrigger
+                    asChild
+                    className=" flex items-center gap-x-2 bg-opacity-30 px-1.5 text-xs font-semibold  "
+                  >
+                    <div className="invisible !rounded-full !bg-gray-300 px-1.5 py-1.5 group-hover:visible group-hover:bg-gray-300 group-hover:hover:bg-gray-300 [&[data-state=open]]:visible [&[data-state=open]]:bg-gray-300">
+                      <BsThreeDots className="text-black sm:text-xl" />
+                    </div>
+                  </DropdownTrigger>
+                </IssueDropdownMenu>
+              )}
+            </div>
           </div>
         </div>
       )}

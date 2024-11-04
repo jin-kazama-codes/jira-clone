@@ -11,7 +11,9 @@ const patchSprintBodyValidator = z.object({
   startDate: z.string().optional(),
   endDate: z.string().optional(),
   status: z.nativeEnum(SprintStatus).optional(),
-  position: z.number().optional()
+  position: z.number().optional(),
+  estimateTime: z.string().optional(),
+  timeTaken: z.string().optional() 
 });
 
 export type PatchSprintBody = z.infer<typeof patchSprintBodyValidator>;
@@ -67,6 +69,9 @@ export async function PATCH(req: NextRequest, { params }: ParamsType) {
       duration: valid.duration ?? current.duration,
       projectId: projectId,
       position: valid.position ?? current.position,
+      estimateTime: valid.estimateTime ?? current.estimateTime,
+      timeTaken: valid.timeTaken ?? current.timeTaken,
+
     },
   });
 
