@@ -4,7 +4,7 @@
 
 ![App screenshot](./assets/readme/backlog-screenshot.png)
 
-## <h1 align="center">Features</h1>
+## <h1>Features</h1>
 
 - Written in modern React
 - Uses Next js 13.4 app directory structure
