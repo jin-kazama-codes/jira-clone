@@ -13,6 +13,8 @@ import {
 import { useSprints } from "@/hooks/query-hooks/use-sprints";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
 import { useCookie } from "@/hooks/use-cookie";
+import { getTimeEstimates } from "@/utils/getOriginalEstimate";
+import Timelist from "./estimate-time-list";
 
 const BacklogList: React.FC<{
   id: string;
@@ -26,7 +28,7 @@ const BacklogList: React.FC<{
 
   return (
     <Accordion
-      className="rounded-xl border-2 pb-20 p-4 "
+      className="rounded-xl border-2 p-4 pb-20 "
       type="single"
       value={openAccordion}
       onValueChange={setOpenAccordion}
@@ -43,7 +45,7 @@ const BacklogList: React.FC<{
 const BacklogListHeader: React.FC<{ issues: IssueType[] }> = ({ issues }) => {
   const { createSprint } = useSprints();
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
-  const user = useCookie('user');
+  const user = useCookie("user");
 
   function handleCreateSprint() {
     if (!isAuthenticated) {
@@ -53,6 +55,13 @@ const BacklogListHeader: React.FC<{ issues: IssueType[] }> = ({ issues }) => {
     createSprint();
   }
 
+  const { convertedOriginalEstimate, convertedTotalTime } =
+    getTimeEstimates(issues);
+
+    
+    console.log("COnvertedOriginal", convertedOriginalEstimate)
+    console.log("convertedTotalTime", convertedTotalTime)
+
   return (
     <div className="flex w-full items-center justify-between text-sm ">
       <AccordionTrigger className="flex w-full items-center p-2  font-medium [&[data-state=open]>svg]:rotate-90">
@@ -61,20 +70,29 @@ const BacklogListHeader: React.FC<{ issues: IssueType[] }> = ({ issues }) => {
             className="mr-2 text-xs text-black transition-transform"
             aria-hidden
           />
-          <div className="flex items-center">
+          <div className="flex items-center gap-x-3">
             <div className="text-semibold text-xl">Backlog</div>
             <div className="ml-3 font-normal text-gray-500">
               ({issues.length} issues)
+            </div>
+            <div className="font-normal text-gray-500">
+              {convertedOriginalEstimate
+                ? convertedOriginalEstimate
+                : ""}
             </div>
           </div>
         </Fragment>
       </AccordionTrigger>
       <div className="flex items-center gap-x-2 py-2">
-        <IssueStatusCount issues={issues} />
-        {(user?.role === "admin" ||
-        user?.role === "manager") && ( <Button onClick={handleCreateSprint} className="!bg-black !text-white rounded-xl px-4 hover:!bg-black">
-          <span className="whitespace-nowrap text-white">Create Sprint</span>
-        </Button>)}
+        <Timelist Time={convertedTotalTime} />
+        {(user?.role === "admin" || user?.role === "manager") && (
+          <Button
+            onClick={handleCreateSprint}
+            className="rounded-xl !bg-black px-4 !text-white hover:!bg-black"
+          >
+            <span className="whitespace-nowrap text-white">Create Sprint</span>
+          </Button>
+        )}
       </div>
     </div>
   );

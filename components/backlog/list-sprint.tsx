@@ -24,8 +24,10 @@ import { toast } from "../toast";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
 import { getPluralEnd } from "@/utils/helpers";
 import { useCookie } from "@/hooks/use-cookie";
+import { getTimeEstimates } from "@/utils/getOriginalEstimate";
+import Timelist from "./estimate-time-list";
 
-const user = useCookie('user');
+const user = useCookie("user");
 
 const SprintList: React.FC<{
   sprint: Sprint;
@@ -40,7 +42,7 @@ const SprintList: React.FC<{
     <Accordion
       onValueChange={setOpenAccordion}
       value={openAccordion}
-      className="overflow-hidden border-2 rounded-xl  p-4"
+      className="overflow-hidden rounded-xl border-2  p-4"
       type="single"
       collapsible
     >
@@ -105,6 +107,10 @@ const SprintListHeader: React.FC<{ issues: IssueType[]; sprint: Sprint }> = ({
     })}`;
   }
 
+  const { convertedOriginalEstimate, convertedTotalTime } =
+    getTimeEstimates(issues);
+
+
   return (
     <Fragment>
       <UpdateSprintModal
@@ -128,7 +134,7 @@ const SprintListHeader: React.FC<{ issues: IssueType[]; sprint: Sprint }> = ({
               aria-hidden
             />
             <div className="flex items-center gap-x-2">
-              <div className="text-semibold text-xl whitespace-nowrap">
+              <div className="text-semibold whitespace-nowrap text-xl">
                 {sprint.name}
               </div>
               <div className="flex items-center gap-x-3 whitespace-nowrap font-normal text-gray-500">
@@ -138,15 +144,22 @@ const SprintListHeader: React.FC<{ issues: IssueType[]; sprint: Sprint }> = ({
                 <span>
                   ({issues.length} issue{getPluralEnd(issues)})
                 </span>
+                {convertedOriginalEstimate ? (
+                  <span>
+                    Estimate:{" "}
+                    <span className="text-md font-bold">
+                      {convertedOriginalEstimate}
+                    </span>
+                  </span>
+                ) : null}
               </div>
             </div>
           </Fragment>
         </AccordionTrigger>
         <div className="flex items-center gap-x-2">
-          <IssueStatusCount issues={issues} />
+          <Timelist Time={convertedTotalTime} />
           <SprintActionButton sprint={sprint} issues={issues} />
-          {(user?.role === "admin" ||
-            user?.role === "manager") &&
+          {(user?.role === "admin" || user?.role === "manager") && (
             <SprintDropdownMenu
               sprint={sprint}
               setUpdateModalIsOpen={setUpdateModalIsOpen}
@@ -157,12 +170,11 @@ const SprintListHeader: React.FC<{ issues: IssueType[]; sprint: Sprint }> = ({
                 className="flex items-center gap-x-1 px-1.5 py-0.5 text-xs font-semibold focus:ring-2"
               >
                 <div className="rounded-full px-1.5 py-1.5 text-black hover:cursor-pointer hover:bg-gray-300 [&[data-state=open]]:bg-gray-300 ">
-
                   <BsThreeDots className="sm:text-xl " />
                 </div>
               </DropdownTrigger>
             </SprintDropdownMenu>
-          }
+          )}
         </div>
       </div>
     </Fragment>
@@ -173,23 +185,26 @@ const SprintActionButton: React.FC<{ sprint: Sprint; issues: IssueType[] }> = ({
   sprint,
   issues,
 }) => {
-
-  if (sprint.status === "ACTIVE" && (user?.role === "admin" ||
-    user?.role === "manager")) {
+  if (
+    sprint.status === "ACTIVE" &&
+    (user?.role === "admin" || user?.role === "manager")
+  ) {
     return (
       <CompleteSprintModal issues={issues} sprint={sprint}>
-        <Button className="!bg-black !text-white rounded-xl px-4 hover:!bg-black">
+        <Button className="rounded-xl !bg-black px-4 !text-white hover:!bg-black">
           <span className="whitespace-nowrap text-white">Complete sprint</span>
         </Button>
       </CompleteSprintModal>
     );
   }
 
-  if (sprint.status === "PENDING" && (user?.role === "admin" ||
-    user?.role === "manager")) {
+  if (
+    sprint.status === "PENDING" &&
+    (user?.role === "admin" || user?.role === "manager")
+  ) {
     return (
       <StartSprintModal issueCount={issues.length} sprint={sprint}>
-        <Button className="!bg-black !text-white rounded-xl px-4 hover:!bg-black">
+        <Button className="rounded-xl !bg-black px-4 !text-white hover:!bg-black">
           <span className="whitespace-nowrap text-white">Start sprint</span>
         </Button>
       </StartSprintModal>

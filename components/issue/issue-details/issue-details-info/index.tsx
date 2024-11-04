@@ -21,16 +21,18 @@ import Worklog from "./issue-details-info-worklog";
 
 const IssueDetailsInfo = React.forwardRef<
   HTMLDivElement,
-  { issue: IssueType | undefined, large?: boolean }
->(({ issue, large }, ref) => {
+  { issue: IssueType | undefined, detailPage?: boolean }
+>(({ issue, detailPage }, ref) => {
   const [parentRef, parentWidth] = useContainerWidth();
 
   if (!issue) return <div />;
+
+  console.log("PARENTWIDTH", parentWidth)
   
   return (
     <div ref={parentRef}>
       {!parentWidth ? null : parentWidth > 800 ? (
-        <LargeIssueDetails issue={issue} large={large} ref={ref} />
+        <LargeIssueDetails issue={issue} detailPage={detailPage} ref={ref} />
       ) : (
         <SmallIssueDetailsInfo issue={issue} ref={ref} />
       )}
@@ -111,19 +113,20 @@ SmallIssueDetailsInfo.displayName = "SmallIssueDetailsInfo";
 
 const LargeIssueDetails = React.forwardRef<
   HTMLDivElement,
-  { issue: IssueType, large?: boolean }
->(({ issue, large }, ref) => {
+  { issue: IssueType, detailPage?: boolean }
+>(({ issue, detailPage }, ref) => {
   const { issueKey } = useSelectedIssueContext();
   const nameRef = useRef<HTMLInputElement>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [activity, setActivity] = useState("comments");
   const [isAddingChildIssue, setIsAddingChildIssue] = useState(false);
 
+
   return (
     <Split
       sizes={[60, 40]}
       gutterSize={2}
-      className={`flex ${large ? 'max-h-[87vh]' : 'max-h-[70vh]' } w-full overflow-hidden`}
+      className={`flex ${detailPage ? 'max-h-[87vh]' : 'max-h-[70vh]' } w-full overflow-hidden`}
       minSize={300}
     >
       <div className="overflow-y-auto pr-3">

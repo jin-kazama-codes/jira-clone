@@ -8,17 +8,18 @@ import { useIsAuthenticated } from "@/hooks/use-is-authed";
 import { useCookie } from "@/hooks/use-cookie";
 
 type OriginalEstimateProps = {
-  isEditing: boolean;
-  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+  isEditing?: boolean;
+  setIsEditing?: React.Dispatch<React.SetStateAction<boolean>>;
   issue: IssueType;
   className?: string;
   useTooltip?: boolean;
+  page?: string;
 };
 
 const OriginalEstimate = React.forwardRef<
   HTMLInputElement,
   OriginalEstimateProps
->(({ isEditing, setIsEditing, className, issue }, ref) => {
+>(({ isEditing, setIsEditing, className, issue, page }, ref) => {
   const [currentEstimate, setCurrentEstimate] = useState(issue.estimateTime);
   const inputRef = ref || useRef<HTMLInputElement>(null);
   const user = useCookie("user");
@@ -59,7 +60,7 @@ const OriginalEstimate = React.forwardRef<
             id="issue-estimate"
             value={currentEstimate}
             onChange={(e) => setCurrentEstimate(e.target.value)}
-            className="w-full min-w-max whitespace-pre-wrap rounded-xl border-2 px-1 py-1.5 outline-2 outline-blue-400"
+            className={`${page === 'backlog' ? 'w-20' : 'w-full min-w-max'} whitespace-pre-wrap rounded-xl border-2 px-1 py-1.5 outline-2 outline-blue-400`}
             placeholder="e.g., 2w 4d 6h 45m"
             onKeyDown={(e) => {
               if (e.key === "Enter") {
@@ -70,7 +71,7 @@ const OriginalEstimate = React.forwardRef<
               }
             }}
           />
-          <div className=" flex gap-x-1">
+          {page !== "backlog" && (<div className=" flex gap-x-1">
             <Button
               className="mt-2 aspect-square rounded-full bg-red-100 p-2.5 shadow-md transition-all hover:bg-gray-100"
               onClick={(e) => {
@@ -90,7 +91,7 @@ const OriginalEstimate = React.forwardRef<
             >
               <MdCheck className="text-sm" />
             </Button>
-          </div>
+          </div>)}
         </div>
       ) : (
         <div
@@ -103,7 +104,11 @@ const OriginalEstimate = React.forwardRef<
         >
           <TooltipWrapper text={issue.estimateTime}>
             <p className={className}>
-              {issue.estimateTime ? issue.estimateTime : "No Time Logged"}
+              {issue.estimateTime
+                ? issue.estimateTime
+                : page === "backlog"
+                ? "0m"
+                : "No Time Logged"}
             </p>
           </TooltipWrapper>
         </div>

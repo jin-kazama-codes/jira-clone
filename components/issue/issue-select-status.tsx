@@ -65,7 +65,8 @@ const IssueSelectStatus: React.FC<{
   currentStatus: IssueType["status"];
   issueId: string;
   variant?: "sm" | "lg";
-}> = ({ currentStatus, issueId, variant = "sm" }) => {
+  page?: string;
+}> = ({ currentStatus, issueId, variant = "sm", page = "backlog" }) => {
   const [selected, setSelected] = useState<StatusObject>(
     () =>
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -91,7 +92,7 @@ const IssueSelectStatus: React.FC<{
 
   return (
     <Fragment>
-      <Select onValueChange={handleSelectChange}>
+      <Select disabled={page !== "backlog"} onValueChange={handleSelectChange}>
         <SelectTrigger
           onClick={(e) => e.stopPropagation()}
           disabled={isUpdating}
@@ -106,7 +107,7 @@ const IssueSelectStatus: React.FC<{
             variant == "sm" && "bg-opacity-20 px-1.5 py-0.5 text-xs font-bold",
             variant == "lg" && "my-2 px-3 py-1.5 text-[16px] font-semibold",
             isUpdating && "cursor-not-allowed",
-            "flex items-center gap-x-2 whitespace-nowrap px-2 rounded-xl py-1 focus:ring-2"
+            "flex items-center gap-x-2 whitespace-nowrap rounded-xl px-2 py-1 focus:ring-2"
           )}
         >
           <SelectValue className="w-full whitespace-nowrap bg-transparent text-white">
@@ -114,9 +115,11 @@ const IssueSelectStatus: React.FC<{
               ? statusMap[selected.value]
               : capitalizeMany(statusMap[selected.value])}
           </SelectValue>
-          <SelectIcon>
-            <FaChevronDown className="text-xs" />
-          </SelectIcon>
+          {page === "backlog" && (
+            <SelectIcon>
+              <FaChevronDown className="text-xs" />
+            </SelectIcon>
+          )}
         </SelectTrigger>
         <SelectPortal className="z-50">
           <SelectContent position="popper">
@@ -136,9 +139,7 @@ const IssueSelectStatus: React.FC<{
                     <span
                       style={{
                         color:
-                          status.value === "TODO"
-                            ? "#000" 
-                            : status.smTextColor,
+                          status.value === "TODO" ? "#000" : status.smTextColor,
                       }}
                       className="rounded-md bg-opacity-30 px-2 text-xs font-semibold"
                     >

@@ -13,8 +13,8 @@ const IssueDetailsHeader: React.FC<{
   issue: IssueType;
   setIssueKey: React.Dispatch<React.SetStateAction<string | null>>;
   isInViewport: boolean;
-  large?: boolean;
-}> = ({ issue, setIssueKey, isInViewport, large }) => {
+  detailPage?: boolean;
+}> = ({ issue, setIssueKey, isInViewport, detailPage }) => {
   const user = useCookie("user");
   if (!issue) return <div />;
   return (
@@ -51,7 +51,7 @@ const IssueDetailsHeader: React.FC<{
             </DropdownTrigger>
           </IssueDropdownMenu>
         )}
-        {!large && (
+        {!detailPage && (
           <Button
             customColors
             className="rounded-full  bg-transparent hover:bg-gray-200"

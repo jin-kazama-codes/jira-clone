@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { BacklogIcon, BoardIcon, DevelopmentIcon, RoadmapIcon } from "./svgs";
+import { BacklogIcon, BoardIcon, BurndownIcon, DevelopmentIcon, RoadmapIcon, VelocityIcon } from "./svgs";
 import {
   NavigationMenu,
   NavigationMenuLink,
@@ -50,6 +50,23 @@ const Sidebar: React.FC = () => {
       href: `/project/settings`,
     },
   ];
+
+  const reportingItems = [
+    {
+      id: "burndown",
+      label: "Burndown Report",
+      icon: BurndownIcon,
+      href: `/project/report/burndown`,
+    },
+    {
+      id: "velocity",
+      label: "Velocity Report",
+      icon: VelocityIcon,
+      href: `/project/report/velocity`,
+    },
+  ];
+
+
   return (
     <div className="flex h-full w-64 flex-col gap-y-5 bg-gray-50 p-3 shadow-inner">
       <div className="my-5 flex items-center gap-x-2 px-3 border-b-2 pb-7">
@@ -65,6 +82,7 @@ const Sidebar: React.FC = () => {
       </div>
       <NavList label={"PLANNING"} items={planningItems} />
       <NavList label={"CONFIGURATION"} items={configurationItems} />
+      <NavList label={"REPORTS"} items={reportingItems} />
     </div>
   );
 };

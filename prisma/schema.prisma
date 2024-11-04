@@ -18,6 +18,7 @@ model Project {
   deletedAt       DateTime?
   id              Int       @id @default(autoincrement())
   cloneChild      Boolean?  @default(false)
+  workingDays     Int?      @default(5)
   members         Member[]
 }
 
@@ -75,7 +76,9 @@ model Sprint {
   status      SprintStatus @default(PENDING)
   projectId   Int?
   creatorId   Int?
-  position    Int?       
+  position    Int?   
+  estimateTime   String?
+  timeTaken   String?    
   issues      Issue[]
 }
 

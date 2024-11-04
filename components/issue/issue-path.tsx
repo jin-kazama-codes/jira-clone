@@ -11,7 +11,6 @@ import { type ReactNode } from "react";
 import { useIssues } from "@/hooks/query-hooks/use-issues";
 import { TooltipWrapper } from "../ui/tooltip";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
-import { Router } from "next/router";
 import { useRouter } from "next/navigation";
 
 const IssuePath: React.FC<{

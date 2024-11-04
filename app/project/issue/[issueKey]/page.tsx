@@ -3,8 +3,8 @@ import React from "react";
 
 const IssueDetail = ({params}) => {
   const { issueKey } = params;
-  const largeSize = true;
-  return <IssueDetails issueKey={issueKey} large={largeSize}/>;
+  const issueDetailPage = true;
+  return <IssueDetails issueKey={issueKey} detailPage={issueDetailPage}/>;
 };
 
 export default IssueDetail;

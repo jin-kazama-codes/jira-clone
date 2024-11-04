@@ -7,6 +7,8 @@ import { isDone } from "@/utils/helpers";
 import { useSprints } from "@/hooks/query-hooks/use-sprints";
 import { FormSubmit } from "@/components/form/submit";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
+import { getTimeEstimates } from "@/utils/getOriginalEstimate";
+import { useEffect } from "react";
 
 export type FormValues = {
   moveToSprintId: string;
@@ -28,6 +30,11 @@ const CompleteSprintForm: React.FC<{
     },
   });
 
+  const { convertedOriginalEstimate, convertedTotalTime } = getTimeEstimates(
+    issues,
+    "velocity"
+  );
+
   const { updateSprint, isUpdating } = useSprints();
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
   const { updateIssuesBatch, batchUpdating } = useIssues();
@@ -41,6 +48,8 @@ const CompleteSprintForm: React.FC<{
       {
         sprintId: sprint.id,
         status: "CLOSED",
+        estimateTime: convertedOriginalEstimate,
+        timeTaken: convertedTotalTime,
       },
       {
         onSuccess: () => {
