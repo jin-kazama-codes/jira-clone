@@ -143,14 +143,18 @@ const Board: React.FC = () => {
         // STATUS
         <div className="relative flex w-[1090px] max-w-full flex-col gap-x-4 overflow-y-auto p-2">
           <div className="flex gap-x-4">
-            {STATUSES.map((status) => (
+            {STATUSES.map((status) => {
+              return (
               <>
+              
                 <div
                   className={clsx(
-                    " h-max min-h-fit w-[350px] rounded-xl  border-x-2  px-1.5  "
-                  )}
+                    " h-max min-h-fit w-[350px] rounded-xl  border-x-2  px-1.5  ",
+                    status === "TODO" ? "bg-gray-300" : status === "IN_PROGRESS" ? "bg-blue-300" : "bg-green-300"
+                  ) }
                 >
-                  <h2 className="text-md sticky top-[0.5px] -mx-1.5 -mt-1.5 mb-0  rounded-t-md border-y-2 bg-white px-2 py-3 font-semibold text-gray-500">
+                  
+                  <h2 className={`text-md sticky top-[0.5px] -mx-1.5 -mt-1.5 mb-0  rounded-b-md border-b-2  px-2 py-3 font-semibold text-black`}>
                     {statusMap[status]}{" "}
                     { showChild ?
                         child.filter((childIssue) => childIssue.status === status).length
@@ -162,7 +166,7 @@ const Board: React.FC = () => {
                   </h2>
                 </div>
               </>
-            ))}
+            )})}
           </div>
           {/* ISSUES - REPEAT */}
           <div className="mt-0 flex w-full max-w-full flex-col">
@@ -200,7 +204,8 @@ const Board: React.FC = () => {
                       {STATUSES.map((status) => (
                         <div
                           className={clsx(
-                            " h-max min-h-fit w-[350px] rounded-xl border-x-2 border-b-2 px-1.5 pb-3"
+                            " h-max min-h-fit w-[350px] rounded-xl border-x-2 border-b-2 px-1.5 pb-3",
+                            status === "TODO" ? "bg-gray-100" : status === "IN_PROGRESS" ? "bg-blue-100" : "bg-green-100"
                           )}
                           key={status}
                         >

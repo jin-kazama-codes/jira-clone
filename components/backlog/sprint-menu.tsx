@@ -11,9 +11,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { type MenuOptionType } from "@/utils/types";
 import { useSprints } from "@/hooks/query-hooks/use-sprints";
-import { previousSprint } from "@/server/functions";
-import { useCookie } from "@/hooks/use-cookie";
-import { prisma } from "@/server/db";
 
 type SprintDropdownMenuProps = {
   children: ReactNode;

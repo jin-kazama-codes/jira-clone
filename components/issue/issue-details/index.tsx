@@ -4,13 +4,14 @@ import { useIssues } from "@/hooks/query-hooks/use-issues";
 import { useIsInViewport } from "@/hooks/use-is-in-viewport";
 import { IssueDetailsHeader } from "./issue-details-header";
 import { IssueDetailsInfo } from "./issue-details-info";
-import { type IssueType } from "@/utils/types";
+import { useSelectedIssueContext } from "@/context/use-selected-issue-context";
 
 const IssueDetails: React.FC<{
   issueKey: string | null;
-  setIssueKey: React.Dispatch<React.SetStateAction<IssueType["key"] | null>>;
-}> = ({ issueKey, setIssueKey }) => {
+  detailPage? : boolean
+}> = ({ issueKey, detailPage }) => {
   const { issues } = useIssues();
+  const { setIssueKey } = useSelectedIssueContext();
   const renderContainerRef = React.useRef<HTMLDivElement>(null);
   const [isInViewport, viewportRef] = useIsInViewport({ threshold: 1 });
 
@@ -38,11 +39,12 @@ const IssueDetails: React.FC<{
       className="relative z-10 flex w-full flex-col overflow-y-auto pl-4 pr-2 [&[data-state=closed]]:hidden"
     >
       <IssueDetailsHeader
+        detailPage={detailPage}
         issue={issueInfo}
         setIssueKey={setIssueKey}
         isInViewport={isInViewport}
       />
-      <IssueDetailsInfo issue={issueInfo} ref={viewportRef} />
+      <IssueDetailsInfo detailPage={detailPage} issue={issueInfo} ref={viewportRef} />
     </div>
   );
 };

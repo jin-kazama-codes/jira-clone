@@ -18,6 +18,7 @@ model Project {
   deletedAt       DateTime?
   id              Int       @id @default(autoincrement())
   cloneChild      Boolean?  @default(false)
+  workingDays     Int?      @default(5)
   members         Member[]
 }
 
@@ -25,6 +26,13 @@ model Member {
   id        Int     @id
   projectId Int
   project   Project @relation(fields: [projectId], references: [id])
+}
+
+model Worklog {
+  issueId         String
+  timeLogged      String
+  workDescription String?
+  id              String      @id @default(uuid())
 }
 
 model Issue {
@@ -48,6 +56,8 @@ model Issue {
   creatorId      Int?
   projectId      Int?
   comments       Comment[]
+  estimateTime   String?
+  timeSpent      String?
   Sprint         Sprint?     @relation(fields: [sprintId], references: [id])
 
   @@index([sprintId])
@@ -66,7 +76,9 @@ model Sprint {
   status      SprintStatus @default(PENDING)
   projectId   Int?
   creatorId   Int?
-  position    Int?       
+  position    Int?   
+  estimateTime   String?
+  timeTaken   String?    
   issues      Issue[]
 }
 

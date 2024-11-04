@@ -25,7 +25,7 @@ const Backlog: React.FC = () => {
   return (
     <Fragment>
       <BacklogHeader project={project} />
-      <div ref={renderContainerRef} className="min-w-full max-w-max">
+      <div ref={renderContainerRef} className="min-w-full max-w-max" >
         <Split
           sizes={issueKey ? [60, 40] : [100, 0]}
           gutterSize={issueKey ? 2 : 0}
@@ -33,7 +33,7 @@ const Backlog: React.FC = () => {
           minSize={issueKey ? 400 : 0}
         >
           <ListGroup className={clsx(issueKey && "pb-5 pr-4")} />
-          <IssueDetails setIssueKey={setIssueKey} issueKey={issueKey} />
+          <IssueDetails issueKey={issueKey} />
         </Split>
       </div>
     </Fragment>

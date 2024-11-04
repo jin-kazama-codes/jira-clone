@@ -52,7 +52,7 @@ const UserModal: React.FC<UserModalProps> = ({ children, refetch }) => {
 
   useEffect(() => {
     if (name && users) {
-      const filteredSuggestions = users.filter((user) =>
+      const filteredSuggestions = users?.filter((user) =>
         user.name.toLowerCase().startsWith(name.toLowerCase())
       );
       setSuggestions(filteredSuggestions);

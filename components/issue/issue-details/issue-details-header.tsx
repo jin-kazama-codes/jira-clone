@@ -13,8 +13,9 @@ const IssueDetailsHeader: React.FC<{
   issue: IssueType;
   setIssueKey: React.Dispatch<React.SetStateAction<string | null>>;
   isInViewport: boolean;
-}> = ({ issue, setIssueKey, isInViewport }) => {
-  const user = useCookie('user');
+  detailPage?: boolean;
+}> = ({ issue, setIssueKey, isInViewport, detailPage }) => {
+  const user = useCookie("user");
   if (!issue) return <div />;
   return (
     <div
@@ -38,26 +39,27 @@ const IssueDetailsHeader: React.FC<{
             <MdOutlineShare className="text-xl" />
           </Button>
         </NotImplemented> */}
-        {(user?.role === "admin" ||
-          user?.role === "manager") &&
+        {(user?.role === "admin" || user?.role === "manager") && (
           <IssueDropdownMenu issue={issue}>
             <DropdownTrigger
               asChild
               className="rounded-m flex h-fit items-center gap-x-2 bg-opacity-30 px-1.5 text-xs font-semibold focus:ring-2"
             >
               <div className="invisible rounded-full px-1.5 py-1.5 text-gray-700 group-hover:visible group-hover:bg-slate-100 group-hover:hover:bg-slate-300 [&[data-state=open]]:visible [&[data-state=open]]:bg-slate-700 [&[data-state=open]]:text-white">
-                <BsThreeDots className="sm:text-xl text-black" />
+                <BsThreeDots className="text-black sm:text-xl" />
               </div>
             </DropdownTrigger>
           </IssueDropdownMenu>
+        )}
+        {!detailPage && (
+          <Button
+            customColors
+            className="rounded-full  bg-transparent hover:bg-gray-200"
+            onClick={() => setIssueKey(null)}
+          >
+            <MdClose className="text-2xl" />
+          </Button>)
         }
-        <Button
-          customColors
-          className="bg-transparent  rounded-full hover:bg-gray-200"
-          onClick={() => setIssueKey(null)}
-        >
-          <MdClose className="text-2xl" />
-        </Button>
       </div>
     </div>
   );

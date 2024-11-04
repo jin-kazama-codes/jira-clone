@@ -11,6 +11,7 @@ import { type ReactNode } from "react";
 import { useIssues } from "@/hooks/query-hooks/use-issues";
 import { TooltipWrapper } from "../ui/tooltip";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
+import { useRouter } from "next/navigation";
 
 const IssuePath: React.FC<{
   issue: IssueType;
@@ -110,11 +111,15 @@ const IssueLink: React.FC<{
   issue: IssueType | IssueType["parent"] | null;
   setIssueKey: React.Dispatch<React.SetStateAction<string | null>>;
 }> = ({ issue, setIssueKey }) => {
+  const router = useRouter()
   if (!issue) return <div />;
   return (
     <TooltipWrapper text={`${issue.key}: ${issue.name}`} side="top">
       <Button
-        onClick={() => setIssueKey(issue?.key ?? null)}
+        onClick={() => {
+          setIssueKey(issue?.key ?? null);
+          router.push(`/project/issue/${issue?.key}`)
+        }}
         customColors
         className=" bg-transparent text-xs text-gray-500 underline-offset-2 hover:underline"
       >
@@ -126,7 +131,7 @@ const IssueLink: React.FC<{
 
 const AddEpic: React.FC = () => {
   return (
-    <div className="flex items-center font-normal rounded-xl text-gray-500">
+    <div className="flex items-center rounded-xl font-normal text-gray-500">
       <AiOutlinePlus className="text-sm" />
       <span>Add Epic</span>
     </div>

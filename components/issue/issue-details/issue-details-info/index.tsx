@@ -17,18 +17,22 @@ import { ColorPicker } from "@/components/color-picker";
 import { useContainerWidth } from "@/hooks/use-container-width";
 import Split from "react-split";
 import "@/styles/split.css";
+import Worklog from "./issue-details-info-worklog";
 
 const IssueDetailsInfo = React.forwardRef<
   HTMLDivElement,
-  { issue: IssueType | undefined }
->(({ issue }, ref) => {
+  { issue: IssueType | undefined, detailPage?: boolean }
+>(({ issue, detailPage }, ref) => {
   const [parentRef, parentWidth] = useContainerWidth();
 
   if (!issue) return <div />;
+
+  console.log("PARENTWIDTH", parentWidth)
+  
   return (
     <div ref={parentRef}>
       {!parentWidth ? null : parentWidth > 800 ? (
-        <LargeIssueDetails issue={issue} ref={ref} />
+        <LargeIssueDetails issue={issue} detailPage={detailPage} ref={ref} />
       ) : (
         <SmallIssueDetailsInfo issue={issue} ref={ref} />
       )}
@@ -109,18 +113,20 @@ SmallIssueDetailsInfo.displayName = "SmallIssueDetailsInfo";
 
 const LargeIssueDetails = React.forwardRef<
   HTMLDivElement,
-  { issue: IssueType }
->(({ issue }, ref) => {
+  { issue: IssueType, detailPage?: boolean }
+>(({ issue, detailPage }, ref) => {
   const { issueKey } = useSelectedIssueContext();
   const nameRef = useRef<HTMLInputElement>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [activity, setActivity] = useState("comments");
   const [isAddingChildIssue, setIsAddingChildIssue] = useState(false);
+
 
   return (
     <Split
       sizes={[60, 40]}
       gutterSize={2}
-      className="flex max-h-[70vh] w-full overflow-hidden"
+      className={`flex ${detailPage ? 'max-h-[87vh]' : 'max-h-[70vh]' } w-full overflow-hidden`}
       minSize={300}
     >
       <div className="overflow-y-auto pr-3">
@@ -157,7 +163,13 @@ const LargeIssueDetails = React.forwardRef<
             setIsAddingChildIssue={setIsAddingChildIssue}
           />
         ) : null}
-        <Comments issue={issue} />
+        <div className="flex gap-x-4 mt-2">
+        <h2>Activity :</h2>
+        <button className={`${activity === "comments" ? "bg-slate-300 border-2 border-black" : "bg-slate-100"} rounded-xl px-2 py-1`} onClick={() => setActivity("comments")}>Comments</button>
+        <button className={`${activity === "worklog" ? "bg-slate-300 border-2 border-black" : "bg-slate-100"} px-2 py-1 rounded-xl`} onClick={() => setActivity("worklog")}>Worklog</button>
+        </div>
+        {activity === "comments" ? <Comments issue={issue} /> : <Worklog />}
+        
       </div>
 
       <div className="mt-4 bg-white pl-3">

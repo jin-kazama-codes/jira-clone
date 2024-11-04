@@ -16,8 +16,6 @@ import {
   type GetIssueCommentsResponse,
   type PostCommentBody,
 } from "@/app/api/issues/[issueId]/comments/route";
-import { useCookie } from "@/hooks/use-cookie";
-import { prisma } from "@/server/db";
 
 const baseUrl = getBaseUrl();
 

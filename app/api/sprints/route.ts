@@ -42,16 +42,22 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   const { id: projectId } = parseCookies(req, "project");
-  const where = {
-    OR: [{ status: SprintStatus.ACTIVE }, { status: SprintStatus.PENDING }],
-    projectId: projectId,
-  };
-  // Get the query parameters
+
   const { searchParams } = new URL(req.url);
+
+  const isClosedOnly = searchParams.get("closed") === "true";
+
+  const where = {
+    projectId: projectId,
+    ...(isClosedOnly
+      ? { status: SprintStatus.CLOSED } // Only get closed sprints if closed parameter is true
+      : { OR: [{ status: SprintStatus.ACTIVE }, { status: SprintStatus.PENDING }] }
+    ),
+  };
 
   // Get the position from the query parameters
   const pos = searchParams.get("position");
-  const position = parseInt(pos)
+  const position = parseInt(pos);
   if (position) {
     where.position = position;
   }
@@ -63,7 +69,7 @@ export async function GET(req: NextRequest) {
     },
   });
 
-  // return NextResponse.json<GetSprintsResponse>({ sprints });
   return NextResponse.json({ sprints });
 }
+
 

@@ -51,6 +51,8 @@ const patchIssueBodyValidator = z.object({
   reporterId: z.number().optional(),
   parentId: z.string().nullable().optional(),
   sprintId: z.string().nullable().optional(),
+  estimateTime: z.string().nullable().optional(),
+  timeSpent: z.string().nullable().optional(),
   isDeleted: z.boolean().optional(),
   sprintColor: z.string().optional(),
 });
@@ -111,6 +113,8 @@ export async function PATCH(req: NextRequest, { params }: ParamsType) {
       sprintId: valid.sprintId === undefined ? undefined : valid.sprintId,
       parentId: valid.parentId === undefined ? undefined : valid.parentId,
       projectId: projectId,
+      estimateTime: valid.estimateTime === undefined ? undefined : valid.estimateTime, 
+      timeSpent: valid.timeSpent === undefined ? undefined : valid.timeSpent, 
       sprintColor: valid.sprintColor ?? undefined,
       boardPosition: valid.boardPosition ?? undefined,
     },
