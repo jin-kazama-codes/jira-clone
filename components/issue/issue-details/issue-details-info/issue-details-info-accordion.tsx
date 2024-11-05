@@ -27,7 +27,7 @@ const IssueDetailsInfoAccordion: React.FC<{ issue: IssueType }> = ({
 
   const user = useCookie("user");
   const [openAccordion, setOpenAccordion] = useState("details");
-  const [isModalOpen, setIsModalOpen] = useState(false); 
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setisEditing] = useState(false);
 
   function handleAutoAssign() {

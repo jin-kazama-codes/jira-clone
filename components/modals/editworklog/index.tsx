@@ -1,21 +1,23 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactNode, } from "react";
 import {
   Modal,
   ModalContent,
   ModalOverlay,
   ModalPortal,
   ModalTitle,
+  ModalTrigger,
 } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { IoClose } from "react-icons/io5";
 import { useIssues } from "@/hooks/query-hooks/use-issues";
 import { calculatePercentage, calculateTimeRemaining } from "@/utils/helpers";
-import { combineTimeSpent } from "@/utils/helpers"; // Helper to combine times
+import { combineTimeSpent } from "@/utils/helpers";
 import { useCookie } from "@/hooks/use-cookie";
+import WorklogDlt from "../worklogdelete";
 
-interface TimeTrackingModalProps {
+interface EditWorklogProps {
   isOpen: boolean;
   onClose: () => void; // Function to handle closing the modal
   issue: {
@@ -23,21 +25,27 @@ interface TimeTrackingModalProps {
     timeSpent: string;
     estimateTime: string;
   };
+  worklog;
+  children: ReactNode;
 }
 
-const TimeTrackingModal: React.FC<TimeTrackingModalProps> = ({
-  isOpen,
-  onClose,
+const EditWorklog: React.FC<EditWorklogProps> = ({
   issue,
+  worklog,
+  children,
 }) => {
+
   const [timeSpent, setTimeSpent] = useState(issue.timeSpent || ""); // Initially empty when modal opens
   const [percentage, setPercentage] = useState(0);
   const [remainingTime, setRemainingTime] = useState("");
-  const [newTimeSpent, setNewTimeSpent] = useState("");
-  const [workDescription, setWorkDescription] = useState("");
+  const [newTimeSpent, setNewTimeSpent] = useState(worklog.timeLogged);
+  const [workDescription, setWorkDescription] = useState(worklog.workDescription);
   const userName = useCookie('user')?.name
-
+  const [isOpen, setIsOpen] = useState(false);
   const { updateIssue } = useIssues();
+
+
+
 
   useEffect(() => {
     // Calculate percentage and remaining time based on the already logged time
@@ -59,55 +67,51 @@ const TimeTrackingModal: React.FC<TimeTrackingModalProps> = ({
     setPercentage(newPercentage);
   }, [newTimeSpent, issue.timeSpent, issue.estimateTime]);
 
-  const onSave = async () => {
-    // sending data to worklog
-
-    try {
-      const response = await fetch("/api/worklog", {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          issueId: issue.id,
-          workDescription: workDescription,
-          timeLogged: newTimeSpent,
-          userName: userName
-        })
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to log time');
-      }
-
-      // Update issue time in Issue Table
-      updateIssue({ issueId: issue.id, timeSpent: timeSpent });
-      onClose();
-    } catch (error) {
-
-    }
-
-    // Update the issue with the combined time
-    updateIssue({ issueId: issue.id, timeSpent: timeSpent });
-    onClose();
-  };
 
   const progressBarColor = percentage > 100 ? "bg-orange-500" : "bg-green-500";
 
+  // Handle input edit
+
+  const onSave = async (worklogId: string) => {
+    try {
+      const response = await fetch(`/api/worklog/${worklogId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          timeLogged: newTimeSpent,
+          workDescription: workDescription,
+          issueId: issue.id,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update worklog');
+      }
+      updateIssue({ issueId: issue.id, timeSpent: timeSpent });
+      setIsOpen(false)
+    } catch (error) {
+      updateIssue({ issueId: issue.id, timeSpent: timeSpent });
+      setIsOpen(false)
+    }
+  };
+
+
   return (
-    <Modal open={isOpen} onOpenChange={onClose}>
+    <Modal open={isOpen} onOpenChange={setIsOpen}>
+      <ModalTrigger asChild>{children}</ModalTrigger>
       <ModalPortal>
         <ModalOverlay />
         <ModalContent className="flex items-center justify-center ">
           <div className="w-full max-w-sm rounded-xl bg-white p-1 overflow-y-scroll h-96">
             <div className="mb-6 flex items-center justify-between">
               <ModalTitle className="text-2xl font-bold text-gray-800">
-                Time tracking
+                Edit Worklog
               </ModalTitle>
               <button
                 className="text-gray-500 hover:text-gray-700"
-                onClick={onClose}
+                onClick={() => setIsOpen(false)}
               >
+
                 <IoClose size={20} />
               </button>
             </div>
@@ -150,21 +154,18 @@ const TimeTrackingModal: React.FC<TimeTrackingModalProps> = ({
               <div className="flex gap-x-2">
                 <div className="space-y-2">
                   <label
-                    htmlFor="timeSpent"
+                    htmlFor="currentTime"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Time spent
+                    Current Logged Time
                   </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      id="timeSpent"
-                      value={newTimeSpent}
-                      onChange={(e) => setNewTimeSpent(e.target.value)}
-                      className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="e.g., 2w 4d 6h 45m"
-                    />
-                  </div>
+                  <input
+                    type="text"
+                    id="currentTime"
+                    value={newTimeSpent}
+                    onChange={(e) => setNewTimeSpent(e.target.value)} // Handle input change
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
                 </div>
 
                 <div className="space-y-2">
@@ -180,30 +181,31 @@ const TimeTrackingModal: React.FC<TimeTrackingModalProps> = ({
                       id="timeRemaining"
                       value={remainingTime}
                       className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      disabled
+                      disableds
                     />
                   </div>
                 </div>
               </div>
-
-              {/* Time format help */}
-              <div className="rounded-lg bg-gray-50 p-3 text-sm text-gray-600">
-                <p className="mb-1 font-medium">Use the format: 2w 4d 6h 45m</p>
-                <ul className="list-inside list-disc space-y-1">
-                  <li>w = weeks</li>
-                  <li>d = days</li>
-                  <li>h = hours</li>
-                  <li>m = minutes</li>
-                </ul>
-              </div>
             </div>
+
+            {/* Time format help */}
+            <div className="rounded-lg bg-gray-50 p-3 text-sm text-gray-600">
+              <p className="mb-1 font-medium">Use the format: 2w 4d 6h 45m</p>
+              <ul className="list-inside list-disc space-y-1">
+                <li>w = weeks</li>
+                <li>d = days</li>
+                <li>h = hours</li>
+                <li>m = minutes</li>
+              </ul>
+            </div>
+
 
             <div>
               <label
                 htmlFor="message"
                 className="mb-2 mt-2 block text-sm font-medium text-gray-900"
               >
-                Work Description
+                Edit  Description
               </label>
               <textarea
                 id="message"
@@ -219,12 +221,12 @@ const TimeTrackingModal: React.FC<TimeTrackingModalProps> = ({
             <div className="mt-6 flex justify-end space-x-3">
               <Button
                 className="rounded-2xl border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                onClick={onClose}
+                onClick={() => setIsOpen(false)}
               >
                 Cancel
               </Button>
               <Button
-                onClick={onSave}
+                onClick={() => onSave(worklog.id)}
                 className="rounded-2xl !bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               >
                 Save
@@ -237,4 +239,4 @@ const TimeTrackingModal: React.FC<TimeTrackingModalProps> = ({
   );
 };
 
-export default TimeTrackingModal;
+export default EditWorklog;

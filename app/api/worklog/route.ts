@@ -25,9 +25,9 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const { timeLogged, workDescription, issueId } = await req.json();
+    const { timeLogged, workDescription, issueId, userName } = await req.json();
 
-    if (!timeLogged || !workDescription || !issueId) {
+    if (!timeLogged || !workDescription || !issueId || !userName) {
       return NextResponse.json(
         { error: "Missing required fields: timeLogged, workDescription, or issueId" },
         { status: 400 }
@@ -40,6 +40,7 @@ export async function POST(req: NextRequest) {
         timeLogged,
         workDescription,
         issueId: issueId, // Assuming issueId is a number
+        userName,
       },
     });
 

@@ -115,15 +115,18 @@ export const useIssueDetails = () => {
     }
   );
 
-  //DELETE 
+  //DELETE
 
   const deleteComment = useMutation(
     async ({ issueId, commentId }: { issueId: string; commentId: string }) => {
-      const response = await fetch(`/api/issues/${issueId}/comments/${commentId}`, {
-        method: 'DELETE',
-      });
+      const response = await fetch(
+        `/api/issues/${issueId}/comments/${commentId}`,
+        {
+          method: "DELETE",
+        }
+      );
       if (!response.ok) {
-        throw new Error('Failed to delete comment');
+        throw new Error("Failed to delete comment");
       }
       return response.json();
     },

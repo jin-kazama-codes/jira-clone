@@ -221,28 +221,27 @@ export const setCookie = (param: string, obj: {}) => {
 
 export const timeStringToMinutes = (timeString?: string) => {
   if (!timeString) return 0; // Return 0 if timeString is null or undefined
-  const Workingdays = useCookie("project").workingDays 
+  const Workingdays = useCookie("project").workingDays;
 
   const timeRegex = /(?:(\d+)w)?\s*(?:(\d+)d)?\s*(?:(\d+)h)?\s*(?:(\d+)m)?/;
   const matches = timeString.match(timeRegex);
 
-  const minutesInDay = 480;      // 1 day = 8 hours = 480 minutes
-  const minutesInWeek = Workingdays * minutesInDay; 
+  const minutesInDay = 480; // 1 day = 8 hours = 480 minutes
+  const minutesInWeek = Workingdays * minutesInDay;
 
   const weeks = parseInt(matches?.[1] || 0, 10) * minutesInWeek; // 1 week = 10080 minutes
-  const days = parseInt(matches?.[2] || 0, 10) * minutesInDay;   // 1 day = 1440 minutes
-  const hours = parseInt(matches?.[3] || 0, 10) * 60;     // 1 hour = 60 minutes
+  const days = parseInt(matches?.[2] || 0, 10) * minutesInDay; // 1 day = 1440 minutes
+  const hours = parseInt(matches?.[3] || 0, 10) * 60; // 1 hour = 60 minutes
   const minutes = parseInt(matches?.[4] || 0, 10);
 
   return weeks + days + hours + minutes;
 };
 
 export const minutesToTimeString = (totalMinutes) => {
+  const Workingdays = useCookie("project").workingDays;
 
-  const Workingdays = useCookie("project").workingDays 
-
-  const minutesInDay = 480;      // 1 day = 8 hours = 480 minutes
-  const minutesInWeek = Workingdays * minutesInDay; 
+  const minutesInDay = 480; // 1 day = 8 hours = 480 minutes
+  const minutesInWeek = Workingdays * minutesInDay;
 
   const weeks = Math.floor(totalMinutes / minutesInWeek);
   const days = Math.floor((totalMinutes % minutesInWeek) / minutesInDay);
@@ -255,30 +254,29 @@ export const minutesToTimeString = (totalMinutes) => {
 };
 
 export const timeStringToHours = (timeString?: string) => {
-  const Workingdays = useCookie("project").workingDays 
+  const Workingdays = useCookie("project").workingDays;
   if (!timeString) return 0; // Return 0 if timeString is null or undefined
 
   const timeRegex = /(?:(\d+)w)?\s*(?:(\d+)d)?\s*(?:(\d+)h)?\s*(?:(\d+)m)?/;
   const matches = timeString.match(timeRegex);
 
-  const hoursInWeek = Workingdays * 8
+  const hoursInWeek = Workingdays * 8;
 
-  const weeks = parseInt(matches?.[1] || '0', 10) * hoursInWeek;    // 1 week = 40 hours (assuming 5 working days)
-  const days = parseInt(matches?.[2] || '0', 10) * 8;      // 1 day = 8 hours
-  const hours = parseInt(matches?.[3] || '0', 10);         // Direct hours
-  const minutes = parseInt(matches?.[4] || '0', 10) / 60;  // Convert minutes to hours
+  const weeks = parseInt(matches?.[1] || "0", 10) * hoursInWeek; // 1 week = 40 hours (assuming 5 working days)
+  const days = parseInt(matches?.[2] || "0", 10) * 8; // 1 day = 8 hours
+  const hours = parseInt(matches?.[3] || "0", 10); // Direct hours
+  const minutes = parseInt(matches?.[4] || "0", 10) / 60; // Convert minutes to hours
 
   return weeks + days + hours + minutes;
 };
 
 export const hoursToTimeString = (hours: number) => {
-  if (!hours) return '0h';
+  if (!hours) return "0h";
 
-  
-  const Workingdays = useCookie("project").workingDays 
+  const Workingdays = useCookie("project").workingDays;
 
-  const hoursInDay = 8;      // 1 day = 8 hours
-  const hoursInWeek = Workingdays * hoursInDay; 
+  const hoursInDay = 8; // 1 day = 8 hours
+  const hoursInWeek = Workingdays * hoursInDay;
 
   const weeks = Math.floor(hours / hoursInWeek);
   const remainingHoursAfterWeeks = hours % hoursInWeek;
@@ -289,7 +287,7 @@ export const hoursToTimeString = (hours: number) => {
   const wholeHours = Math.floor(remainingHoursAfterDays);
   const minutes = Math.round((remainingHoursAfterDays - wholeHours) * 60);
 
-  let timeString = '';
+  let timeString = "";
 
   if (weeks > 0) timeString += `${weeks}w `;
   if (days > 0) timeString += `${days}d `;
@@ -299,22 +297,24 @@ export const hoursToTimeString = (hours: number) => {
   return timeString.trim();
 };
 
-
 export const calculateTimeRemaining = (timeSpent, estimateTime) => {
   const timeSpentMinutes = timeStringToMinutes(timeSpent);
   const estimateTimeMinutes = timeStringToMinutes(estimateTime);
 
   const remainingMinutes = estimateTimeMinutes - timeSpentMinutes;
-  if(remainingMinutes > 0 ){
-    return minutesToTimeString(remainingMinutes)
-  } else if(remainingMinutes == 0){
-    return '0m'
-  }else{
-    return 'Overdue'
+  if (remainingMinutes > 0) {
+    return minutesToTimeString(remainingMinutes);
+  } else if (remainingMinutes == 0) {
+    return "0m";
+  } else {
+    return "Overdue";
   }
 };
 
-export const calculatePercentage = (timeSpent?: string, estimateTime?: string) => {
+export const calculatePercentage = (
+  timeSpent?: string,
+  estimateTime?: string
+) => {
   const timeSpentMinutes = timeStringToMinutes(timeSpent);
   const estimateTimeMinutes = timeStringToMinutes(estimateTime);
 
@@ -323,12 +323,26 @@ export const calculatePercentage = (timeSpent?: string, estimateTime?: string) =
   return (timeSpentMinutes / estimateTimeMinutes) * 100;
 };
 
-export const combineTimeSpent = (existingTimeSpent: string, newTimeSpent: string) => {
+export const combineTimeSpent = (
+  existingTimeSpent: string,
+  newTimeSpent: string
+) => {
+  const existingMinutes = timeStringToMinutes(existingTimeSpent);
+  const newMinutes = timeStringToMinutes(newTimeSpent);
 
-    const existingMinutes = timeStringToMinutes(existingTimeSpent)
-    const newMinutes = timeStringToMinutes(newTimeSpent)
+  const totalMinutes = existingMinutes + newMinutes;
 
-    const totalMinutes =  existingMinutes + newMinutes
+  return minutesToTimeString(totalMinutes);
+};
 
-    return minutesToTimeString(totalMinutes)
-}
+export const reduceTimeSpent = (
+  existingTimeSpent: string,
+  timeLogged: string
+) => {
+  const existingMinutes = timeStringToMinutes(existingTimeSpent);
+  const newTime = timeStringToMinutes(timeLogged);
+
+  const totalTime = existingMinutes - newTime;
+
+  return minutesToTimeString(totalTime);
+};
