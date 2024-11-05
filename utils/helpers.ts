@@ -225,8 +225,8 @@ export const timeStringToMinutes = (timeString?: string) => {
   const matches = timeString.match(timeRegex);
 
   const weeks = parseInt(matches?.[1] || 0, 10) * 10080; // 1 week = 10080 minutes
-  const days = parseInt(matches?.[2] || 0, 10) * 1440;   // 1 day = 1440 minutes
-  const hours = parseInt(matches?.[3] || 0, 10) * 60;     // 1 hour = 60 minutes
+  const days = parseInt(matches?.[2] || 0, 10) * 1440; // 1 day = 1440 minutes
+  const hours = parseInt(matches?.[3] || 0, 10) * 60; // 1 hour = 60 minutes
   const minutes = parseInt(matches?.[4] || 0, 10);
 
   return weeks + days + hours + minutes;
@@ -248,16 +248,19 @@ export const calculateTimeRemaining = (timeSpent, estimateTime) => {
   const estimateTimeMinutes = timeStringToMinutes(estimateTime);
 
   const remainingMinutes = estimateTimeMinutes - timeSpentMinutes;
-  if(remainingMinutes > 0 ){
-    return minutesToTimeString(remainingMinutes)
-  } else if(remainingMinutes == 0){
-    return '0m'
-  }else{
-    return 'Overdue'
+  if (remainingMinutes > 0) {
+    return minutesToTimeString(remainingMinutes);
+  } else if (remainingMinutes == 0) {
+    return "0m";
+  } else {
+    return "Overdue";
   }
 };
 
-export const calculatePercentage = (timeSpent?: string, estimateTime?: string) => {
+export const calculatePercentage = (
+  timeSpent?: string,
+  estimateTime?: string
+) => {
   const timeSpentMinutes = timeStringToMinutes(timeSpent);
   const estimateTimeMinutes = timeStringToMinutes(estimateTime);
 
@@ -266,12 +269,26 @@ export const calculatePercentage = (timeSpent?: string, estimateTime?: string) =
   return (timeSpentMinutes / estimateTimeMinutes) * 100;
 };
 
-export const combineTimeSpent = (existingTimeSpent: string, newTimeSpent: string) => {
+export const combineTimeSpent = (
+  existingTimeSpent: string,
+  newTimeSpent: string
+) => {
+  const existingMinutes = timeStringToMinutes(existingTimeSpent);
+  const newMinutes = timeStringToMinutes(newTimeSpent);
 
-    const existingMinutes = timeStringToMinutes(existingTimeSpent)
-    const newMinutes = timeStringToMinutes(newTimeSpent)
+  const totalMinutes = existingMinutes + newMinutes;
 
-    const totalMinutes =  existingMinutes + newMinutes
+  return minutesToTimeString(totalMinutes);
+};
 
-    return minutesToTimeString(totalMinutes)
-}
+export const reduceTimeSpent = (
+  existingTimeSpent: string,
+  timeLogged: string
+) => {
+  const existingMinutes = timeStringToMinutes(existingTimeSpent);
+  const newTime = timeStringToMinutes(timeLogged);
+
+  const totalTime = existingMinutes - newTime;
+
+  return minutesToTimeString(totalTime);
+};

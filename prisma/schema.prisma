@@ -30,8 +30,10 @@ model Member {
 model Worklog {
   issueId         String
   timeLogged      String
+  userName        String?
+  createdAt       DateTime @default(now())
   workDescription String?
-  id              String      @id @default(uuid())
+  id              String   @id @default(uuid())
 }
 
 model Issue {
@@ -75,7 +77,7 @@ model Sprint {
   status      SprintStatus @default(PENDING)
   projectId   Int?
   creatorId   Int?
-  position    Int?       
+  position    Int?
   issues      Issue[]
 }
 
