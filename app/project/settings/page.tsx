@@ -11,8 +11,9 @@ const UpdateProject: React.FC = () => {
     projectId: "",
     name: "",
     cloneChild: false,
+    workingDays: 5,  // Default to 5 working days, stored as an integer
   });
-  const router = useRouter()
+  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -21,12 +22,14 @@ const UpdateProject: React.FC = () => {
     const projectId = useCookie("project").id;
     const name = useCookie("project").name;
     const cloneChild = useCookie("project").cloneChild;
+    const workingDays = parseInt(useCookie("project").workingDays, 10) || 5;
     if (projectId && name) {
       setFormData((prevData) => ({
         ...prevData,
         projectId,
         name,
         cloneChild,
+        workingDays,
       }));
     } else {
       setError("Project not found in cookies");
@@ -34,12 +37,12 @@ const UpdateProject: React.FC = () => {
   }, []);
 
   const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value, type, checked } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type === "checkbox" ? checked : name === "workingDays" ? parseInt(value, 10) : value,
     }));
   };
 
@@ -54,13 +57,13 @@ const UpdateProject: React.FC = () => {
       });
 
       if (response.status === 200 && isMounted) {
-        // Redirect after successful update
         const updatedProject = response.data.project;
         setCookie("project", {
           id: updatedProject.id,
           name: updatedProject.name,
           cloneChild: updatedProject.cloneChild,
-          key: updatedProject.key
+          workingDays: updatedProject.workingDays,
+          key: updatedProject.key,
         });
         router.push("/project/backlog");
       } else {
@@ -78,7 +81,7 @@ const UpdateProject: React.FC = () => {
   };
 
   if (!isMounted) {
-    return null; // Prevent rendering the component until fully mounted
+    return null;
   }
 
   return (
@@ -87,7 +90,7 @@ const UpdateProject: React.FC = () => {
         <div className="text-center">
           <h1 className="text-3xl font-bold tracking-tight">Update Project</h1>
           <p className="text-muted-foreground text-lg">
-            Enter the new project name below.
+            Enter the new project details below.
           </p>
         </div>
         <form
@@ -124,6 +127,23 @@ const UpdateProject: React.FC = () => {
               <label htmlFor="cloneChild" className="text-sm font-medium">
                 Clone Child Issues
               </label>
+            </div>
+
+            {/* New Select for Working Days */}
+            <div className="mt-2 flex flex-col">
+              <label htmlFor="workingDays" className="text-sm font-medium">
+                Working Days
+              </label>
+              <select
+                id="workingDays"
+                name="workingDays"
+                className="focus:border-primary focus:ring-primary mt-3 rounded-xl border border-gray-300 px-3 py-2"
+                onChange={handleChange}
+                value={formData.workingDays}
+              >
+                <option value={5}>5 Days</option>
+                <option value={6}>6 Days</option>
+              </select>
             </div>
           </div>
 

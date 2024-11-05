@@ -8,8 +8,8 @@ import { useSelectedIssueContext } from "@/context/use-selected-issue-context";
 
 const IssueDetails: React.FC<{
   issueKey: string | null;
-  large? : boolean
-}> = ({ issueKey, large }) => {
+  detailPage? : boolean
+}> = ({ issueKey, detailPage }) => {
   const { issues } = useIssues();
   const { setIssueKey } = useSelectedIssueContext();
   const renderContainerRef = React.useRef<HTMLDivElement>(null);
@@ -39,12 +39,12 @@ const IssueDetails: React.FC<{
       className="relative z-10 flex w-full flex-col overflow-y-auto pl-4 pr-2 [&[data-state=closed]]:hidden"
     >
       <IssueDetailsHeader
-        large={large}
+        detailPage={detailPage}
         issue={issueInfo}
         setIssueKey={setIssueKey}
         isInViewport={isInViewport}
       />
-      <IssueDetailsInfo large={large} issue={issueInfo} ref={viewportRef} />
+      <IssueDetailsInfo detailPage={detailPage} issue={issueInfo} ref={viewportRef} />
     </div>
   );
 };

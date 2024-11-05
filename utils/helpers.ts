@@ -1,6 +1,7 @@
 import { type IssueCountType } from "./types";
 import { type IssueType } from "@/utils/types";
 import { type DefaultUser, type Issue } from "@prisma/client";
+import { useCookie } from "@/hooks/use-cookie";
 
 type Value<T> = T extends Promise<infer U> ? U : T;
 
@@ -220,12 +221,16 @@ export const setCookie = (param: string, obj: {}) => {
 
 export const timeStringToMinutes = (timeString?: string) => {
   if (!timeString) return 0; // Return 0 if timeString is null or undefined
+  const Workingdays = useCookie("project").workingDays;
 
   const timeRegex = /(?:(\d+)w)?\s*(?:(\d+)d)?\s*(?:(\d+)h)?\s*(?:(\d+)m)?/;
   const matches = timeString.match(timeRegex);
 
-  const weeks = parseInt(matches?.[1] || 0, 10) * 10080; // 1 week = 10080 minutes
-  const days = parseInt(matches?.[2] || 0, 10) * 1440; // 1 day = 1440 minutes
+  const minutesInDay = 480; // 1 day = 8 hours = 480 minutes
+  const minutesInWeek = Workingdays * minutesInDay;
+
+  const weeks = parseInt(matches?.[1] || 0, 10) * minutesInWeek; // 1 week = 10080 minutes
+  const days = parseInt(matches?.[2] || 0, 10) * minutesInDay; // 1 day = 1440 minutes
   const hours = parseInt(matches?.[3] || 0, 10) * 60; // 1 hour = 60 minutes
   const minutes = parseInt(matches?.[4] || 0, 10);
 
@@ -233,14 +238,63 @@ export const timeStringToMinutes = (timeString?: string) => {
 };
 
 export const minutesToTimeString = (totalMinutes) => {
-  const weeks = Math.floor(totalMinutes / 10080);
-  const days = Math.floor((totalMinutes % 10080) / 1440);
-  const hours = Math.floor((totalMinutes % 1440) / 60);
+  const Workingdays = useCookie("project").workingDays;
+
+  const minutesInDay = 480; // 1 day = 8 hours = 480 minutes
+  const minutesInWeek = Workingdays * minutesInDay;
+
+  const weeks = Math.floor(totalMinutes / minutesInWeek);
+  const days = Math.floor((totalMinutes % minutesInWeek) / minutesInDay);
+  const hours = Math.floor((totalMinutes % minutesInDay) / 60);
   const minutes = totalMinutes % 60;
 
-  return `${weeks > 0 ? `${weeks}w ` : ""}${days > 0 ? `${days}d ` : ""}${
+  return `${weeks > 0 ? `${weeks}w ` : ""}${days > 0 ? `${days}d` : ""}${
     hours > 0 ? `${hours}h ` : ""
   }${minutes > 0 ? `${minutes}m` : ""}`.trim();
+};
+
+export const timeStringToHours = (timeString?: string) => {
+  const Workingdays = useCookie("project").workingDays;
+  if (!timeString) return 0; // Return 0 if timeString is null or undefined
+
+  const timeRegex = /(?:(\d+)w)?\s*(?:(\d+)d)?\s*(?:(\d+)h)?\s*(?:(\d+)m)?/;
+  const matches = timeString.match(timeRegex);
+
+  const hoursInWeek = Workingdays * 8;
+
+  const weeks = parseInt(matches?.[1] || "0", 10) * hoursInWeek; // 1 week = 40 hours (assuming 5 working days)
+  const days = parseInt(matches?.[2] || "0", 10) * 8; // 1 day = 8 hours
+  const hours = parseInt(matches?.[3] || "0", 10); // Direct hours
+  const minutes = parseInt(matches?.[4] || "0", 10) / 60; // Convert minutes to hours
+
+  return weeks + days + hours + minutes;
+};
+
+export const hoursToTimeString = (hours: number) => {
+  if (!hours) return "0h";
+
+  const Workingdays = useCookie("project").workingDays;
+
+  const hoursInDay = 8; // 1 day = 8 hours
+  const hoursInWeek = Workingdays * hoursInDay;
+
+  const weeks = Math.floor(hours / hoursInWeek);
+  const remainingHoursAfterWeeks = hours % hoursInWeek;
+
+  const days = Math.floor(remainingHoursAfterWeeks / hoursInDay);
+  const remainingHoursAfterDays = remainingHoursAfterWeeks % hoursInDay;
+
+  const wholeHours = Math.floor(remainingHoursAfterDays);
+  const minutes = Math.round((remainingHoursAfterDays - wholeHours) * 60);
+
+  let timeString = "";
+
+  if (weeks > 0) timeString += `${weeks}w `;
+  if (days > 0) timeString += `${days}d `;
+  if (wholeHours > 0) timeString += `${wholeHours}h `;
+  if (minutes > 0) timeString += `${minutes}m`;
+
+  return timeString.trim();
 };
 
 export const calculateTimeRemaining = (timeSpent, estimateTime) => {

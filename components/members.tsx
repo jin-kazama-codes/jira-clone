@@ -66,56 +66,68 @@ const Members = () => {
 
   if (!members) return <div />;
 
+  const totalMembers = members.length + 1; // Including unassigned
+  const needsScroll = totalMembers > 7;
+
   return (
     <div className="flex items-center">
-      {[...members, unassigned].map((member, index) => {
-        const initials = getInitials(member.name);
-        const bgColor = getColorForInitial(member.id, index); // Use color palette based on index
-        return (
-          <div
-            key={member.id}
-            style={{ zIndex: members.length - index }}
-            className="hover:!z-10"
-          >
-            <Button
-              onClick={() => handleAssigneeFilter(member.id)}
-              customColors
-              customPadding
-              data-state={
-                assignees.includes(member.id) ? "selected" : "not-selected"
-              }
-              className="-mx-1 flex border-spacing-2 rounded-full border-2 border-transparent bg-white p-0.5 transition-all duration-75 hover:-mt-1.5 [&[data-state=selected]]:border-inprogress"
-            >
-              {member.avatar ? (
-                <Avatar src={member.avatar} alt={`${member.name}`} />
-              ) : (
-                <TooltipWrapper text={member.name}>
-                  <div
-                    className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-300"
-                    style={{ backgroundColor: bgColor }}
-                  >
-                    <span className="font-bold text-white">{initials}</span>
-                  </div>
-                </TooltipWrapper>
-              )}
-            </Button>
-          </div>
-        );
-      })}
-
-      {/* <NotImplemented feature="add people"> */}
-      {(user?.role === "admin" || user?.role === "manager") && (
-        <UserModal refetch={refetch}>
-          <button>
-            <AddPeopleIcon
-              className="ml-3 rounded-full bg-gray-200 p-1 text-gray-500"
-              size={35}
-            />
-          </button>
-        </UserModal>
-      )}
-      {/* </NotImplemented> */}
+    <div className="relative">
+      {/* Subtle fade effects */}
+      {/* <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-6 bg-gradient-to-r from-white to-transparent opacity-90" /> */}
+      {needsScroll && (<div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-6 bg-gradient-to-l from-white to-transparent opacity-90" />)}
+      
+      {/* Scrollable container with subtle shadow */}
+      <div className={`${needsScroll ? 'w-56 overflow-x-auto [-ms-scrollbar:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden' : ''} rounded-xl bg-white py-2`}>
+        <div className={`flex ${needsScroll ? 'px-3' : ''}`}>
+          {[...members, unassigned].map((member, index) => {
+            const initials = getInitials(member.name);
+            const bgColor = getColorForInitial(member.id, index);
+            return (
+              <div
+                key={member.id}
+                style={{ zIndex: members.length - index }}
+                className="-ml-2 first:ml-0 hover:!z-10"
+              >
+                <Button
+                  onClick={() => handleAssigneeFilter(member.id)}
+                  customColors
+                  customPadding
+                  data-state={
+                    assignees.includes(member.id) ? "selected" : "not-selected"
+                  }
+                  className="flex border-spacing-2 rounded-full border-2 border-transparent bg-white p-0.5 transition-all duration-75 hover:-mt-1.5 [&[data-state=selected]]:border-inprogress"
+                >
+                  {member.avatar ? (
+                    <Avatar src={member.avatar} alt={`${member.name}`} />
+                  ) : (
+                    <TooltipWrapper text={member.name}>
+                      <div
+                        className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-300"
+                        style={{ backgroundColor: bgColor }}
+                      >
+                        <span className="font-bold text-white">{initials}</span>
+                      </div>
+                    </TooltipWrapper>
+                  )}
+                </Button>
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
+
+    {(user?.role === "admin" || user?.role === "manager") && (
+      <UserModal refetch={refetch}>
+        <button>
+          <AddPeopleIcon
+            className="ml-3 rounded-full bg-gray-200 p-1 text-gray-500"
+            size={35}
+          />
+        </button>
+      </UserModal>
+    )}
+  </div>
   );
 };
 
