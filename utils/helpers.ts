@@ -346,3 +346,24 @@ export const reduceTimeSpent = (
 
   return minutesToTimeString(totalTime);
 };
+
+
+export const calculateTimeLogged = (time) => {
+  const now = new Date();
+  const diff = now - new Date(time); // Difference in milliseconds
+
+  const seconds = Math.floor((diff / 1000) % 60);
+  const minutes = Math.floor((diff / 1000 / 60) % 60);
+  const hours = Math.floor((diff / 1000 / 60 / 60) % 24);
+  const days = Math.floor(diff / 1000 / 60 / 60 / 24);
+
+  if (days > 0) {
+    return `${days}d`;
+  } else if (hours > 0) {
+    return `${hours}h`;
+  } else if (minutes > 0) {
+    return `${minutes}m`;
+  } else {
+    return `${seconds}s`;
+  }
+};
