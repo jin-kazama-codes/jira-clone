@@ -1,20 +1,12 @@
 "use client";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCookie } from "@/hooks/use-cookie";
-import { useFiltersContext } from "@/context/use-filters-context";
 
 const TopNavbar: React.FC = () => {
   const user = useCookie("user");
   const router = useRouter();
-  const pathname = usePathname();
-  const { assignees, setAssignees } = useFiltersContext();
-  const isAdminOrManager =
-    user && (user.role === "admin" || user.role === "manager");
 
-  const isOnProjectPage = pathname === "/project";
-  const isOnUsersPage = pathname === "/project/users";
 
   function handleLogout() {
     document.cookie.split(";").forEach((cookie) => {
@@ -26,13 +18,7 @@ const TopNavbar: React.FC = () => {
     window.location.reload();
   }
 
-  const filterAssignee = () => {
-    setAssignees([user.id]);
-  };
 
-  const clearFilterAssignee = () => {
-    setAssignees([]);
-  };
 
   return (
     <div className="flex h-12 w-full items-center justify-between border-b px-4">
