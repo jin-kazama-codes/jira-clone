@@ -39,7 +39,7 @@ const Project: React.FC = async () => {
           {/* Left: Project List */}
           {projects && (
             <div className={isAdminOrManager ? "lg:col-span-1 " : "col-span-1"}>
-              <ProjectList projects={projects} />
+              <ProjectList projects={projects} admin={isAdminOrManager}/>
             </div>
           )}
           {/* Right: Create Project Form */}

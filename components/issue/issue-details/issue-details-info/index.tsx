@@ -27,6 +27,8 @@ const IssueDetailsInfo = React.forwardRef<
 
   if (!issue) return <div />;
 
+  console.log("PARENTWIDTH", parentWidth)
+  
   return (
     <div ref={parentRef}>
       {!parentWidth ? null : parentWidth > 800 ? (
@@ -133,7 +135,7 @@ const LargeIssueDetails = React.forwardRef<
     <Split
       sizes={[60, 40]}
       gutterSize={2}
-      className={`flex ${detailPage ? 'max-h-[87vh]' : 'max-h-[70vh]'} w-full overflow-hidden`}
+      className={`flex ${detailPage ? 'max-h-[87vh]' : 'max-h-[70vh]' } w-full overflow-hidden`}
       minSize={300}
     >
       <div className="overflow-y-auto pr-3">
@@ -175,9 +177,8 @@ const LargeIssueDetails = React.forwardRef<
           <button className={`${activity === "comments" ? "bg-slate-300 border-2 " : "bg-slate-100"} rounded-md rounded-r-none  px-2 py-1 border-2 `} onClick={() => setActivity("comments")}>Comments</button>
           <button className={`${activity === "worklog" ? "bg-slate-300 border-2 " : "bg-slate-100"} rounded-md rounded-l-none  px-2 py-1 border-2 `} onClick={() => setActivity("worklog")}>Worklog</button>
         </div>
-        {activity === "comments" ? <Comments issue={issue} /> : <Worklog
-          issue={issue} />}
-
+        {activity === "comments" ? <Comments issue={issue} /> : <Worklog issue={issue}/>}
+        
       </div>
 
       <div className="mt-4 bg-white pl-3">
