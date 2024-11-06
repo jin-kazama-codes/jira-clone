@@ -1,15 +1,27 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { BacklogIcon, BoardIcon, BurndownIcon, DevelopmentIcon, RoadmapIcon, VelocityIcon } from "./svgs";
+import { FaClipboardList } from "react-icons/fa";
+import {
+  BacklogIcon,
+  BoardIcon,
+  BurndownIcon,
+  DevelopmentIcon,
+  ProjectsIcon,
+  RoadmapIcon,
+  TaskIcon,
+  UsersIcon,
+  VelocityIcon,
+} from "./svgs";
 import {
   NavigationMenu,
   NavigationMenuLink,
   NavigationMenuList,
 } from "./ui/navigation-menu";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { FaChessPawn, FaChevronRight } from "react-icons/fa";
 import { useCookie } from "@/hooks/use-cookie";
+import { useFiltersContext } from "@/context/use-filters-context";
 
 type NavItemType = {
   id: string;
@@ -19,8 +31,23 @@ type NavItemType = {
 };
 
 const Sidebar: React.FC = () => {
+  const user = useCookie("user");
+  const router = useRouter();
+  const pathname = usePathname();
+  const { assignees, setAssignees } = useFiltersContext();
+  const isAdminOrManager =
+    user && (user.role === "admin" || user.role === "manager");
+
+  const isOnProjectPage = pathname === "/project";
+  const isOnUsersPage = pathname === "/project/users";
+
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const project = useCookie("project");
+
+  const toggleAssigneeFilter = () => {
+    setAssignees(assignees.length === 0 ? [user.id] : []);
+  };
+
   const planningItems = [
     {
       id: "roadmap",
@@ -42,14 +69,31 @@ const Sidebar: React.FC = () => {
     },
   ];
 
+  const myWorkSpaceItems = [
+    {
+      id: "projects",
+      label: "Projects",
+      icon: ProjectsIcon,
+      href: `/project`,
+    },
+
+  ];
+
+  // Configuration items, with Users section shown only if the user is an admin or manager
   const configurationItems = [
+    isAdminOrManager && {
+      id: "users",
+      label: "Users",
+      icon: UsersIcon,
+      href: `/project/users`,
+    },
     {
       id: "settings",
       label: "Settings",
       icon: DevelopmentIcon,
       href: `/project/settings`,
     },
-  ];
+  ].filter(Boolean); // Filter out any null values if isAdminOrManager is false
 
   const reportingItems = [
     {
@@ -66,23 +110,39 @@ const Sidebar: React.FC = () => {
     },
   ];
 
-
   return (
-    <div className="flex h-full w-64 flex-col gap-y-5 bg-gray-50 p-3 shadow-inner">
-      <div className="my-5 flex items-center gap-x-2 px-3 border-b-2 pb-7">
+    <div className="flex h-full w-64 flex-col gap-y-3 bg-gray-50 p-3 shadow-inner">
+      <div className="my-5 flex items-center gap-x-2 border-b-2 px-3 pb-7">
         <div className="mt-1 flex items-center justify-center rounded-full bg-[#FF5630] p-1 text-xs font-bold text-white">
           <FaChessPawn className="aspect-square text-2xl" />
         </div>
         <div>
-          <h2 className="-mb-[0.5px] text-md font-semibold text-gray-600">
+          <h2 className="text-md -mb-[0.5px] font-semibold text-gray-600">
             {project?.name}
           </h2>
           <p className="text-xs text-gray-500">Task Management App</p>
         </div>
       </div>
+
+
       <NavList label={"PLANNING"} items={planningItems} />
+      <NavList label={"MY WORKSPACE"} items={myWorkSpaceItems} />
+      {!isOnUsersPage && !isOnProjectPage && (
+        <button
+          onClick={toggleAssigneeFilter}
+          className=" flex w-full rounded-sm rounded-r-xl py-2 items-center border-l-4 border-inherit bg-inherit px-2  hover:bg-slate-100"
+        >
+          <FaClipboardList className="w-6 h-6 mr-3" /> {/* Task-related icon */}
+          <span className=" text-sm">
+            {assignees.length === 0 ? "My Tasks" : "All Tasks"}
+          </span>
+        </button>
+      )}
       <NavList label={"CONFIGURATION"} items={configurationItems} />
       <NavList label={"REPORTS"} items={reportingItems} />
+
+
+
     </div>
   );
 };
@@ -158,10 +218,10 @@ const NavItem: React.FC<{ item: NavItemType; disabled?: boolean }> = ({
     >
       <NavigationMenuLink
         active={currentPath === item.href}
-        className="flex w-full rounded-sm border-transparent rounded-r-xl [&[data-active]]:rounded-r-xl py-2 [&[data-active]]:border-l-black [&[data-active]]:bg-slate-200 [&[data-active]]:text-black hover:bg-slate-100"
+        className="flex w-full rounded-sm rounded-r-xl border-transparent py-2 hover:bg-slate-100 [&[data-active]]:rounded-r-xl [&[data-active]]:border-l-black [&[data-active]]:bg-slate-200 [&[data-active]]:text-black"
       >
         <div className="flex w-full items-center gap-x-3 border-l-4 border-inherit bg-inherit px-2">
-          <item.icon className="[&[data-active]]:text-blue-500"/>
+          <item.icon className="[&[data-active]]:text-blue-500" />
           <span className="text-sm">{item.label}</span>
         </div>
       </NavigationMenuLink>

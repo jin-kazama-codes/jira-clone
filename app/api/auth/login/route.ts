@@ -28,15 +28,21 @@ export async function POST(request: Request) {
   );
 }
 
-
-
 export async function PATCH(request: Request) {
   try {
     const { projectId, name, cloneChild, workingDays } = await request.json();
 
     // Ensure that projectId, name, and cloneChild are provided
-    if (!projectId || !name || typeof cloneChild !== "boolean" || !workingDays) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    if (
+      !projectId ||
+      !name ||
+      typeof cloneChild !== "boolean" ||
+      !workingDays
+    ) {
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
     }
 
     const project = await prisma.project.findUnique({
@@ -58,7 +64,9 @@ export async function PATCH(request: Request) {
     );
   } catch (error) {
     console.error("Error updating project:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
-

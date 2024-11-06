@@ -555,6 +555,118 @@ const BurndownIcon: React.FC<{ className?: string; size?: number }> = ({
   );
 };
 
+const UsersIcon: React.FC<{ className?: string; size?: number }> = ({
+  className,
+  size,
+}) => {
+  return (
+    <svg
+      className={className}
+      width={size ?? 24}
+      height={size ?? 24}
+      viewBox="0 0 24 24"
+      role="presentation"
+    >
+      <path
+        d="M6 2a3 3 0 110 6 3 3 0 010-6zm0 2a1 1 0 100 2 1 1 0 000-2zm10-2a3 3 0 110 6 3 3 0 010-6zm0 2a1 1 0 100 2 1 1 0 000-2zM4 13h12a3 3 0 110 6H4a3 3 0 110-6zm0 2a1 1 0 000 2h12a1 1 0 000-2H4z"
+        fill="currentColor"
+      ></path>
+    </svg>
+  );
+};
+
+// const ProjectsIcon: React.FC<{ className?: string; size?: number }> = ({
+//   className,
+//   size,
+// }) => {
+//   return (
+//     <svg
+//       className={className}
+//       width={size ?? 24}
+//       height={size ?? 24}
+//       viewBox="0 0 24 24"
+//       role="presentation"
+//     >
+//       <path
+//         d="M6 2h10a3 3 0 010 6H6a3 3 0 110-6zm0 2a1 1 0 100 2h10a1 1 0 000-2H6zm2 7h8a3 3 0 010 6h-8a3 3 0 010-6zm0 2a1 1 0 000 2h8a1 1 0 000-2H8zm-4 5h6a3 3 0 010 6H4a3 3 0 010-6zm0 2a1 1 0 000 2h6a1 1 0 000-2H4z"
+//         fill="currentColor"
+//       ></path>
+//     </svg>
+//   );
+// };
+
+const ProjectsIcon: React.FC<{ className?: string; size?: number }> = ({
+  className,
+  size,
+}) => {
+  return (
+    <svg
+      className={className}
+      width={size ?? 24}
+      height={size ?? 24}
+      viewBox="0 0 24 24"
+      role="presentation"
+    >
+      <g fill="currentColor">
+        {/* Folder Base */}
+        <path d="M10 2H4a2 2 0 00-2 2v16a2 2 0 002 2h16a2 2 0 002-2V8l-8-6z" />
+        {/* Project Cards */}
+        <rect
+          x="4"
+          y="8"
+          width="16"
+          height="2"
+          rx="1"
+          fill="rgba(255, 255, 255, 0.7)"
+        />
+        <rect
+          x="4"
+          y="12"
+          width="12"
+          height="2"
+          rx="1"
+          fill="rgba(255, 255, 255, 0.5)"
+        />
+        <rect
+          x="4"
+          y="16"
+          width="8"
+          height="2"
+          rx="1"
+          fill="rgba(255, 255, 255, 0.3)"
+        />
+        {/* Arrow for adding new project */}
+        <path d="M12 10l2 2h-1v4h-2v-4H10l2-2z" fill="currentColor" />
+      </g>
+    </svg>
+  );
+};
+
+const TaskIcon: React.FC<{ className?: string; size?: number }> = ({
+  className,
+  size,
+}) => {
+  return (
+    <svg
+      className={className}
+      width={size ?? 24}
+      height={size ?? 24}
+      viewBox="0 0 24 24"
+      role="presentation"
+    >
+      <path
+        d="M4 5h6a1 1 0 100-2H4a1 1 0 000 2zm0 4h6a1 1 0 100-2H4a1 1 0 000 2zm0 4h6a1 1 0 100-2H4a1 1 0 000 2zm0 4h6a1 1 0 100-2H4a1 1 0 000 2z"
+        fill="currentColor"
+      ></path>
+      {/* Checkbox icon */}
+      <path
+        d="M15 4h5a1 1 0 011 1v5a1 1 0 01-2 0V7.414l-5.293 5.293a1 1 0 01-1.414-1.414L17.586 6H15a1 1 0 010-2z"
+        fill="currentColor"
+      ></path>
+    </svg>
+  );
+};
+
 export {
   ChildrenTreeIcon,
   BacklogIcon,
@@ -567,5 +679,8 @@ export {
   SubTaskIcon,
   UnassignedUser,
   VelocityIcon,
-  BurndownIcon
+  BurndownIcon,
+  UsersIcon,
+  ProjectsIcon,
+  TaskIcon,
 };

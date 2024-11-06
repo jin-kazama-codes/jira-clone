@@ -53,7 +53,7 @@ const IssueTitle = React.forwardRef<HTMLInputElement, IssueTitleProps>(
               id="issue-title"
               value={currentTitle}
               onChange={(e) => setCurrentTitle(e.target.value)}
-              className="w-full min-w-max rounded-xl whitespace-pre-wrap px-1 py-1.5 outline-2 outline-blue-400"
+              className="w-full min-w-max whitespace-pre-wrap rounded-xl px-1 py-1.5 outline-2 outline-blue-400"
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   handleNameChange(e);
@@ -65,7 +65,7 @@ const IssueTitle = React.forwardRef<HTMLInputElement, IssueTitleProps>(
             />
             <div className="absolute -bottom-10 right-0 z-10 flex gap-x-1">
               <Button
-                className="mt-2 rounded-full aspect-square bg-red-100 p-2.5 shadow-md transition-all hover:bg-gray-100"
+                className="mt-2 aspect-square rounded-full bg-red-100 p-2.5 shadow-md transition-all hover:bg-gray-100"
                 onClick={(e) => {
                   e.stopPropagation();
                   setIsEditing(false);
@@ -76,7 +76,7 @@ const IssueTitle = React.forwardRef<HTMLInputElement, IssueTitleProps>(
                 <MdClose className="text-sm" />
               </Button>
               <Button
-                className="mt-2 rounded-full aspect-square bg-green-100 p-2.5 shadow-md transition-all hover:bg-gray-100"
+                className="mt-2 aspect-square rounded-full bg-green-100 p-2.5 shadow-md transition-all hover:bg-gray-100"
                 onClick={handleNameChange}
                 customColors
                 customPadding
