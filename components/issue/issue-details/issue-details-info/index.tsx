@@ -27,6 +27,8 @@ const IssueDetailsInfo = React.forwardRef<
 
   if (!issue) return <div />;
 
+  console.log("PARENTWIDTH", parentWidth)
+  
   return (
     <div ref={parentRef}>
       {!parentWidth ? null : parentWidth > 800 ? (
@@ -48,6 +50,7 @@ const SmallIssueDetailsInfo = React.forwardRef<
   const nameRef = useRef<HTMLInputElement>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isAddingChildIssue, setIsAddingChildIssue] = useState(false);
+  const [activity, setActivity] = useState("comments");
 
   return (
     <Fragment>
@@ -102,7 +105,15 @@ const SmallIssueDetailsInfo = React.forwardRef<
       ) : null}
       <IssueDetailsInfoAccordion issue={issue} />
       <IssueMetaInfo issue={issue} />
-      <Comments issue={issue} />
+
+      <div className="row  flex  mt-2">
+        <h2 className="pr-2">Activity :</h2>
+        <button className={`${activity === "comments" ? "bg-slate-300 border-2 " : "bg-slate-100"} rounded-md rounded-r-none  px-2 py-1 border-2 `} onClick={() => setActivity("comments")}>Comments</button>
+        <button className={`${activity === "worklog" ? "bg-slate-300 border-2 " : "bg-slate-100"} rounded-md rounded-l-none  px-2 py-1 border-2 `} onClick={() => setActivity("worklog")}>Worklog</button>
+      </div>
+      {activity === "comments" ? <Comments issue={issue} /> : <Worklog
+        issue={issue} />}
+
     </Fragment>
   );
 });
@@ -124,7 +135,7 @@ const LargeIssueDetails = React.forwardRef<
     <Split
       sizes={[60, 40]}
       gutterSize={2}
-      className={`flex ${detailPage ? 'max-h-[87vh]' : 'max-h-[70vh]'} w-full overflow-hidden`}
+      className={`flex ${detailPage ? 'max-h-[87vh]' : 'max-h-[70vh]' } w-full overflow-hidden`}
       minSize={300}
     >
       <div className="overflow-y-auto pr-3">
@@ -161,14 +172,13 @@ const LargeIssueDetails = React.forwardRef<
             setIsAddingChildIssue={setIsAddingChildIssue}
           />
         ) : null}
-        <div className="flex gap-x-4 mt-2">
+        <div className="row flex  mt-2">
           <h2>Activity :</h2>
-          <button className={`${activity === "comments" ? "bg-slate-300 border-2 border-black" : "bg-slate-100"} rounded-xl px-2 py-1`} onClick={() => setActivity("comments")}>Comments</button>
-          <button className={`${activity === "worklog" ? "bg-slate-300 border-2 border-black" : "bg-slate-100"} px-2 py-1 rounded-xl`} onClick={() => setActivity("worklog")}>Worklog</button>
+          <button className={`${activity === "comments" ? "bg-slate-300 border-2 " : "bg-slate-100"} rounded-md rounded-r-none  px-2 py-1 border-2 `} onClick={() => setActivity("comments")}>Comments</button>
+          <button className={`${activity === "worklog" ? "bg-slate-300 border-2 " : "bg-slate-100"} rounded-md rounded-l-none  px-2 py-1 border-2 `} onClick={() => setActivity("worklog")}>Worklog</button>
         </div>
-        {activity === "comments" ? <Comments issue={issue} /> : <Worklog
-          issue={issue} />}
-
+        {activity === "comments" ? <Comments issue={issue} /> : <Worklog issue={issue}/>}
+        
       </div>
 
       <div className="mt-4 bg-white pl-3">

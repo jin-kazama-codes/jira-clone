@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import WorklogDlt from '@/components/modals/worklogdelete';
 import EditWorklog from '@/components/modals/editworklog';
+import { calculateTimeLogged } from '@/utils/helpers';
+
 
 
 interface WorklogEntry {
@@ -46,24 +48,7 @@ const Worklog: React.FC<WorklogProps> = ({ issue }) => {
     }
   }, []);
 
-  const calculateTimeLogged = (time) => {
-    const now = new Date();
-    const diff = now - new Date(time); // Difference in milliseconds
 
-    const seconds = Math.floor((diff / 1000) % 60);
-    const minutes = Math.floor((diff / 1000 / 60) % 60);
-    const hours = Math.floor((diff / 1000 / 60 / 60) % 24);
-    const days = Math.floor(diff / 1000 / 60 / 60 / 24);
-
-    if (days > 0) {
-      return `${days}d`;
-    } else if (hours > 0) {
-    } else if (minutes > 0) {
-      return `${minutes}m`;
-    } else {
-      return `${seconds}s`;
-    }
-  };
 
 
   useEffect(() => {

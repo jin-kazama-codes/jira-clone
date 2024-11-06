@@ -1,5 +1,5 @@
 "use client";
-import React, { type ReactNode } from "react";
+import React, { type ReactNode, useMemo } from "react";
 import clsx from "clsx";
 import {
   Dropdown,
@@ -14,7 +14,7 @@ import { useSprints } from "@/hooks/query-hooks/use-sprints";
 
 type SprintDropdownMenuProps = {
   children: ReactNode;
-  sprint;
+  sprint: { id: string; position: number };
   setUpdateModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setDeleteModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -25,47 +25,43 @@ const SprintDropdownMenu: React.FC<SprintDropdownMenuProps> = ({
   setUpdateModalIsOpen,
   setDeleteModalIsOpen,
 }) => {
-  const { sprints,updateSprint } = useSprints();
+  const { sprints, updateSprint } = useSprints();
 
-  const lastPosition = sprints.length;
+  const menuOptions = useMemo<MenuOptionType[]>(() => {
+    const options = [
+      { id: "edit", label: "Edit Sprint" },
+      { id: "delete", label: "Delete Sprint" },
+    ];
+    const currentSprintIndex = sprints?.findIndex(s => s.id === sprint.id);
 
-  const menuOptions: MenuOptionType[] = [
-    { id: "edit", label: "Edit Sprint" },
-    { id: "delete", label: "Delete Sprint" },
-    ...(sprint.position > 1 ? [{ id: "up", label: "Move Sprint Up" }] : []),
-    ...(sprint.position !== lastPosition
-      ? [{ id: "down", label: "Move Sprint Down" }]
-      : []),
-  ];
+    // Determine menu options based on sprint's position in the sorted array
+    if (currentSprintIndex === 0) {
+      // Sprint is at the top, only allow moving down
+      options.push({ id: "down", label: "Move Sprint Down" });
+    } else if (currentSprintIndex === sprints?.length - 1) {
+      options.push({ id: "up", label: "Move Sprint Up" });
+    } else {
+      options.push({ id: "up", label: "Move Sprint Up" });
+      options.push({ id: "down", label: "Move Sprint Down" });
+    }
+  
+    return options;
+  }, [sprint.id, sprints]);
 
-  const previousSprint = async (position: number) => {
-    const response = await fetch(`/api/sprints?position=${position}`);
+  const handlePositionChange = (placement: "up" | "down") => {
+    const currentIndex = sprints.findIndex(
+      (s) => s.position === sprint.position
+    );
+    const targetIndex =
+      placement === "up" ? currentIndex - 1 : currentIndex + 1;
 
-    const data = await response.json();
+    if (targetIndex >= 0 && targetIndex < sprints.length) {
+      const targetSprint = sprints[targetIndex];
 
-    return data.sprints[0].id;
-  };
-
-  const handleMove = async (sprint, direction: "up" | "down") => {
-    // const projectId = useCookie("project").id;
-    const currentSprintId = sprint.id;
-    const currentSprintPosition = sprint.position;
-    const previousSprintPosition =
-      direction === "up"
-        ? currentSprintPosition - 1
-        : currentSprintPosition + 1;
-
-    const previousSprintId = await previousSprint(previousSprintPosition);
-
-    // Swap positions
-    updateSprint({
-      sprintId: currentSprintId,
-      position: previousSprintPosition,
-    });
-    updateSprint({
-      sprintId: previousSprintId,
-      position: currentSprintPosition,
-    });
+      // Swap positions between current sprint and target sprint
+      updateSprint({ sprintId: sprint.id, position: targetSprint.position });
+      updateSprint({ sprintId: targetSprint.id, position: sprint.position });
+    }
   };
 
   const handleSprintAction = (
@@ -73,14 +69,12 @@ const SprintDropdownMenu: React.FC<SprintDropdownMenuProps> = ({
     e: React.SyntheticEvent
   ) => {
     e.stopPropagation();
-    if (id == "delete") {
+    if (id === "delete") {
       setDeleteModalIsOpen(true);
-    } else if (id == "edit") {
+    } else if (id === "edit") {
       setUpdateModalIsOpen(true);
-    } else if (id === "up") {
-      handleMove(sprint, "up");
-    } else if (id === "down") {
-      handleMove(sprint, "down");
+    } else if (id === "up" || id === "down") {
+      handlePositionChange(id);
     }
   };
 
@@ -106,7 +100,7 @@ const SprintDropdownMenu: React.FC<SprintDropdownMenuProps> = ({
                     "border-transparent px-4 py-2 text-sm hover:cursor-default hover:bg-gray-100"
                   )}
                 >
-                  <span className={clsx("pr-2 text-sm")}>{action.label}</span>
+                  <span className="pr-2 text-sm">{action.label}</span>
                 </DropdownItem>
               ))}
             </DropdownGroup>

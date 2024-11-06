@@ -1,37 +1,24 @@
 "use client";
 import Image from "next/image";
-import { usePathname, useRouter } from 'next/navigation';
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCookie } from "@/hooks/use-cookie";
-import { useFiltersContext } from "@/context/use-filters-context";
 
 const TopNavbar: React.FC = () => {
-  const user = useCookie('user');
+  const user = useCookie("user");
   const router = useRouter();
-  const pathname = usePathname();
-  const { assignees, setAssignees } = useFiltersContext();
-  const isAdminOrManager = user && (user.role === "admin" || user.role === "manager");
 
-  const isOnProjectPage = pathname === "/project";
-  const isOnUsersPage = pathname === "/project/users";
 
   function handleLogout() {
-    document.cookie.split(";").forEach(cookie => {
+    document.cookie.split(";").forEach((cookie) => {
       document.cookie = cookie
         .replace(/^ +/, "")
         .replace(/=.*/, "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/");
     });
-    router.push('/login');
+    router.push("/login");
     window.location.reload();
   }
 
-  const filterAssignee = () => {
-    setAssignees([user.id]);
-  };
 
-  const clearFilterAssignee = () => {
-    setAssignees([]);
-  };
 
   return (
     <div className="flex h-12 w-full items-center justify-between border-b px-4">
@@ -43,44 +30,6 @@ const TopNavbar: React.FC = () => {
           height={25}
         />
         <span className="text-sm font-medium text-gray-600">F2 - Fintech</span>
-        
-        {!isOnUsersPage && !isOnProjectPage && isAdminOrManager && (
-          <Link
-            href="/project/users"
-            className="ml-5 rounded-xl !bg-black px-2 py-1 !text-white hover:!bg-slate-700"
-          >
-            <span className="whitespace-nowrap text-sm text-white">
-              Users
-            </span>
-          </Link>
-        )}
-        
-        {(isOnUsersPage || !isOnProjectPage) && (
-          <Link
-            href="/project"
-            className="ml-5 rounded-xl !bg-black px-2 py-1 !text-white hover:!bg-slate-700"
-          >
-            <span className="whitespace-nowrap text-sm text-white">
-              Projects
-            </span>
-          </Link>
-        )}
-
-        {(!isOnUsersPage && !isOnProjectPage && assignees.length === 0) && (
-          <button onClick={filterAssignee} className="ml-5 rounded-xl !bg-black px-2 py-1 !text-white hover:!bg-slate-700">
-            <span className="whitespace-nowrap text-sm text-white">
-              My Tasks
-            </span>
-          </button>
-        )}
-        
-        {assignees.length !== 0 && (
-          <button onClick={clearFilterAssignee} className="ml-5 rounded-xl !bg-black px-2 py-1 !text-white hover:!bg-slate-700">
-            <span className="whitespace-nowrap text-sm text-white">
-              All Tasks
-            </span>
-          </button>
-        )}
       </div>
       <div className="flex items-center gap-x-5">
         {user ? (
@@ -98,7 +47,7 @@ const TopNavbar: React.FC = () => {
         )}
         <button
           onClick={handleLogout}
-          className="inline-flex items-center justify-center text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none rounded-xl ring-offset-background bg-red-500 text-white hover:bg-red-600 h-8 py-2 px-4"
+          className="focus-visible:ring-ring ring-offset-background inline-flex h-8 items-center justify-center rounded-xl bg-red-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
         >
           Logout
         </button>

@@ -12,7 +12,7 @@ const ITEMS_PER_PAGE = 20;
 const Burndown: React.FC = () => {
   const project = useCookie("project");
   const renderContainerRef = React.useRef<HTMLDivElement>(null);
-  const [sprintId, setSprintId] = useState(null);
+  const [sprintId, setSprintId] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const { issues } = useIssues();
 
@@ -52,65 +52,70 @@ const Burndown: React.FC = () => {
         sprintId={sprintId}
         setSprintId={setSprintId}
       />
-      <div ref={renderContainerRef} className="min-w-full max-w-max">
-        <BurndownIssueList issues={paginatedIssues} />
+      <div ref={renderContainerRef} className="min-w-full max-w-max flex flex-col items-center justify-center">
+        {allIssues.length > 0 ? (
+          <>
+            <BurndownIssueList issues={paginatedIssues} />
 
-        {/* Pagination Controls */}
-        {totalPages > 1 && (
-          <div className="flex items-center justify-between border-t bg-white px-4 py-3">
-            <div className="flex items-center gap-2">
-              <p className="text-sm text-gray-700">
-                Showing {startIndex + 1} to{" "}
-                {Math.min(endIndex, allIssues.length)} of {allIssues.length}{" "}
-                issues
-              </p>
-            </div>
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between border-t bg-white px-4 py-3 w-full">
+                <div className="flex items-center gap-2">
+                  <p className="text-sm text-gray-700">
+                    Showing {startIndex + 1} to{" "}
+                    {Math.min(endIndex, allIssues.length)} of {allIssues.length}{" "}
+                    issues
+                  </p>
+                </div>
 
-            <div className="flex items-center gap-2">
-              <button
-                className="rounded-full bg-black p-1.5"
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                <FaChevronLeft className="h-4 w-4 text-white" />
-              </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    className="rounded-full bg-black p-1.5"
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                  >
+                    <FaChevronLeft className="h-4 w-4 text-white" />
+                  </button>
 
-              <div className="flex items-center gap-1">
-                {Array.from({ length: totalPages }, (_, i) => i + 1)
-                  .filter(
-                    (page) =>
-                      page === 1 ||
-                      page === totalPages ||
-                      Math.abs(page - currentPage) <= 1
-                  )
-                  .map((page, index, array) => (
-                    <Fragment key={page}>
-                      {index > 0 && array[index - 1] !== page - 1 && (
-                        <span className="px-2">...</span>
-                      )}
-                      <button
-                        onClick={() => handlePageChange(page)}
-                        className={`${
-                          page === currentPage
-                            ? "bg-slate-500 text-white"
-                            : "bg-slate-300"
-                        } w-8 rounded-full`}
-                      >
-                        {page}
-                      </button>
-                    </Fragment>
-                  ))}
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1)
+                      .filter(
+                        (page) =>
+                          page === 1 ||
+                          page === totalPages ||
+                          Math.abs(page - currentPage) <= 1
+                      )
+                      .map((page, index, array) => (
+                        <Fragment key={page}>
+                          {index > 0 && array[index - 1] !== page - 1 && (
+                            <span className="px-2">...</span>
+                          )}
+                          <button
+                            onClick={() => handlePageChange(page)}
+                            className={`${page === currentPage
+                              ? "bg-slate-500 text-white"
+                              : "bg-slate-300"
+                              } w-8 rounded-full`}
+                          >
+                            {page}
+                          </button>
+                        </Fragment>
+                      ))}
+                  </div>
+
+                  <button
+                    className="rounded-full bg-black p-1.5"
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                  >
+                    <FaChevronRight className="h-4 w-4 text-white" />
+                  </button>
+                </div>
               </div>
-
-              <button
-                className="rounded-full bg-black p-1.5"
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              >
-                <FaChevronRight className="h-4 w-4 text-white" />
-              </button>
-            </div>
-          </div>
+            )}
+          </>
+        ) : (
+          <p className="text-center text-gray-500 text-lg">Complete your first sprint to view this report </p>
         )}
       </div>
     </Fragment>
