@@ -248,7 +248,7 @@ export const minutesToTimeString = (totalMinutes) => {
   const hours = Math.floor((totalMinutes % minutesInDay) / 60);
   const minutes = totalMinutes % 60;
 
-  return `${weeks > 0 ? `${weeks}w ` : ""}${days > 0 ? `${days}d` : ""}${
+  return `${weeks > 0 ? `${weeks}w ` : ""}${days > 0 ? `${days}d` : ""} ${
     hours > 0 ? `${hours}h ` : ""
   }${minutes > 0 ? `${minutes}m` : ""}`.trim();
 };
@@ -346,7 +346,6 @@ export const reduceTimeSpent = (
 
   return minutesToTimeString(totalTime);
 };
-
 
 export const calculateTimeLogged = (time) => {
   const now = new Date();

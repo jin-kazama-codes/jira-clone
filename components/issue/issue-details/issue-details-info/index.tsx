@@ -173,7 +173,7 @@ const LargeIssueDetails = React.forwardRef<
           />
         ) : null}
         <div className="row flex  mt-2">
-          <h2>Activity :</h2>
+          <h2 className="pr-2">Activity :</h2>
           <button className={`${activity === "comments" ? "bg-slate-300 border-2 " : "bg-slate-100"} rounded-md rounded-r-none  px-2 py-1 border-2 `} onClick={() => setActivity("comments")}>Comments</button>
           <button className={`${activity === "worklog" ? "bg-slate-300 border-2 " : "bg-slate-100"} rounded-md rounded-l-none  px-2 py-1 border-2 `} onClick={() => setActivity("worklog")}>Worklog</button>
         </div>
