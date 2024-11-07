@@ -80,7 +80,7 @@ const Sidebar: React.FC = () => {
 
   // Configuration items, with Users section shown only if the user is an admin or manager
   const configurationItems = [
-    isAdminOrManager && {
+    {
       id: "users",
       label: "Users",
       icon: UsersIcon,
@@ -136,7 +136,7 @@ const Sidebar: React.FC = () => {
           </span>
         </button>
       )}
-      <NavList label={"CONFIGURATION"} items={configurationItems} />
+      {isAdminOrManager && <NavList label={"CONFIGURATION"} items={configurationItems} />}
       <NavList label={"REPORTS"} items={reportingItems} />
 
 
