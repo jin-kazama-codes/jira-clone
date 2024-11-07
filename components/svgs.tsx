@@ -608,35 +608,10 @@ const ProjectsIcon: React.FC<{ className?: string; size?: number }> = ({
       role="presentation"
     >
       <g fill="currentColor">
-        {/* Folder Base */}
-        <path d="M10 2H4a2 2 0 00-2 2v16a2 2 0 002 2h16a2 2 0 002-2V8l-8-6z" />
-        {/* Project Cards */}
-        <rect
-          x="4"
-          y="8"
-          width="16"
-          height="2"
-          rx="1"
-          fill="rgba(255, 255, 255, 0.7)"
-        />
-        <rect
-          x="4"
-          y="12"
-          width="12"
-          height="2"
-          rx="1"
-          fill="rgba(255, 255, 255, 0.5)"
-        />
-        <rect
-          x="4"
-          y="16"
-          width="8"
-          height="2"
-          rx="1"
-          fill="rgba(255, 255, 255, 0.3)"
-        />
-        {/* Arrow for adding new project */}
-        <path d="M12 10l2 2h-1v4h-2v-4H10l2-2z" fill="currentColor" />
+        {/* Folder base */}
+        <path d="M2 6.994C2 5.893 2.898 5 3.99 5H8l2 2h10.01c1.099 0 1.99.888 1.99 1.994V18.006c0 1.1-.892 1.994-1.99 1.994H3.99C2.892 20 2 19.105 2 18.006V6.994z" />
+        {/* Inner content lines */}
+        <path d="M6 12h12v1.5H6zm0 3h8v1.5H6z" fillOpacity="0.3" />
       </g>
     </svg>
   );

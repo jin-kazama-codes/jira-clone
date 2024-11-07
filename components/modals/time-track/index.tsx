@@ -60,7 +60,6 @@ const TimeTrackingModal: React.FC<TimeTrackingModalProps> = ({
   }, [newTimeSpent, issue.timeSpent, issue.estimateTime]);
 
   const onSave = async () => {
-    // sending data to worklog
 
     try {
       const response = await fetch("/api/worklog", {
