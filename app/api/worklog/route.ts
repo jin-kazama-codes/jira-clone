@@ -4,7 +4,7 @@ import { prisma } from "@/server/db"; // adjust this import according to your pr
 export async function GET(req: NextRequest) {
   // Parse the URL to get the query parameters
   const { searchParams } = new URL(req.url);
-  
+
   const issueId = searchParams.get("issueId");
 
   if (!issueId) {
@@ -15,21 +15,23 @@ export async function GET(req: NextRequest) {
   }
 
   const worklogs = await prisma.worklog.findMany({
-    where: { issueId: issueId }, // Assuming issueId is a number
+    where: { issueId: issueId },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
 
   // Return the fetched worklogs
   return NextResponse.json({ worklogs });
 }
 
-
 export async function POST(req: NextRequest) {
   try {
     const { timeLogged, workDescription, issueId, userName } = await req.json();
 
-    if (!timeLogged || !workDescription || !issueId || !userName) {
+    if (!timeLogged || !issueId || !userName) {
       return NextResponse.json(
-        { error: "Missing required fields: timeLogged, workDescription, or issueId" },
+        { error: "Missing required fields: timeLogged or issueId" },
         { status: 400 }
       );
     }
@@ -37,10 +39,10 @@ export async function POST(req: NextRequest) {
     // Create a new worklog entry in the database
     const newWorklog = await prisma.worklog.create({
       data: {
-        timeLogged,
-        workDescription,
-        issueId: issueId, // Assuming issueId is a number
-        userName,
+        timeLogged: timeLogged,
+        workDescription: workDescription,
+        issueId: issueId,
+        userName: userName,
       },
     });
 

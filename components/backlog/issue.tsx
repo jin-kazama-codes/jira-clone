@@ -140,7 +140,7 @@ const Issue: React.FC<{
                 issueId={issue.id}
               />
             </div>
-            <div className="w-20 flex justify-center items-center" onClick={e => e.stopPropagation()}>
+            <div className="w-20 flex justify-center items-center" onClick={e => e.stopPropagation()} onBlur={() => setIsEditingEstimate(false)}>
               <OriginalEstimate setIsEditing={setIsEditingEstimate} isEditing={isEditingEstimate} page="backlog" issue={issue} className="bg-gray-300 px-2  rounded-xl" />
             </div>
             <div className="flex w-20 justify-end items-center gap-x-2">

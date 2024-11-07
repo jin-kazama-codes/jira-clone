@@ -60,7 +60,6 @@ const TimeTrackingModal: React.FC<TimeTrackingModalProps> = ({
   }, [newTimeSpent, issue.timeSpent, issue.estimateTime]);
 
   const onSave = async () => {
-    // sending data to worklog
 
     try {
       const response = await fetch("/api/worklog", {
@@ -180,7 +179,7 @@ const TimeTrackingModal: React.FC<TimeTrackingModalProps> = ({
                       id="timeRemaining"
                       value={remainingTime}
                       className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      disableds
+                      readOnly
                     />
                   </div>
                 </div>
