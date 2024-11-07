@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import WorklogDlt from '@/components/modals/worklogdelete';
 import EditWorklog from '@/components/modals/editworklog';
 import { calculateTimeLogged } from '@/utils/helpers';
+import { useCookie } from '@/hooks/use-cookie';
 
 
 
@@ -23,6 +24,7 @@ interface WorklogProps {
 const Worklog: React.FC<WorklogProps> = ({ issue }) => {
   const [work, setWork] = useState<WorklogEntry[]>([]); // Initialize as an array
   const [loading, setLoading] = useState<boolean>(true); // Track loading state
+  const Username = useCookie('user').name
 
 
   const getWorklog = useCallback(async (issueId: any) => {
@@ -68,7 +70,7 @@ const Worklog: React.FC<WorklogProps> = ({ issue }) => {
               <p className='text-sm font-medium pl-2 text-gray-500'>{calculateTimeLogged(wrk.createdAt)} Ago</p>
             </div>
             <div className='text-base p-3'> {wrk.workDescription} </div>
-            <div className='flex space-x-2 items-center font-bold'>
+            {wrk.userName === Username && (<div className='flex space-x-2 items-center font-bold'>
               <EditWorklog
                 issue={issue}
                 worklog={wrk}
@@ -77,13 +79,12 @@ const Worklog: React.FC<WorklogProps> = ({ issue }) => {
                 >Edit</button>
               </EditWorklog>
               <WorklogDlt
-                issue={issue}
                 worklog={wrk}>
                 <button
                   className='bg-transparent text-sm  font-bold text-gray-500 underline-offset-2 hover:underline'
                 >Delete</button>
               </WorklogDlt>
-            </div>
+            </div>)}
             <hr className='mb-4' />
           </>
         ))

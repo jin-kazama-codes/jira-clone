@@ -16,18 +16,12 @@ import { useIsAuthenticated } from "@/hooks/use-is-authed";
 
 
 interface WorklogDltProps {
-  issue: {
-    id: string;
-    timeSpent: string;
-
-  };
   worklog;
   children: ReactNode;
 
 }
 
 const WorklogDlt: React.FC<WorklogDltProps> = ({
-  issue,
   worklog,
   children,
 }) => {
@@ -57,7 +51,7 @@ const WorklogDlt: React.FC<WorklogDltProps> = ({
         const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to delete worklog entry');
       }
-
+      setIsOpen(false)
     } catch (error) {
       console.error('Error updating worklog:', error)
 
