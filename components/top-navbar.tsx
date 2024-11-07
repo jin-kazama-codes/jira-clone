@@ -25,11 +25,11 @@ const TopNavbar: React.FC = () => {
       <div className="flex items-center gap-x-2">
         <Image
           src="https://cdn.worldvectorlogo.com/logos/jira-3.svg"
-          alt="Jira logo"
+          alt="Karya logo"
           width={25}
           height={25}
         />
-        <span className="text-sm font-medium text-gray-600">F2 - Fintech</span>
+        <span className="text-sm font-medium text-gray-600">Karya - IO</span>
       </div>
       <div className="flex items-center gap-x-5">
         {user ? (

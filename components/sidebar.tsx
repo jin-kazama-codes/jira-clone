@@ -18,7 +18,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
 } from "./ui/navigation-menu";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { FaChessPawn, FaChevronRight } from "react-icons/fa";
 import { useCookie } from "@/hooks/use-cookie";
 import { useFiltersContext } from "@/context/use-filters-context";
@@ -32,7 +32,6 @@ type NavItemType = {
 
 const Sidebar: React.FC = () => {
   const user = useCookie("user");
-  const router = useRouter();
   const pathname = usePathname();
   const { assignees, setAssignees } = useFiltersContext();
   const isAdminOrManager =
@@ -120,7 +119,6 @@ const Sidebar: React.FC = () => {
           <h2 className="text-md -mb-[0.5px] font-semibold text-gray-600">
             {project?.name}
           </h2>
-          <p className="text-xs text-gray-500">Task Management App</p>
         </div>
       </div>
 
@@ -132,7 +130,7 @@ const Sidebar: React.FC = () => {
           onClick={toggleAssigneeFilter}
           className=" flex w-full rounded-sm rounded-r-xl py-2 items-center border-l-4 border-inherit bg-inherit px-2  hover:bg-slate-100"
         >
-          <FaClipboardList className="w-6 h-6 mr-3" /> {/* Task-related icon */}
+          <FaClipboardList className="w-5 h-5 mr-3" /> {/* Task-related icon */}
           <span className=" text-sm">
             {assignees.length === 0 ? "My Tasks" : "All Tasks"}
           </span>

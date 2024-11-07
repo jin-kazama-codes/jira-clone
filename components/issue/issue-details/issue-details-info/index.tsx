@@ -26,8 +26,6 @@ const IssueDetailsInfo = React.forwardRef<
   const [parentRef, parentWidth] = useContainerWidth();
 
   if (!issue) return <div />;
-
-  console.log("PARENTWIDTH", parentWidth)
   
   return (
     <div ref={parentRef}>
