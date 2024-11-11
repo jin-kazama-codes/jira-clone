@@ -11,6 +11,8 @@ import {
   ModalTrigger,
 } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
+import { WelcomeNewMemberTemplate } from "@/components/email-template";
+import { useCookie } from "@/hooks/use-cookie";
 
 interface UserModalProps {
   children: ReactNode;
@@ -29,6 +31,7 @@ const UserModal: React.FC<UserModalProps> = ({ children, refetch }) => {
   const [error, setError] = useState<string | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [suggestions, setSuggestions] = useState<User[]>([]);
+  const projectName = useCookie("project").name;
 
   useEffect(() => {
     if (isOpen) {
@@ -85,10 +88,27 @@ const UserModal: React.FC<UserModalProps> = ({ children, refetch }) => {
       });
 
       if (response.ok) {
-        const result = await response.json();
         refetch(); // Manually trigger refetch to get the latest members list
 
         setIsOpen(false);
+        try {
+          const emailHtml = WelcomeNewMemberTemplate({
+            name: name,
+            projectName: projectName,
+          });
+          await fetch("/api/email", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              to: email,
+              subject: "You were Added to a Project",
+              html: emailHtml,
+            }),
+          });
+          console.log("Email notification sent to:", email);
+        } catch (error) {
+          console.error("Failed to send email notification:", error);
+        }
         setName("");
         setEmail("");
       } else {

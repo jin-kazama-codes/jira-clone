@@ -18,6 +18,7 @@ import { toast } from "../toast";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
 import { type DefaultUser } from "@prisma/client";
 import { TooltipWrapper } from "../ui/tooltip";
+import {AssignIssueEmailTemplate} from "../email-template";
 
 const IssueAssigneeSelect: React.FC<{
   issue: IssueType;
@@ -44,7 +45,7 @@ const IssueAssigneeSelect: React.FC<{
   }
   function getColorFromLocalStorage(memberId: string | number) {
     const savedColorMap = JSON.parse(localStorage.getItem("colorMap")) || {};
-    return savedColorMap[memberId] || "#ccc"; 
+    return savedColorMap[memberId] || "#ccc";
   }
   function handleSelectChange(value: DefaultUser["id"]) {
     if (!isAuthenticated) {
@@ -58,13 +59,31 @@ const IssueAssigneeSelect: React.FC<{
         assigneeId: value === "unassigned" ? null : value,
       },
       {
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
           toast.success({
             message: `Issue assignee updated to ${
               data.assignee?.name ?? "Unassigned"
             }`,
             description: "Issue assignee changed",
           });
+          // Send email notification to the new assignee
+          if (data.assignee?.email) {
+            try {
+              const emailHtml = AssignIssueEmailTemplate({ name: data.assignee.name, issue: issue.name });
+              await fetch("/api/email", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  to: data.assignee.email,
+                  subject: "New Issue Assignment Notification",
+                  html: emailHtml,
+                }),
+              });
+              console.log("Email notification sent to:", data.assignee.email);
+            } catch (error) {
+              console.error("Failed to send email notification:", error);
+            }
+          }
         },
       }
     );
@@ -91,7 +110,11 @@ const IssueAssigneeSelect: React.FC<{
             >
               <div
                 className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-300"
-                style={{ backgroundColor: issue.assignee?.id ? getColorFromLocalStorage(issue.assignee.id) : getColorFromLocalStorage(unassigned.id) }}
+                style={{
+                  backgroundColor: issue.assignee?.id
+                    ? getColorFromLocalStorage(issue.assignee.id)
+                    : getColorFromLocalStorage(unassigned.id),
+                }}
               >
                 <span className="font-bold text-white">
                   {issue.assignee?.name
@@ -131,7 +154,11 @@ const IssueAssigneeSelect: React.FC<{
                           <TooltipWrapper text={member.name}>
                             <div
                               className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-300"
-                              style={{ backgroundColor: member?.id ? getColorFromLocalStorage(member.id) : getColorFromLocalStorage(unassigned.id) }}
+                              style={{
+                                backgroundColor: member?.id
+                                  ? getColorFromLocalStorage(member.id)
+                                  : getColorFromLocalStorage(unassigned.id),
+                              }}
                             >
                               <span className="font-bold text-white">
                                 {initials}
