@@ -2,6 +2,7 @@
 import { DeleteUserModal } from "@/components/modals/default-users/delete-user";
 import { EditUserModal } from "@/components/modals/default-users/edit-user";
 import { useMembers } from "@/hooks/query-hooks/use-members";
+import withProjectLayout from "@/app/project-layout/withProjectLayout";
 import React, { Fragment } from "react";
 
 const Userspage = () => {
@@ -86,4 +87,4 @@ const Userspage = () => {
   );
 };
 
-export default Userspage;
+export default withProjectLayout(Userspage);

@@ -22,7 +22,7 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, admin }) => {
 
   const handleProjectClick = (project: Project) => {
     setCookie("project", project);
-    router.push("/project/backlog");
+    router.push("/backlog");
   };
 
   useEffect(() => {
