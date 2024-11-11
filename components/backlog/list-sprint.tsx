@@ -177,6 +177,10 @@ const SprintListHeader: React.FC<{ issues: IssueType[]; sprint: Sprint }> = ({
           )}
         </div>
       </div>
+      <div className="text-gray-500 pl-7 text-sm">
+        {sprint.description}
+      </div>
+
     </Fragment>
   );
 };
