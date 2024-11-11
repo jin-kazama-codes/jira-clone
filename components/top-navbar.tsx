@@ -86,7 +86,7 @@ const TopNavbar: React.FC = () => {
 
         {showDropdown && (
           <div
-            className="absolute right-0  top-11 w-80  bg-white rounded-md shadow-lg py-2 z-10 border border-gray-300"
+            className="absolute right-0  top-11 w-80  bg-white rounded-md shadow-lg pt-2 z-10 border border-gray-300"
             ref={dropdownRef}
           >
             <p className="font-bold px-6  mt-4  ">Account</p>
@@ -108,12 +108,12 @@ const TopNavbar: React.FC = () => {
                 <p className="  text-sm text-gray-500">{user.email}</p>
               </div>
             </div>
-            <hr className="mt-5 " />
+            <hr className="mt-5" />
             <button
-              className="w-full mt-2  px-5 py-2 text-sm text-left text-gray-600 hover:bg-red-400"
+              className="w-full  px-5 py-3 text-sm text-left text-gray-600 hover:bg-slate-200"
               onClick={handleLogout}
             >
-              Logout
+              Log out
             </button>
           </div>
         )}

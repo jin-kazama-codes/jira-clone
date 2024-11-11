@@ -23,7 +23,7 @@ const BoardHeader: React.FC<{ project: Project; activeSprint }> = ({
       <div className="text-sm text-gray-500">Projects / {project.name}</div>
       <h1>{activeSprint ? activeSprint.name : "Active Sprint"}</h1>
       <div className="text-gray-500  text-sm">
-        {activeSprint.description}
+        {activeSprint ? activeSprint.description : ""}
       </div>
       <div className="my-3 flex items-center justify-between">
         <div className="flex items-center gap-x-5">
