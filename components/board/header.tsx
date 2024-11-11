@@ -9,16 +9,22 @@ import { Members } from "../members";
 import { ClearFilters } from "../filter-issue-clear";
 import { SprintFilter } from "../filter-sprint";
 
-const BoardHeader: React.FC<{ project: Project }> = ({
+
+const BoardHeader: React.FC<{ project: Project; activeSprint }> = ({
   project,
+  activeSprint,
   setChild,
   showChild,
 }) => {
   const { search, setSearch } = useFiltersContext();
+
   return (
     <div className="flex h-fit flex-col">
       <div className="text-sm text-gray-500">Projects / {project.name}</div>
-      <h1>Active sprints </h1>
+      <h1>{activeSprint ? activeSprint.name : "Active Sprint"}</h1>
+      <div className="text-gray-500  text-sm">
+        {activeSprint ? activeSprint.description : ""}
+      </div>
       <div className="my-3 flex items-center justify-between">
         <div className="flex items-center gap-x-5">
           <SearchBar

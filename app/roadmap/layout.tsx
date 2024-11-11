@@ -1,7 +1,8 @@
 import { Container } from "@/components/ui/container";
 import { SelectedIssueProvider } from "@/context/use-selected-issue-context";
+import withProjectLayout from "@/app/project-layout/withProjectLayout";
 
-const BoardLayout = ({ children }: { children: React.ReactNode }) => {
+const RoadmapLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <Container className="h-full">
       <main className="w-full">
@@ -11,4 +12,4 @@ const BoardLayout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default BoardLayout;
+export default withProjectLayout(RoadmapLayout);

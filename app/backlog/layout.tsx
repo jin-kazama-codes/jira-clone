@@ -1,5 +1,6 @@
 import { Container } from "@/components/ui/container";
 import { SelectedIssueProvider } from "@/context/use-selected-issue-context";
+import withProjectLayout from "@/app/project-layout/withProjectLayout";
 
 const BacklogLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -11,4 +12,4 @@ const BacklogLayout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default BacklogLayout;
+export default withProjectLayout(BacklogLayout);

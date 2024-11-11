@@ -22,7 +22,7 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, admin }) => {
 
   const handleProjectClick = (project: Project) => {
     setCookie("project", project);
-    router.push("/project/backlog");
+    router.push("/backlog");
   };
 
   useEffect(() => {
@@ -93,8 +93,8 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, admin }) => {
           <div className="w-full max-w-sm rounded-lg bg-white p-6">
             <h3 className="mb-4 text-lg font-semibold">Delete Project</h3>
             <p className="mb-6">
-              Are you sure you want to delete &quot;{projectToDelete.name}
-              &quot;? This action cannot be undone.
+              Are you sure you want to delete <span className="">{projectToDelete.name}
+              </span>? This action cannot be undone.
             </p>
             <div className="flex justify-end space-x-4">
               <button

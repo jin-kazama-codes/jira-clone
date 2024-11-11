@@ -1,4 +1,5 @@
 import { Burndown } from '@/components/burndown'
+import withProjectLayout from "@/app/project-layout/withProjectLayout";
 import React from 'react'
 
 const BurndownReport = () => {
@@ -9,4 +10,4 @@ const BurndownReport = () => {
   )
 }
 
-export default BurndownReport
+export default withProjectLayout(BurndownReport)

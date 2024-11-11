@@ -38,7 +38,7 @@ const Sidebar: React.FC = () => {
     user && (user.role === "admin" || user.role === "manager");
 
   const isOnProjectPage = pathname === "/project";
-  const isOnUsersPage = pathname === "/project/users";
+  const isOnUsersPage = pathname === "/users";
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const project = useCookie("project");
@@ -52,19 +52,19 @@ const Sidebar: React.FC = () => {
       id: "roadmap",
       label: "Roadmap",
       icon: RoadmapIcon,
-      href: `/project/roadmap`,
+      href: `/roadmap`,
     },
     {
       id: "backlog",
       label: "Backlog",
       icon: BacklogIcon,
-      href: `/project/backlog`,
+      href: `/backlog`,
     },
     {
       id: "board",
       label: "Board",
       icon: BoardIcon,
-      href: `/project/board`,
+      href: `/board`,
     },
   ];
 
@@ -84,13 +84,13 @@ const Sidebar: React.FC = () => {
       id: "users",
       label: "Users",
       icon: UsersIcon,
-      href: `/project/users`,
+      href: `/users`,
     },
     {
       id: "settings",
       label: "Settings",
       icon: DevelopmentIcon,
-      href: `/project/settings`,
+      href: `/settings`,
     },
   ].filter(Boolean); // Filter out any null values if isAdminOrManager is false
 
@@ -99,13 +99,13 @@ const Sidebar: React.FC = () => {
       id: "burndown",
       label: "Burndown Report",
       icon: BurndownIcon,
-      href: `/project/report/burndown`,
+      href: `/report/burndown`,
     },
     {
       id: "velocity",
       label: "Velocity Report",
       icon: VelocityIcon,
-      href: `/project/report/velocity`,
+      href: `/report/velocity`,
     },
   ];
 

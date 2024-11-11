@@ -58,10 +58,6 @@ const BacklogListHeader: React.FC<{ issues: IssueType[] }> = ({ issues }) => {
   const { convertedOriginalEstimate, convertedTotalTime } =
     getTimeEstimates(issues);
 
-    
-    console.log("COnvertedOriginal", convertedOriginalEstimate)
-    console.log("convertedTotalTime", convertedTotalTime)
-
   return (
     <div className="flex w-full items-center justify-between text-sm ">
       <AccordionTrigger className="flex w-full items-center p-2  font-medium [&[data-state=open]>svg]:rotate-90">

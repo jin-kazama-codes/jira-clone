@@ -37,7 +37,7 @@ const BurndownIssueList = ({ issues }) => {
               key={issue.id}
               onClick={() => {
                 setIssueKey(issue.key);
-                router.push(`/project/issue/${issue?.key}`) 
+                router.push(`/issue/${issue?.key}`) 
               }}
               className="grid cursor-pointer grid-cols-5 items-center gap-4 px-4 py-3 hover:bg-slate-50"
             >
