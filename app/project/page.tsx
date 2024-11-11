@@ -9,25 +9,11 @@ const Project: React.FC = async () => {
   const isAdminOrManager =
     user && (user.role === "admin" || user.role === "manager");
 
-  const members = await prisma.member.findMany({
-    where: {
-      id: user.id
-    },
-    select: {
-      projectId: true // Only select the projectId field
-    }
+  // Single query to get both member and project data
+  const projects = await prisma.project.findMany({
+    where: isAdminOrManager ? {} : { members: { some: { id: user.id } } },
+    include: { members: true }
   });
-
-  // Extract all projectIds from the members array
-  const projectIds = members.map(member => member.projectId);
-  const findManyProjects = isAdminOrManager ? {} : {
-      where: {
-        id: {
-          in: projectIds  // Use `in` operator to match multiple projectIds
-        }
-      }
-  }
-  const projects = await prisma.project.findMany(findManyProjects);
 
   return (
     <>
@@ -39,7 +25,7 @@ const Project: React.FC = async () => {
           {/* Left: Project List */}
           {projects && (
             <div className={isAdminOrManager ? "lg:col-span-1 " : "col-span-1"}>
-              <ProjectList projects={projects} admin={isAdminOrManager}/>
+              <ProjectList projects={projects} admin={isAdminOrManager} />
             </div>
           )}
           {/* Right: Create Project Form */}

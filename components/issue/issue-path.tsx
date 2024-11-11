@@ -118,7 +118,7 @@ const IssueLink: React.FC<{
       <Button
         onClick={() => {
           setIssueKey(issue?.key ?? null);
-          router.push(`/project/issue/${issue?.key}`)
+          router.push(`/issue/${issue?.key}`)
         }}
         customColors
         className=" bg-transparent text-xs text-gray-500 underline-offset-2 hover:underline"

@@ -61,7 +61,7 @@ const IssueDropdownMenu: React.FC<{
     }
   }, []);
 
-  const isBacklogPage = currentPath === "/project/backlog";
+  const isBacklogPage = currentPath === "/backlog";
 
   const handleIssueAction = (
     id: MenuOptionType["id"],

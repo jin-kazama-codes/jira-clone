@@ -4,6 +4,7 @@ import axios from "axios";
 import { useCookie } from "@/hooks/use-cookie";
 import { useRouter } from "next/navigation";
 import { setCookie } from "@/utils/helpers";
+import withProjectLayout from "@/app/project-layout/withProjectLayout";
 
 const UpdateProject: React.FC = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -65,7 +66,7 @@ const UpdateProject: React.FC = () => {
           workingDays: updatedProject.workingDays,
           key: updatedProject.key,
         });
-        router.push("/project/backlog");
+        router.push("/backlog");
       } else {
         setLoading(false);
         setError(response.data.error || "Update failed");
@@ -166,4 +167,4 @@ const UpdateProject: React.FC = () => {
   );
 };
 
-export default UpdateProject;
+export default withProjectLayout(UpdateProject);

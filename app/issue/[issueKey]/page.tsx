@@ -1,4 +1,5 @@
 import { IssueDetails } from "@/components/issue/issue-details";
+import withProjectLayout from "@/app/project-layout/withProjectLayout";
 import React from "react";
 
 const IssueDetail = ({params}) => {
@@ -7,4 +8,4 @@ const IssueDetail = ({params}) => {
   return <IssueDetails issueKey={issueKey} detailPage={issueDetailPage}/>;
 };
 
-export default IssueDetail;
+export default withProjectLayout(IssueDetail);

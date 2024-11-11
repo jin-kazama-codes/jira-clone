@@ -1,4 +1,5 @@
 import { Velocity } from '@/components/velocity'
+import withProjectLayout from "@/app/project-layout/withProjectLayout";
 import React from 'react'
 
 const VelocityReport = () => {
@@ -9,4 +10,4 @@ const VelocityReport = () => {
   )
 }
 
-export default VelocityReport
+export default withProjectLayout(VelocityReport)
