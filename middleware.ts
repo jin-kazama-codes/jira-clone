@@ -6,7 +6,7 @@ export function middleware(request: NextRequest) {
   const cookieStore = cookies();
   const token = cookieStore.get("user")?.value;
   // Define routes that do not require authentication
-  const publicPaths = ["/login"];
+  const publicPaths = ["/login","/forgot-password","/reset-password"];
   // Check if the user is authenticated
   if (!token && !publicPaths.includes(request.nextUrl.pathname)) {
     // Redirect to the login page if not authenticated
