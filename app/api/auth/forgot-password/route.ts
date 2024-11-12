@@ -48,7 +48,7 @@ export async function POST(req: Request) {
       subject: 'Password Reset Request',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #333;">Passwosrd Reset Request</h2>
+          <h2 style="color: #333;">Password Reset Request</h2>
           <p>You requested to reset your password. Click the link below to set a new password:</p>
           <a href="${resetUrl}" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; margin: 15px 0;">Reset Password</a>
           <p style="color: #666; font-size: 14px;">This link will expire in 1 hour.</p>
