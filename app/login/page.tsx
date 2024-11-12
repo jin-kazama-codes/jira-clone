@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { setCookie } from "@/utils/helpers";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import Link from "next/link";
 
 const Login: React.FC = () => {
   const router = useRouter();
@@ -124,10 +125,18 @@ const Login: React.FC = () => {
               </button>
             </div>
           </div>
+          <p
+          className="text-blue-600 hover:text-blue-800 mt-2 hover:underline cursor-pointer"
+            onClick={() => {
+              router.push("/forgot-password");
+            }}
+          >
+            Forgot Password ?
+          </p>
           {error && <p className="mt-2 text-red-500">{error}</p>}
           <div className="mt-4 flex justify-end">
             {Loading ? (
-              <div className="w-10 h-10 border-4 border-t-4 border-gray-200 border-t-black rounded-full animate-spin"></div>
+              <div className="h-10 w-10 animate-spin rounded-full border-4 border-t-4 border-gray-200 border-t-black"></div>
             ) : (
               <button
                 type="submit"
