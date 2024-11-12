@@ -18,7 +18,7 @@
 - Entire app written with typescript
 - End to end type safety with Zod
 
-## Setting up development environment
+## <h1>Setting up development environment</h1>
 
 - Project uses Prisma, you can decide which database to use. \*By default it uses the 'mysql' provider
 - `git clone https://github.com/jin-kazama-codes/jira-clone.git`
