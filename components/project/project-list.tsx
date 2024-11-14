@@ -1,12 +1,13 @@
 "use client";
 
-import { setCookie } from "@/utils/helpers";
+import { removeCookie, setCookie } from "@/utils/helpers";
 import { Project } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { MdOutlineDelete } from "react-icons/md";
 import { toast } from "../toast";
 import { FaTrashAlt } from "react-icons/fa";
+import { useCookie } from "@/hooks/use-cookie";
 
 type ProjectList = Project[];
 
@@ -19,14 +20,22 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, admin }) => {
   const router = useRouter();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [projectToDelete, setProjectToDelete] = useState(null);
+  const projectId = useCookie('Invited Project')
+
+  const invitedProject = projects.find((project) => project.id === projectId)
+
 
   const handleProjectClick = (project: Project) => {
     setCookie("project", project);
-    router.push("/backlog");
+    router.push(`/${project.key}/backlog`);
   };
 
   useEffect(() => {
     router.refresh();
+    if(invitedProject){
+      handleProjectClick(invitedProject)
+    }
+    removeCookie('Invited Project')
   }, []); // Add an empty dependency array to refresh only on mount
 
   const handleDelete = async (e, projectId: number) => {
