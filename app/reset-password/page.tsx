@@ -18,35 +18,35 @@ const ResetPassword = () => {
   const router = useRouter()
   const token = searchParams.get('token')
 
-  // useEffect(() => {
-  //   // Verify token on component mount
-  //   const verifyToken = async () => {
-  //     if (!token) {
-  //       setError('Invalid reset link')
-  //       return
-  //     }
+  useEffect(() => {
+    // Verify token on component mount
+    const verifyToken = async () => {
+      if (!token) {
+        setError('Invalid reset link')
+        return
+      }
 
-  //     try {
-  //       const response = await fetch('/api/auth/verify-reset-token', {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify({ token }),
-  //       })
+      try {
+        const response = await fetch('/api/auth/verify-reset-token', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ token }),
+        })
 
-  //       if (response.ok) {
-  //         setIsValidToken(true)
-  //       } else {
-  //         setError('This reset link is invalid or has expired')
-  //       }
-  //     } catch (err) {
-  //       setError('Error verifying reset link')
-  //     }
-  //   }
+        if (response.ok) {
+          setIsValidToken(true)
+        } else {
+          setError('This reset link is invalid or has expired')
+        }
+      } catch (err) {
+        setError('Error verifying reset link')
+      }
+    }
 
-  //   verifyToken()
-  // }, [token])
+    verifyToken()
+  }, [token])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
