@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { parseCookies } from "@/utils/cookies";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { getBaseUrl } from "@/utils/helpers";
 
 const prisma = new PrismaClient();
 
@@ -22,6 +25,20 @@ export async function POST(req: Request) {
   try {
     const { name, email } = await req.json();
     const { id: projectId } = parseCookies(req, "project");
+
+    const resetToken = jwt.sign(
+      { email: email, projectId: projectId },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+    const ProjectToken = jwt.sign(
+      { projectId: projectId },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+    const baseUrl = getBaseUrl();
+    const resetUrl = `${baseUrl}/reset-password?token=${resetToken}`;
+    const projectUrl = `${baseUrl}/login?token=${ProjectToken}`;
 
     const existingUser = await prisma.defaultUser.findFirst({
       where: { email },
@@ -49,13 +66,14 @@ export async function POST(req: Request) {
         });
 
         return NextResponse.json(
-          { user: existingUser, member: newMember },
+          { user: existingUser, member: newMember, projectUrl: projectUrl },
           { status: 201 }
         );
       }
     } else {
+      const hashedPassword = await bcrypt.hash("member@f2-fin", 10);
       const newUser = await prisma.defaultUser.create({
-        data: { name, email },
+        data: { name, email, password: hashedPassword },
       });
 
       const newMember = await prisma.member.create({
@@ -66,7 +84,7 @@ export async function POST(req: Request) {
       });
 
       return NextResponse.json(
-        { user: newUser, member: newMember },
+        { user: newUser, member: newMember, url: resetUrl },
         { status: 201 }
       );
     }
@@ -96,10 +114,7 @@ export async function PATCH(req: Request) {
     });
 
     if (!existingUser) {
-      return NextResponse.json(
-        { error: "User not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     // Update user with provided fields
@@ -136,10 +151,7 @@ export async function DELETE(req: Request) {
     // Delete the specific record by its unique ID
     await prisma.member.deleteMany({
       where: {
-        AND: [
-          {id: userId},
-          {projectId : projectId}
-        ]
+        AND: [{ id: userId }, { projectId: projectId }],
       },
     });
 
@@ -155,6 +167,3 @@ export async function DELETE(req: Request) {
     );
   }
 }
-
-
-

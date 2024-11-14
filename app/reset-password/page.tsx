@@ -18,13 +18,13 @@ const ResetPassword = () => {
   const router = useRouter()
   const token = searchParams.get('token')
 
-  // useEffect(() => {
-  //   // Verify token on component mount
-  //   const verifyToken = async () => {
-  //     if (!token) {
-  //       setError('Invalid reset link')
-  //       return
-  //     }
+  useEffect(() => {
+    // Verify token on component mount
+    const verifyToken = async () => {
+      if (!token) {
+        router.push('/login')
+        return
+      }
 
   //     try {
   //       const response = await fetch('/api/auth/verify-reset-token', {

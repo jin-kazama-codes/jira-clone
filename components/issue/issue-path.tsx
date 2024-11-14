@@ -12,8 +12,10 @@ import { useIssues } from "@/hooks/query-hooks/use-issues";
 import { TooltipWrapper } from "../ui/tooltip";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
 import { useRouter } from "next/navigation";
+import { useCookie } from "@/hooks/use-cookie";
 
-const IssuePath: React.FC<{
+const 
+IssuePath: React.FC<{
   issue: IssueType;
   setIssueKey: React.Dispatch<React.SetStateAction<string | null>>;
 }> = ({ issue, setIssueKey }) => {
@@ -111,6 +113,7 @@ const IssueLink: React.FC<{
   issue: IssueType | IssueType["parent"] | null;
   setIssueKey: React.Dispatch<React.SetStateAction<string | null>>;
 }> = ({ issue, setIssueKey }) => {
+  const projectKey = useCookie('project').key
   const router = useRouter()
   if (!issue) return <div />;
   return (
@@ -118,7 +121,7 @@ const IssueLink: React.FC<{
       <Button
         onClick={() => {
           setIssueKey(issue?.key ?? null);
-          router.push(`/issue/${issue?.key}`)
+          router.push(`/${projectKey}/issue/${issue?.key}`)
         }}
         customColors
         className=" bg-transparent text-xs text-gray-500 underline-offset-2 hover:underline"
