@@ -17,6 +17,9 @@ const ResetPassword = () => {
   const router = useRouter();
   const token = searchParams.get("token");
 
+
+
+
   useEffect(() => {
     // Verify token on component mount
     const verifyToken = async () => {
@@ -26,26 +29,27 @@ const ResetPassword = () => {
       }
 
       try {
-        const response = await fetch("/api/auth/verify-reset-token", {
-          method: "POST",
+        const response = await fetch('/api/auth/verify-reset-token', {
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({ token }),
-        });
+        })
 
         if (response.ok) {
-          setIsValidToken(true);
+          setIsValidToken(true)
         } else {
-          setError("This reset link is invalid or has expired");
+          setError('This reset link is invalid or has expired')
         }
       } catch (err) {
-        setError("Error verifying reset link");
+        setError('Error verifying reset link')
       }
-    };
+    }
 
-    verifyToken();
-  }, [token]);
+    verifyToken()
+  }, [token])
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -212,4 +216,8 @@ const ResetPassword = () => {
   );
 };
 
+  )
+}
+
 export default ResetPassword;
+
