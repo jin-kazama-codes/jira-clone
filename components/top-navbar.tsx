@@ -59,7 +59,7 @@ const TopNavbar: React.FC = () => {
 
 
   return (
-    <div className="flex  bg-blue-600 h-12 w-full items-center justify-between border-b px-4">
+    <div className="flex h-12 w-full items-center justify-between border-b px-4">
       <div className="flex items-center gap-x-2">
         <Image
           src="https://cdn.worldvectorlogo.com/logos/jira-3.svg"
@@ -67,7 +67,7 @@ const TopNavbar: React.FC = () => {
           width={25}
           height={25}
         />
-        <span className="text-xl font-medium text-white">Karya - IO</span>
+        <span className="text-sm font-medium text-gray-600">Karya - IO</span>
       </div>
 
       <div className="relative flex items-center gap-x-5">

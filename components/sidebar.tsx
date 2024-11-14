@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { FaClipboardList } from "react-icons/fa";
 import {
@@ -22,7 +22,6 @@ import { usePathname } from "next/navigation";
 import { FaChessPawn, FaChevronRight } from "react-icons/fa";
 import { useCookie } from "@/hooks/use-cookie";
 import { useFiltersContext } from "@/context/use-filters-context";
-import { SidebarSkeleton } from "./skeletons";
 
 type NavItemType = {
   id: string;
@@ -33,9 +32,7 @@ type NavItemType = {
 
 const Sidebar: React.FC = () => {
   const user = useCookie("user");
-  const project = useCookie("project");
   const pathname = usePathname();
-  const [loading, setLoading] = useState(!project);
   const { assignees, setAssignees } = useFiltersContext();
   const isAdminOrManager =
     user && (user.role === "admin" || user.role === "manager");
@@ -44,12 +41,7 @@ const Sidebar: React.FC = () => {
   const isOnUsersPage = pathname === "/users";
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-
-  useEffect(() => {
-    if (project) {
-      setLoading(false);
-    }
-  }, [project]);
+  const project = useCookie("project");
 
   const toggleAssigneeFilter = () => {
     setAssignees(assignees.length === 0 ? [user.id] : []);
@@ -60,19 +52,19 @@ const Sidebar: React.FC = () => {
       id: "roadmap",
       label: "Roadmap",
       icon: RoadmapIcon,
-      href: `/${project?.key}/roadmap`,
+      href: `/roadmap`,
     },
     {
       id: "backlog",
       label: "Backlog",
       icon: BacklogIcon,
-      href: `/${project?.key}/backlog`,
+      href: `/backlog`,
     },
     {
       id: "board",
       label: "Board",
       icon: BoardIcon,
-      href: `/${project?.key}/board`,
+      href: `/board`,
     },
   ];
 
@@ -92,13 +84,13 @@ const Sidebar: React.FC = () => {
       id: "users",
       label: "Users",
       icon: UsersIcon,
-      href: `/${project?.key}/users`,
+      href: `/users`,
     },
     {
       id: "settings",
       label: "Settings",
       icon: DevelopmentIcon,
-      href: `/${project?.key}/settings`,
+      href: `/settings`,
     },
   ].filter(Boolean); // Filter out any null values if isAdminOrManager is false
 
@@ -107,19 +99,15 @@ const Sidebar: React.FC = () => {
       id: "burndown",
       label: "Burndown Report",
       icon: BurndownIcon,
-      href: `/${project?.key}/report/burndown`,
+      href: `/report/burndown`,
     },
     {
       id: "velocity",
       label: "Velocity Report",
       icon: VelocityIcon,
-      href: `/${project?.key}/report/velocity`,
+      href: `/report/velocity`,
     },
   ];
-
-  if (loading) {
-    return <SidebarSkeleton />
-  }
 
   return (
     <div className="flex h-full w-64 flex-col gap-y-3 bg-gray-50 p-3 shadow-inner">

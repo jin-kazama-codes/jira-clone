@@ -18,7 +18,7 @@ import { toast } from "../toast";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
 import { type DefaultUser } from "@prisma/client";
 import { TooltipWrapper } from "../ui/tooltip";
-import { AssignIssueEmailTemplate } from "../email-template";
+import {AssignIssueEmailTemplate} from "../email-template";
 
 const IssueAssigneeSelect: React.FC<{
   issue: IssueType;
@@ -69,11 +69,7 @@ const IssueAssigneeSelect: React.FC<{
           // Send email notification to the new assignee
           if (data.assignee?.email) {
             try {
-              const emailHtml = AssignIssueEmailTemplate({
-                name: data.assignee.name,
-                issue: issue.name,
-                url: data.issueUrl,
-              });
+              const emailHtml = AssignIssueEmailTemplate({ name: data.assignee.name, issue: issue.name });
               await fetch("/api/email", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },

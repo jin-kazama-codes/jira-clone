@@ -195,7 +195,7 @@ const SprintActionButton: React.FC<{ sprint: Sprint; issues: IssueType[] }> = ({
   ) {
     return (
       <CompleteSprintModal issues={issues} sprint={sprint}>
-        <Button className="rounded-xl px-4 bg-blue-600">
+        <Button className="rounded-xl !bg-black px-4 !text-white hover:!bg-black">
           <span className="whitespace-nowrap text-white">Complete sprint</span>
         </Button>
       </CompleteSprintModal>
@@ -208,8 +208,7 @@ const SprintActionButton: React.FC<{ sprint: Sprint; issues: IssueType[] }> = ({
   ) {
     return (
       <StartSprintModal issueCount={issues.length} sprint={sprint}>
-        <Button
-          className="rounded-xl bg-blue-600  px-4 ">
+        <Button className="rounded-xl !bg-black px-4 !text-white hover:!bg-black">
           <span className="whitespace-nowrap text-white">Start sprint</span>
         </Button>
       </StartSprintModal>

@@ -216,7 +216,7 @@ export const setCookie = (param: string, obj: {}) => {
   const cookieValue = JSON.stringify(obj);
   const expiryDate = new Date();
   expiryDate.setDate(expiryDate.getDate() + 7); // Cookie expires in 7 days
-  document.cookie = `${param}=${cookieValue}; expires=${expiryDate.toUTCString()}; path=/; secure; SameSite=lax`;
+  document.cookie = `${param}=${cookieValue}; expires=${expiryDate.toUTCString()}; path=/; secure; SameSite=Strict`;
 };
 
 export const timeStringToMinutes = (timeString?: string) => {
@@ -366,20 +366,3 @@ export const calculateTimeLogged = (time) => {
     return `${seconds}s`;
   }
 };
-
-export function removeCookie(cookieName: string) {
-  document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-}
-
-export function getProjectKeyFromUrl() {
-  // Get the current path from the URL
-  const pathname = window.location.pathname;
-
-  // Split the path into segments
-  const segments = pathname.split('/');
-
-  // Extract and return the project key (assumed to be the second segment)
-  return segments[1]; // "KARYA-IO" in this example
-}
-
-

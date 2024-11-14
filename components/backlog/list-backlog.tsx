@@ -84,7 +84,7 @@ const BacklogListHeader: React.FC<{ issues: IssueType[] }> = ({ issues }) => {
         {(user?.role === "admin" || user?.role === "manager") && (
           <Button
             onClick={handleCreateSprint}
-            className="rounded-xl  px-4 !text-white bg-blue-600 "
+            className="rounded-xl !bg-black px-4 !text-white hover:!bg-black"
           >
             <span className="whitespace-nowrap text-white">Create Sprint</span>
           </Button>

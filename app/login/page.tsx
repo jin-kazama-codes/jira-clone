@@ -1,9 +1,10 @@
 "use client";
 import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 import { setCookie } from "@/utils/helpers";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import Link from "next/link";
 
 const Login: React.FC = () => {
   const router = useRouter();
@@ -18,43 +19,10 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [Loading, setLoading] = useState(false);
 
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token");
-  const redirectPath = searchParams.get("redirect");
-  
-
+  // Check if the component is mounted
   useEffect(() => {
     setIsMounted(true);
-    // Verify token on component mount if token is present
-    const verifyToken = async () => {
-      if (token) {
-        try {
-          const response = await fetch("/api/auth/verify-login-token", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ token }),
-          });
-          const data = await response.json();
-
-          if (response.ok) {
-            setCookie("Invited Project", data.projectId);
-          } else {
-            setError("This reset link is invalid or has expired");
-          }
-        } catch (err) {
-          setError("Error verifying reset link");
-        }
-      }
-      
-    };
-
-    verifyToken();
-    if(redirectPath){
-      router.push(redirectPath || "/");
-    }
-  }, [token]);
+  }, []);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -100,120 +68,85 @@ const Login: React.FC = () => {
   }
 
   return (
-    <div
-      style={{
-        background: 'linear-gradient(125deg, #ECFCFF 0%, #ECFCFF 40%, #B2FCFF calc(40% + 1px), #B2FCFF 60%, #3E64FF calc(60% + 1px), #3E64FF 72%, #5EDFFF calc(72% + 1px),#5EDFFF  100%)'
-      }}
-      className="flex items-center justify-center min-h-screen p-4"
-    >
-      <div
-        style={{
-          background: " #3E64FF",
-          boxShadow: '0px 0px 24px rgb(92, 86, 150)'
-        }}
-        className="w-full max-w-md rounded-2xl overflow-hidden">
-        {/* Content */}
-        <div className="relative z-10">
-          {/* Header */}
-          <div className="relative text-center  p-8 min-w-screen flex items-center justify-center">
-            {/* Content */}
-            <div className="relative z-10">
-              <h1
-                className="text-3xl text-white font-bold tracking-tight">
-                Login to Continue
-              </h1>
-              <p className="text-lg text-blue-100 opacity-90 mt-2">
-                Fill out the form below to get started.
-              </p>
-            </div>
-          </div>
-
-
-          {/* Form */}
-          <form onSubmit={handleSubmit}
-            style={{
-              background: " #5EDFFF"
-            }}
-            className="  px-8 pt-10 rounded-t-3xl pb-8 space-y-6">
-            {/* Email Field */}
-            <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium text-gray-800">
+    <div className="container mx-auto max-w-md py-12">
+      <div className="space-y-6">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold tracking-tight">
+            Login to Continue
+          </h1>
+          <p className="text-muted-foreground text-lg">
+            Fill out the form below to get started.
+          </p>
+        </div>
+        <form
+          onSubmit={handleSubmit}
+          className="mt-5 rounded-xl bg-white p-6 shadow-lg"
+        >
+          <div className="grid gap-4">
+            <div className="flex flex-col">
+              <label htmlFor="email" className="text-sm font-medium">
                 Email
               </label>
               <input
                 id="email"
                 name="email"
-                type="email"
+                type="text"
                 placeholder="Enter your email"
-                value={formData.email}
+                className="focus:border-primary focus:ring-primary mt-3 rounded-xl border border-gray-300 px-3 py-2"
                 onChange={handleChange}
+                value={formData.email}
                 required
-                className="w-full px-4 py-3 rounded-xl border border-blue-300 border-opacity-50  text-black placeholder-gray-600 focus:outline-none  focus:ring-blue-300 focus:border-transparent transition duration-200 ease-in-out"
               />
             </div>
-
-            {/* Password Field */}
-            <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-medium text-gray-700">
+            <div className="relative flex flex-col">
+              <label htmlFor="password" className="text-sm font-medium">
                 Password
               </label>
-              <div className="relative">
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 rounded-xl border border-blue-300 border-opacity-50  text-black placeholder-gray-600 focus:outline-none  focus:ring-blue-300 focus:border-transparent transition duration-200 ease-in-out"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(prev => !prev)}
-                  className="absolute text-gray-500 right-4 top-1/2 -translate-y-1/2"
-                >
-                  {showPassword ? (
-                    <AiFillEyeInvisible className="text-xl" />
-                  ) : (
-                    <AiFillEye className="text-xl" />
-                  )}
-
-                </button>
-              </div>
+              <input
+                id="password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                className="focus:border-primary focus:ring-primary mt-3 rounded-xl border border-gray-300 px-3 py-2 pr-10"
+                onChange={handleChange}
+                value={formData.password}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-4 top-11 text-gray-500"
+              >
+                {showPassword ? (
+                  <AiFillEyeInvisible className="text-xl" />
+                ) : (
+                  <AiFillEye className="text-xl" />
+                )}
+              </button>
             </div>
-
-            {/* Forgot Password Link */}
-            <p
-              className="text-gray-800 hover:text-gray-900 mt-2 hover:underline cursor-pointer"
-              onClick={() => {
-                router.push("/forgot-password");
-              }}
-            >
-              Forgot Password ?
-            </p>
-
-            {/* Error Message */}
-            {error && <p className="text-red-500 text-sm">{error}</p>}
-
-            {/* Submit Button */}
-            <div className="mt-4 flex justify-center">
-              {Loading ? (
-                <div className="h-10 w-10 animate-spin rounded-full border-4 border-t-4 border-gray-200 border-t-black" />
-              ) : (
-                <button
-                  type="submit"
-                  disabled={Loading}
-                  className="w-full py-3 border border-transparent rounded-xl shadow-sm text-lg  font-medium text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition duration-200 ease-in-out"
-                >
-                  Log in
-                </button>
-              )}
-            </div>
-
-          </form>
-        </div>
-
+          </div>
+          <p
+          className="text-blue-600 hover:text-blue-800 mt-2 hover:underline cursor-pointer"
+            onClick={() => {
+              router.push("/forgot-password");
+            }}
+          >
+            Forgot Password ?
+          </p>
+          {error && <p className="mt-2 text-red-500">{error}</p>}
+          <div className="mt-4 flex justify-end">
+            {Loading ? (
+              <div className="h-10 w-10 animate-spin rounded-full border-4 border-t-4 border-gray-200 border-t-black"></div>
+            ) : (
+              <button
+                type="submit"
+                className="focus:ring-primary rounded-xl bg-black px-4 py-2 text-white hover:bg-slate-800 focus:outline-none focus:ring-2"
+              >
+                Login
+              </button>
+            )}
+          </div>
+        </form>
       </div>
     </div>
   );

@@ -92,35 +92,6 @@ const RoadmapTableSkeleton = () => {
   );
 };
 
-const SidebarSkeleton = () => {
-  return (
-    <div className="w-60 bg-white p-4 shadow-lg">
-      {/* Header */}
-      <div className="mb-6 flex items-center space-x-3">
-        <div className="h-10 w-10 animate-pulse rounded-full bg-gray-200"></div>
-        <div className="h-4 w-32 animate-pulse rounded-xl bg-gray-200"></div>
-      </div>
-
-      {/* Sections */}
-      {["PLANNING", "MY WORKSPACE", "CONFIGURATION", "REPORTS"].map(
-        (section, index) => (
-          <div key={section} className="mb-6">
-            <div className="mb-3 h-4 w-24 animate-pulse rounded-xl bg-gray-200"></div>
-            <div className="space-y-3">
-              {[...Array(index === 3 ? 1 : 3)].map((_, i) => (
-                <div key={i} className="flex items-center space-x-3">
-                  <div className="h-4 w-4 animate-pulse rounded-xl bg-gray-200"></div>
-                  <div className="h-4 w-24 animate-pulse rounded-xl bg-gray-200"></div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )
-      )}
-    </div>
-  );
-};
-
 export {
   IssueSkeleton,
   BreadCrumbSkeleton,
@@ -129,5 +100,4 @@ export {
   SprintSearchSkeleton,
   BoardColumnSkeleton,
   RoadmapTableSkeleton,
-  SidebarSkeleton,
 };

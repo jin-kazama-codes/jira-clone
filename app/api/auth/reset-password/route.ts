@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import jwt from 'jsonwebtoken'
 import { prisma } from '@/server/db'
-import bcrypt from 'bcryptjs'
 
 export async function POST(req: Request) {
   try {
@@ -17,12 +16,10 @@ export async function POST(req: Request) {
     // Verify and decode JWT token
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { email: string }
 
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-
     // Update user password
     await prisma.defaultUser.update({
       where: { email: decoded.email },
-      data: { password: hashedPassword },
+      data: { password: newPassword },
     })
 
     return NextResponse.json({ 
