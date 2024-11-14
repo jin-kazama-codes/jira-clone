@@ -39,63 +39,87 @@ const ForgotPassword = () => {
   }
 
   return (
-    <div className="container mx-auto max-w-md py-12">
-      <div className="space-y-6">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold tracking-tight">
-            Forgot Your Password?
-          </h1>
-          <p className="text-muted-foreground text-lg">
-            Enter your email to receive a password reset link
-          </p>
-        </div>
-        {success ? (
-          <div className="mt-5 rounded-xl bg-green-50 p-6 text-center">
-            <p className="text-green-800">
-              If an account exists with that email, you will receive a password reset link shortly.
-              Please check your email.
-            </p>
-          </div>
-        ) : (
-          <form
-            className="mt-5 rounded-xl bg-white p-6 shadow-lg"
-            onSubmit={handleSubmit}
-          >
-            <div className="grid gap-4">
-              <div className="flex flex-col">
-                <label htmlFor="email" className="text-sm font-medium">
-                  Email
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  className="focus:border-primary focus:ring-primary mt-3 rounded-xl border border-gray-300 px-3 py-2"
-                  required
-                  onChange={(e) => setEmail(e.target.value)}
-                  value={email}
-                />
-              </div>
+    <div
+      style={{
+        background: 'linear-gradient(125deg, #ECFCFF 0%, #ECFCFF 40%, #B2FCFF calc(40% + 1px), #B2FCFF 60%, #3E64FF calc(60% + 1px), #3E64FF 72%, #5EDFFF calc(72% + 1px),#5EDFFF  100%)'
+      }}
+      className="flex items-center justify-center min-h-screen   p-4">
+      <div style={{
+        background: " #3E64FF",
+        boxShadow: '0px 0px 24px rgb(92, 86, 150)'
+      }}
+        className=" max-w-md rounded-2xl   overflow-hidden">
+        {/* Content */}
+        <div className="relative z-10">
+          {/* Header */}
+          <div className="text-center  text-white p-8">
+            <div className="relative z-10">
+              <h1 className="text-3xl font-bold tracking-tight">
+                Forgot Your Password?
+              </h1>
+              <p className="text-lg opacity-90 mt-2">
+                Enter your email to receive a password reset link
+              </p>
             </div>
-            {error && <p className="mt-2 text-red-500">{error}</p>}
-            <div className="mt-4 flex justify-end">
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit}
+            style={{
+              background: " #5EDFFF"
+            }}
+            className=" rounded-t-3xl  px-8 pt-10 pb-8 space-y-6">
+            {/* Email Field */}
+            <div className="space-y-2">
+              <label htmlFor="email" className="text-sm font-medium text-gray-800">
+                Email
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="Enter your email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+
+                className="w-full px-4 py-3 rounded-xl border border-blue-300 border-opacity-50  text-black placeholder-gray-600 focus:outline-none  focus:ring-blue-300 focus:border-transparent transition duration-200 ease-in-out"
+              />
+            </div>
+
+            {/* Error Message */}
+            {error && <p className="text-red-500 text-sm">{error}</p>}
+
+            {/* Success Message */}
+            {success && (
+              <div className="mt-5 rounded-xl bg-green-100 p-6 text-center">
+                <p className="text-green-700">
+                  If an account exists with that email, you will receive a password reset link shortly.
+                  Please check your email.
+                </p>
+              </div>
+            )}
+
+            {/* Submit Button */}
+            <div className="mt-4 flex justify-center">
               {loading ? (
-                <div className="w-10 h-10 border-4 border-t-4 border-gray-200 border-t-black rounded-full animate-spin"></div>
+                <div className="h-10 w-10 animate-spin rounded-full border-4 border-t-4 border-gray-200 border-t-black" />
               ) : (
                 <button
                   type="submit"
-                  className="focus:ring-primary rounded-xl bg-black px-4 py-2 text-white hover:bg-slate-800 focus:outline-none focus:ring-2"
                   disabled={loading}
+                  className="w-full py-3 border border-transparent rounded-xl shadow-sm text-lg  font-medium text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition duration-200 ease-in-out"
                 >
                   Send Reset Link
                 </button>
               )}
             </div>
           </form>
-        )}
+        </div>
       </div>
     </div>
+
+
   )
 }
 
