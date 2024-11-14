@@ -8,7 +8,7 @@ import {
 } from "@prisma/client";
 import { z } from "zod";
 import { type GetIssuesResponse } from "../route";
-import { filterUserForClient } from "@/utils/helpers";
+import { filterUserForClient, getBaseUrl } from "@/utils/helpers";
 import { parseCookies } from "@/utils/cookies";
 import { getQueryClient } from "@/utils/get-query-client";
 
@@ -70,7 +70,8 @@ type ParamsType = {
 
 export async function PATCH(req: NextRequest, { params }: ParamsType) {
   const userId = parseCookies(req, "user").id;
-  const { id: projectId } = parseCookies(req, "project");
+  const { id: projectId, key: projectKey } = parseCookies(req, "project");
+  const baseUrl = getBaseUrl();
 
   if (!userId) return new Response("Unauthenticated request", { status: 403 });
   const { success } = await ratelimit.limit(userId);
@@ -113,8 +114,9 @@ export async function PATCH(req: NextRequest, { params }: ParamsType) {
       sprintId: valid.sprintId === undefined ? undefined : valid.sprintId,
       parentId: valid.parentId === undefined ? undefined : valid.parentId,
       projectId: projectId,
-      estimateTime: valid.estimateTime === undefined ? undefined : valid.estimateTime, 
-      timeSpent: valid.timeSpent === undefined ? undefined : valid.timeSpent, 
+      estimateTime:
+        valid.estimateTime === undefined ? undefined : valid.estimateTime,
+      timeSpent: valid.timeSpent === undefined ? undefined : valid.timeSpent,
       sprintColor: valid.sprintColor ?? undefined,
       boardPosition: valid.boardPosition ?? undefined,
     },
@@ -127,8 +129,9 @@ export async function PATCH(req: NextRequest, { params }: ParamsType) {
       },
     });
     const assigneeForClient = filterUserForClient(assignee);
+    const issueUrl = `${baseUrl}/${projectKey}/issue/${issue.key}`;
     return NextResponse.json({
-      issue: { ...issue, assignee: assigneeForClient },
+      issue: { ...issue, assignee: assigneeForClient, issueUrl: issueUrl },
     });
   }
 

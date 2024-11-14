@@ -1,10 +1,9 @@
 "use client";
 import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import { setCookie } from "@/utils/helpers";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import Link from "next/link";
 
 const Login: React.FC = () => {
   const router = useRouter();
@@ -19,10 +18,43 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [Loading, setLoading] = useState(false);
 
-  // Check if the component is mounted
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
+  const redirectPath = searchParams.get("redirect");
+  
+
   useEffect(() => {
     setIsMounted(true);
-  }, []);
+    // Verify token on component mount if token is present
+    const verifyToken = async () => {
+      if (token) {
+        try {
+          const response = await fetch("/api/auth/verify-login-token", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ token }),
+          });
+          const data = await response.json();
+
+          if (response.ok) {
+            setCookie("Invited Project", data.projectId);
+          } else {
+            setError("This reset link is invalid or has expired");
+          }
+        } catch (err) {
+          setError("Error verifying reset link");
+        }
+      }
+      
+    };
+
+    verifyToken();
+    if(redirectPath){
+      router.push(redirectPath || "/");
+    }
+  }, [token]);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

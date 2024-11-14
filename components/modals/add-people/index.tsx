@@ -12,7 +12,9 @@ import {
 } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { WelcomeNewMemberTemplate } from "@/components/email-template";
+import jwt from "jsonwebtoken";
 import { useCookie } from "@/hooks/use-cookie";
+import { getBaseUrl } from "@/utils/helpers";
 
 interface UserModalProps {
   children: ReactNode;
@@ -31,7 +33,6 @@ const UserModal: React.FC<UserModalProps> = ({ children, refetch }) => {
   const [error, setError] = useState<string | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [suggestions, setSuggestions] = useState<User[]>([]);
-  const projectName = useCookie("project").name;
 
   useEffect(() => {
     if (isOpen) {
@@ -86,15 +87,16 @@ const UserModal: React.FC<UserModalProps> = ({ children, refetch }) => {
         },
         body: JSON.stringify(userData),
       });
-
+      const data = await response.json();
+      const resetUrl = await data.url;
+      const projectUrl = await data.projectUrl
       if (response.ok) {
         refetch(); // Manually trigger refetch to get the latest members list
-
         setIsOpen(false);
         try {
           const emailHtml = WelcomeNewMemberTemplate({
             name: name,
-            projectName: projectName,
+            Url: resetUrl || projectUrl,
           });
           await fetch("/api/email", {
             method: "POST",
