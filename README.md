@@ -4,7 +4,7 @@
 
 ![App screenshot](./assets/readme/backlog-screenshot.png)
 
-## Feature
+## <h1>Features</h1>
 
 - Written in modern React
 - Uses Next js 13.4 app directory structure
@@ -18,7 +18,7 @@
 - Entire app written with typescript
 - End to end type safety with Zod
 
-## Setting up development environment
+## <h1>Setting up development environment</h1>
 
 - Project uses Prisma, you can decide which database to use. \*By default it uses the 'mysql' provider
 - `git clone https://github.com/jin-kazama-codes/jira-clone.git`
@@ -53,5 +53,5 @@ Contributions to this project are welcome. Feel free to submit bug reports, feat
 ## License
 
 This project is licensed under the [MIT](https://opensource.org/licenses/MIT) license.
-<hr/>
+
 
