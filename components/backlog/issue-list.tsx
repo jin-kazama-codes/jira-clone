@@ -107,7 +107,7 @@ const IssueList: React.FC<{ sprintId: string | null; issues: IssueType[] }> = ({
             <div
               className={clsx(
                 issues.length &&
-                  "flex flex-col gap-1 divide-y rounded-xl bg-white"
+                "flex flex-col gap-1 divide-y text-gray-800 rounded-xl bg-transparent"
               )}
             >
               {issues

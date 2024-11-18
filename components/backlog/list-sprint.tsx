@@ -42,7 +42,7 @@ const SprintList: React.FC<{
     <Accordion
       onValueChange={setOpenAccordion}
       value={openAccordion}
-      className="overflow-hidden rounded-xl border-2  p-4"
+      className="overflow-hidden rounded-xl border-2 bg-sprint p-4"
       type="single"
       collapsible
     >
@@ -137,7 +137,7 @@ const SprintListHeader: React.FC<{ issues: IssueType[]; sprint: Sprint }> = ({
               <div className="text-semibold whitespace-nowrap text-xl">
                 {sprint.name}
               </div>
-              <div className="flex items-center gap-x-3 whitespace-nowrap font-normal text-gray-500">
+              <div className="flex items-center gap-x-3 whitespace-nowrap font-normal text-gray-800">
                 <span>
                   {getFormattedDateRange(sprint.startDate, sprint.endDate)}
                 </span>
@@ -177,7 +177,7 @@ const SprintListHeader: React.FC<{ issues: IssueType[]; sprint: Sprint }> = ({
           )}
         </div>
       </div>
-      <div className="text-gray-500 pl-7 text-sm">
+      <div className="text-gray-800 pl-7 font-medium text-sm">
         {sprint.description}
       </div>
 
@@ -195,7 +195,7 @@ const SprintActionButton: React.FC<{ sprint: Sprint; issues: IssueType[] }> = ({
   ) {
     return (
       <CompleteSprintModal issues={issues} sprint={sprint}>
-        <Button className="rounded-xl px-4 bg-blue-600">
+        <Button className="rounded-xl px-4 !bg-blue-600 hover:!bg-blue-700">
           <span className="whitespace-nowrap text-white">Complete sprint</span>
         </Button>
       </CompleteSprintModal>
@@ -209,7 +209,7 @@ const SprintActionButton: React.FC<{ sprint: Sprint; issues: IssueType[] }> = ({
     return (
       <StartSprintModal issueCount={issues.length} sprint={sprint}>
         <Button
-          className="rounded-xl bg-blue-600  px-4 ">
+          className="rounded-xl !bg-blue-600 hover:!bg-blue-700  px-4 ">
           <span className="whitespace-nowrap text-white">Start sprint</span>
         </Button>
       </StartSprintModal>

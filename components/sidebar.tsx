@@ -122,13 +122,14 @@ const Sidebar: React.FC = () => {
   }
 
   return (
-    <div className="flex h-full w-64 flex-col gap-y-3 bg-gray-50 p-3 shadow-inner">
+    <div
+      className="flex bg-sidebar h-full w-64 flex-col gap-y-3 p-3 shadow-inner">
       <div className="my-5 flex items-center gap-x-2 border-b-2 px-3 pb-7">
         <div className="mt-1 flex items-center justify-center rounded-full bg-[#FF5630] p-1 text-xs font-bold text-white">
           <FaChessPawn className="aspect-square text-2xl" />
         </div>
         <div>
-          <h2 className="text-md -mb-[0.5px] font-semibold text-gray-600">
+          <h2 className="text-md -mb-[0.5px] font-semibold text-black">
             {project?.name}
           </h2>
         </div>
@@ -140,7 +141,7 @@ const Sidebar: React.FC = () => {
       {!isOnUsersPage && !isOnProjectPage && (
         <button
           onClick={toggleAssigneeFilter}
-          className=" flex w-full rounded-sm rounded-r-xl py-2 items-center border-l-4 border-inherit bg-inherit px-2  hover:bg-slate-100"
+          className=" flex w-full rounded-sm rounded-r-xl py-2 items-center border-l-4 border-inherit bg-inherit px-2  hover:bg-slate-200"
         >
           <FaClipboardList className="w-5 h-5 mr-3" /> {/* Task-related icon */}
           <span className=" text-sm">
@@ -228,7 +229,7 @@ const NavItem: React.FC<{ item: NavItemType; disabled?: boolean }> = ({
     >
       <NavigationMenuLink
         active={currentPath === item.href}
-        className="flex w-full rounded-sm rounded-r-xl border-transparent py-2 hover:bg-slate-100 [&[data-active]]:rounded-r-xl [&[data-active]]:border-l-black [&[data-active]]:bg-slate-200 [&[data-active]]:text-black"
+        className="flex w-full rounded-sm rounded-r-xl border-transparent py-2 hover:bg-slate-200 [&[data-active]]:rounded-r-xl [&[data-active]]:border-l-black [&[data-active]]:bg-slate-200 [&[data-active]]:text-black"
       >
         <div className="flex w-full items-center gap-x-3 border-l-4 border-inherit bg-inherit px-2">
           <item.icon className="[&[data-active]]:text-blue-500" />

@@ -64,9 +64,9 @@ const Issue: React.FC<{
             onChecked
               ? "bg-gray-200"
               : isDragging
-              ? "rounded-xl border-[0.3px] border-gray-300 bg-gray-100"
-              : "border-[0.3px] border-slate-200 bg-slate-50",
-            "group flex w-full max-w-full items-center justify-between rounded-xl   px-3 py-1.5 text-sm hover:bg-gray-300 [&[data-state=selected]]:bg-gray-300"
+                ? "rounded-xl border-[0.3px] border-gray-300 bg-transparent"
+                : "border-[0.3px] border-slate-200 bg-cyan-100",
+            "group flex w-full max-w-full items-center justify-between rounded-xl   px-3 py-1.5 text-sm hover:bg-gray-300 [&[data-state=selected]]:bg-transparent"
           )}
           style={{
             borderBottomWidth: "0.3px", // Ensuring the bottom border is visible

@@ -39,16 +39,11 @@ const ForgotPassword = () => {
   }
 
   return (
-    <div
-      style={{
-        background: 'linear-gradient(125deg, #ECFCFF 0%, #ECFCFF 40%, #B2FCFF calc(40% + 1px), #B2FCFF 60%, #3E64FF calc(60% + 1px), #3E64FF 72%, #5EDFFF calc(72% + 1px),#5EDFFF  100%)'
-      }}
-      className="flex items-center justify-center min-h-screen   p-4">
+    <div className="flex bg-custom-background items-center justify-center min-h-screen   p-4">
       <div style={{
-        background: " #3E64FF",
         boxShadow: '0px 0px 24px rgb(92, 86, 150)'
       }}
-        className=" max-w-md rounded-2xl   overflow-hidden">
+        className=" max-w-md bg-header rounded-2xl   overflow-hidden">
         {/* Content */}
         <div className="relative z-10">
           {/* Header */}
@@ -65,10 +60,7 @@ const ForgotPassword = () => {
 
           {/* Form */}
           <form onSubmit={handleSubmit}
-            style={{
-              background: " #5EDFFF"
-            }}
-            className=" rounded-t-3xl  px-8 pt-10 pb-8 space-y-6">
+            className=" rounded-t-3xl bg-body  px-8 pt-10 pb-8 space-y-6">
             {/* Email Field */}
             <div className="space-y-2">
               <label htmlFor="email" className="text-sm font-medium text-gray-800">
