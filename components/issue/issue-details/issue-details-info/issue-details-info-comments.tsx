@@ -141,7 +141,7 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
   return (
     <Fragment>
       <h2>Comments</h2>
-      <div className="sticky bottom-0 mb-5 w-full bg-white">
+      <div className="sticky bottom-0 mb-5 w-full bg-transparent">
         <div ref={scrollRef} id="dummy-scroll-div" />
         {isWritingComment ? (
           <Editor
@@ -253,23 +253,23 @@ const CommentPreview: React.FC<{
   }
 
   return (
-    <div className="flex w-full gap-x-2">
+    <div className="flex bg-transparent w-full gap-x-2">
       <Avatar
         src={comment.author?.avatar ?? ""}
         alt={`${comment.author?.name ?? "Guest"}`}
       />
       <div className="w-full rounded-xl border p-2 px-3">
         <div className="flex items-center gap-x-3 text-xs">
-          <span className="font-bold text-gray-600 ">
+          <span className="font-bold text-black ">
             {comment.author?.name}
           </span>
-          <span className="text-gray-500">
+          <span className="text-gray-800">
             {dayjs(comment.createdAt).fromNow()}
           </span>
 
           <span
             data-state={comment.isEdited ? "edited" : "not-edited"}
-            className="hidden text-gray-400 [&[data-state=edited]]:block"
+            className="hidden text-gray-700 [&[data-state=edited]]:block"
           >
             (Edited)
           </span>
@@ -302,14 +302,14 @@ const CommentPreview: React.FC<{
             <Button
               onClick={() => setIsEditing(true)}
               customColors
-              className="bg-transparent text-xs font-medium text-gray-500 underline-offset-2 hover:underline"
+              className="bg-transparent text-xs font-medium text-gray-800 underline-offset-2 hover:underline"
             >
               Edit
             </Button>
             <Button
               onClick={handleDelete}
               customColors
-              className="bg-transparent text-xs font-medium text-gray-500 underline-offset-2 hover:underline"
+              className="bg-transparent text-xs font-medium text-gray-800 underline-offset-2 hover:underline"
             >
               Delete
             </Button>

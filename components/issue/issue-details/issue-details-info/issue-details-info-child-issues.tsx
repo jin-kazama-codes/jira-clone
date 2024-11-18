@@ -29,82 +29,82 @@ const ChildIssueList: React.FC<{
   isAddingChildIssue,
   setIsAddingChildIssue,
 }) => {
-  const { createIssue, isCreating } = useIssues();
-  const [isEditing, setIsEditing] = useState(isAddingChildIssue);
-  const [isAuthenticated, openAuthModal] = useIsAuthenticated();
+    const { createIssue, isCreating } = useIssues();
+    const [isEditing, setIsEditing] = useState(isAddingChildIssue);
+    const [isAuthenticated, openAuthModal] = useIsAuthenticated();
 
-  function handleCreateIssue({
-    name,
-    type,
-    parentId,
-  }: {
-    name: string;
-    type: IssueType["type"];
-    parentId: IssueType["id"] | null;
-  }) {
-    if (!isAuthenticated) {
-      openAuthModal();
-      return;
-    }
-    if (!name) {
-      return;
-    }
-    createIssue(
-      {
-        name,
-        type,
-        parentId,
-        sprintId: null,
-        reporterId: null,
-      },
-      {
-        onSuccess: () => {
-          setIsEditing(false);
-          setIsAddingChildIssue(false);
-        },
+    function handleCreateIssue({
+      name,
+      type,
+      parentId,
+    }: {
+      name: string;
+      type: IssueType["type"];
+      parentId: IssueType["id"] | null;
+    }) {
+      if (!isAuthenticated) {
+        openAuthModal();
+        return;
       }
-    );
-  }
-  return (
-    <Fragment>
-      <div className="flex items-center justify-between">
-        <h2>Child Issues</h2>
-        <Button
-          onClick={() => setIsEditing(true)}
-          customColors
-          customPadding
-          className="p-1 hover:bg-gray-100"
-        >
-          <AiOutlinePlus />
-        </Button>
-      </div>
-      {issues.length ? <ProgressBar issues={issues} /> : null}
-      <div className="mt-3" />
-      {issues
-        .sort(
-          (a, b) =>
-            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        )
-        .map((issue) => {
-          return <ChildIssue key={issue.key} issue={issue} />;
-        })}
-      <EmtpyIssue
-        data-state={isEditing || isAddingChildIssue ? "open" : "closed"}
-        className="[&[data-state=closed]]:hidden"
-        onCreate={({ name, type, parentId }) =>
-          handleCreateIssue({ name, type, parentId })
+      if (!name) {
+        return;
+      }
+      createIssue(
+        {
+          name,
+          type,
+          parentId,
+          sprintId: null,
+          reporterId: null,
+        },
+        {
+          onSuccess: () => {
+            setIsEditing(false);
+            setIsAddingChildIssue(false);
+          },
         }
-        onCancel={() => {
-          setIsEditing(false);
-          setIsAddingChildIssue(false);
-        }}
-        isCreating={isCreating}
-        isSubtask={!parentIsEpic}
-        parentId={parentId}
-      />
-    </Fragment>
-  );
-};
+      );
+    }
+    return (
+      <Fragment>
+        <div className="flex items-center justify-between">
+          <h2>Child Issues</h2>
+          <Button
+            onClick={() => setIsEditing(true)}
+            customColors
+            customPadding
+            className="p-1 hover:bg-gray-100"
+          >
+            <AiOutlinePlus />
+          </Button>
+        </div>
+        {issues.length ? <ProgressBar issues={issues} /> : null}
+        <div className="mt-3" />
+        {issues
+          .sort(
+            (a, b) =>
+              new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          )
+          .map((issue) => {
+            return <ChildIssue key={issue.key} issue={issue} />;
+          })}
+        <EmtpyIssue
+          data-state={isEditing || isAddingChildIssue ? "open" : "closed"}
+          className="[&[data-state=closed]]:hidden"
+          onCreate={({ name, type, parentId }) =>
+            handleCreateIssue({ name, type, parentId })
+          }
+          onCancel={() => {
+            setIsEditing(false);
+            setIsAddingChildIssue(false);
+          }}
+          isCreating={isCreating}
+          isSubtask={!parentIsEpic}
+          parentId={parentId}
+        />
+      </Fragment>
+    );
+  };
 
 const ChildIssue: React.FC<{ issue: IssueType }> = ({ issue }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -116,7 +116,7 @@ const ChildIssue: React.FC<{ issue: IssueType }> = ({ issue }) => {
       data-state={issueKey == issue.key ? "selected" : "not-selected"}
       onClick={() => setIssueKey(issue.key)}
       className={clsx(
-        "group flex w-full max-w-full items-center justify-between border-[0.3px] rounded-xl border-gray-300 px-3 py-1.5 text-sm hover:bg-gray-50 [&[data-state=selected]]:bg-blue-100"
+        "group flex w-full max-w-full items-center justify-between border-[0.3px] rounded-xl border-gray-300 px-3 py-1.5 text-sm bg-cyan-100 hover:bg-gray-200 [&[data-state=selected]]:bg-blue-100"
       )}
     >
       <div

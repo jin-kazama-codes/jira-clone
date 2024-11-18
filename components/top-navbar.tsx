@@ -59,7 +59,10 @@ const TopNavbar: React.FC = () => {
 
 
   return (
-    <div className="flex  bg-blue-600 h-12 w-full items-center justify-between border-b px-4">
+    <div style={{
+      background: '#3E64FF'
+    }}
+      className="flex h-12 w-full items-center justify-between border-b px-4">
       <div className="flex items-center gap-x-2">
         <Image
           src="https://cdn.worldvectorlogo.com/logos/jira-3.svg"

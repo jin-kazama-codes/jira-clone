@@ -12,6 +12,18 @@ export default {
         inprogress: "#0854cc",
         done: "#08845c",
         todo: "#d4d4d8",
+        header: " #3E64FF",
+        body: "#5EDFFF",
+        sidebar: "#ECFCFF",
+        sprint: "#B2FCFF",
+      },
+      backgroundImage: {
+        "custom-background": `
+          linear-gradient(125deg, #ECFCFF 0%, #ECFCFF 40%, 
+          #B2FCFF calc(40% + 1px), #B2FCFF 60%, 
+          #3E64FF calc(60% + 1px), #3E64FF 72%, 
+          #5EDFFF calc(72% + 1px), #5EDFFF 100%)
+        `,
       },
     },
   },

@@ -65,9 +65,9 @@ const Worklog: React.FC<WorklogProps> = ({ issue }) => {
         work.map((wrk, index) => (
           <>
             <div className='flex space-x-1.5 items-center' key={index + 1}>
-              <p className="font-bold text-xm text-gray-600 "> {wrk.userName}</p>
-              <p className='text-sm font-medium text-gray-500'>Logged <span className="font-bold text-black"> {wrk.timeLogged}</span> </p>
-              <p className='text-sm font-medium pl-2 text-gray-500'>{calculateTimeLogged(wrk.createdAt)} Ago</p>
+              <p className="font-bold text-xm text-black "> {wrk.userName}</p>
+              <p className='text-sm font-medium text-gray-800'>Logged <span className="font-bold text-black"> {wrk.timeLogged}</span> </p>
+              <p className='text-sm font-medium pl-2 text-gray-800'>{calculateTimeLogged(wrk.createdAt)} Ago</p>
             </div>
             <div className='text-base p-3'> {wrk.workDescription} </div>
             {wrk.userName === Username && (<div className='flex space-x-2 items-center font-bold'>
@@ -75,13 +75,13 @@ const Worklog: React.FC<WorklogProps> = ({ issue }) => {
                 issue={issue}
                 worklog={wrk}
               >
-                <button className="bg-transparent text-sm font-bold text-gray-500 underline-offset-2 hover:underline"
+                <button className="bg-transparent text-sm font-bold text-gray-800 underline-offset-2 hover:underline"
                 >Edit</button>
               </EditWorklog>
               <WorklogDlt
                 worklog={wrk}>
                 <button
-                  className='bg-transparent text-sm  font-bold text-gray-500 underline-offset-2 hover:underline'
+                  className='bg-transparent text-sm  font-bold text-gray-800 underline-offset-2 hover:underline'
                 >Delete</button>
               </WorklogDlt>
             </div>)}

@@ -24,7 +24,7 @@ const CreateProject: React.FC = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const userId = String(useCookie('user').id);
-    const {name, key} = formData
+    const { name, key } = formData
 
     try {
       const response = await fetch('/api/project', {
@@ -57,60 +57,62 @@ const CreateProject: React.FC = () => {
   };
 
   return (
-    <div className="bg-white border rounded-xl">
-    <div className="p-4 border-b">
-      <h2 className="text-2xl font-semibold text-center">Create New Project</h2>
+    <div
+
+      className="bg-white border rounded-xl">
+      <div
+        className="p-4 bg-header rounded-t-xl border-b">
+        <h2 className="text-2xl text-white font-semibold text-center">Create New Project</h2>
+      </div>
+      <div className="p-4 bg-white rounded-3xl">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Project Name Field */}
+          <div className="space-y-2">
+            <label htmlFor="name" className="text-sm text-gray-700 font-medium">
+              Name
+            </label>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              className="w-full border border-gray-300 placeholder-gray-600 bg-gray-200 rounded-xl px-3 py-2 text-sm"
+              placeholder="Enter a descriptive name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          {/* Project Key Field */}
+          <div className="space-y-2">
+            <label htmlFor="key" className="text-sm text-gray-700 font-medium">
+              Key
+            </label>
+            <input
+              id="key"
+              name="key"
+              type="text"
+              className="w-full border border-gray-300 placeholder-gray-600 bg-gray-200 rounded-xl px-3 py-2 text-sm"
+              placeholder="Enter a unique key"
+              value={formData.key}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          {/* Display Error or Success Message */}
+          {error && <p className="text-red-500">{error}</p>}
+          {success && <p className="text-green-500">{success}</p>}
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="w-full py-3 border border-transparent rounded-xl shadow-sm text-lg  font-medium text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition duration-200 ease-in-out">
+            Create Project
+          </button>
+        </form>
+      </div>
     </div>
-    <div className="p-4">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Project Name Field */}
-        <div className="space-y-2">
-          <label htmlFor="name" className="text-sm font-medium">
-            Name
-          </label>
-          <input
-            id="name"
-            name="name"
-            type="text"
-            className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm"
-            placeholder="Enter a descriptive name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        {/* Project Key Field */}
-        <div className="space-y-2">
-          <label htmlFor="key" className="text-sm font-medium">
-            Key
-          </label>
-          <input
-            id="key"
-            name="key"
-            type="text"
-            className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm"
-            placeholder="Enter a unique key"
-            value={formData.key}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        {/* Display Error or Success Message */}
-        {error && <p className="text-red-500">{error}</p>}
-        {success && <p className="text-green-500">{success}</p>}
-
-        {/* Submit Button */}
-        <button
-          type="submit"
-          className="w-full bg-black text-white rounded-xl px-4 py-2 hover:bg-slate-800"
-        >
-          Create Project
-        </button>
-      </form>
-    </div>
-  </div>
   );
 };
 

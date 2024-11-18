@@ -32,7 +32,7 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, admin }) => {
 
   useEffect(() => {
     router.refresh();
-    if(invitedProject){
+    if (invitedProject) {
       handleProjectClick(invitedProject)
     }
     removeCookie('Invited Project')
@@ -56,9 +56,10 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, admin }) => {
       }
     } catch (error) {
       console.error("Error deleting project:", error);
-      toast.error({ message: "Something went wrong!",
+      toast.error({
+        message: "Something went wrong!",
         description: "An error occured while deleting project"
-       }); // Pass a string, not an object
+      }); // Pass a string, not an object
       setShowDeleteDialog(false);
     }
   };
@@ -70,8 +71,12 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, admin }) => {
   };
 
   return (
-    <div className="rounded-xl border bg-white pb-5">
-      <div className="p-4 ">
+    <div
+      className="rounded-xl border bg-white pb-5">
+      <div style={{
+        background: '#3E64FF'
+      }}
+        className="p-4 rounded-t-xl ">
         <h2 className="text-center text-2xl font-semibold">Projects List</h2>
       </div>
       <div className="p-4">
@@ -80,11 +85,10 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, admin }) => {
             <div
               key={project.id}
               onClick={() => handleProjectClick(project)}
-              className={`group flex cursor-pointer items-center ${
-                admin ? "justify-between" : "justify-center"
-              }  rounded-xl bg-gray-100 p-3 shadow-sm transition-shadow hover:shadow-md`}
+              className={`group flex cursor-pointer items-center ${admin ? "justify-between" : "justify-center"
+                }  rounded-xl bg-gray-200 p-3 shadow-sm transition-shadow hover:shadow-md`}
             >
-              <div className={`text-sm font-medium`}>{project.name}</div>
+              <div className={`text-sm  text-gray-700 font-medium`}>{project.name}</div>
               {admin && (
                 <button
                   className="rounded-full p-2 text-red-400 opacity-0 transition-opacity hover:bg-red-100 hover:text-red-600 group-hover:opacity-100"

@@ -39,9 +39,10 @@ const SearchBar: React.FC<{
 
   return (
     <div
+
       className={clsx(
         fullWidth ? "w-full" : "w-fit",
-        "relative flex items-center"
+        "relative  bg-sidebar flex items-center"
       )}
     >
       <label htmlFor="issue-search" className="sr-only">
