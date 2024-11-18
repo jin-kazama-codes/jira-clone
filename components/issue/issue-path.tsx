@@ -14,51 +14,51 @@ import { useIsAuthenticated } from "@/hooks/use-is-authed";
 import { useRouter } from "next/navigation";
 import { useCookie } from "@/hooks/use-cookie";
 
-const 
-IssuePath: React.FC<{
-  issue: IssueType;
-  setIssueKey: React.Dispatch<React.SetStateAction<string | null>>;
-}> = ({ issue, setIssueKey }) => {
-  if (isEpic(issue))
-    return (
-      <div className="flex items-center">
-        <IssueIcon issueType={issue.type} />
-        <TooltipWrapper text={`${issue.key}: ${issue.name}`} side="top">
-          <Button
-            onClick={() => setIssueKey(issue.key)}
-            customColors
-            className=" bg-transparent text-xs text-gray-500 underline-offset-2 hover:underline"
-          >
-            <span className="whitespace-nowrap">{issue.key}</span>
-          </Button>
-        </TooltipWrapper>
-      </div>
-    );
+const
+  IssuePath: React.FC<{
+    issue: IssueType;
+    setIssueKey: React.Dispatch<React.SetStateAction<string | null>>;
+  }> = ({ issue, setIssueKey }) => {
+    if (isEpic(issue))
+      return (
+        <div className="flex items-center">
+          <IssueIcon issueType={issue.type} />
+          <TooltipWrapper text={`${issue.key}: ${issue.name}`} side="top">
+            <Button
+              onClick={() => setIssueKey(issue.key)}
+              customColors
+              className=" bg-transparent text-xs text-gray-800 underline-offset-2 hover:underline"
+            >
+              <span className="whitespace-nowrap">{issue.key}</span>
+            </Button>
+          </TooltipWrapper>
+        </div>
+      );
 
-  if (issue.parent && isEpic(issue.parent))
+    if (issue.parent && isEpic(issue.parent))
+      return (
+        <ParentContainer issue={issue} setIssueKey={setIssueKey}>
+          <IssueSelectEpic issue={issue} key={issue.id}>
+            <IssueIcon issueType={issue.parent.type} />
+          </IssueSelectEpic>
+        </ParentContainer>
+      );
+
+    if (issue.parent)
+      return (
+        <ParentContainer issue={issue} setIssueKey={setIssueKey}>
+          <IssueIcon issueType={issue.parent.type} />
+        </ParentContainer>
+      );
+
     return (
       <ParentContainer issue={issue} setIssueKey={setIssueKey}>
-        <IssueSelectEpic issue={issue} key={issue.id}>
-          <IssueIcon issueType={issue.parent.type} />
+        <IssueSelectEpic issue={issue}>
+          <AddEpic />
         </IssueSelectEpic>
       </ParentContainer>
     );
-
-  if (issue.parent)
-    return (
-      <ParentContainer issue={issue} setIssueKey={setIssueKey}>
-        <IssueIcon issueType={issue.parent.type} />
-      </ParentContainer>
-    );
-
-  return (
-    <ParentContainer issue={issue} setIssueKey={setIssueKey}>
-      <IssueSelectEpic issue={issue}>
-        <AddEpic />
-      </IssueSelectEpic>
-    </ParentContainer>
-  );
-};
+  };
 
 const ParentContainer: React.FC<{
   children: ReactNode;
@@ -89,12 +89,12 @@ const ParentContainer: React.FC<{
     );
   }
   return (
-    <div className="flex gap-x-3">
-      <div className="flex items-center">
+    <div className="flex  gap-x-3">
+      <div className="flex  items-center">
         {children}
         <IssueLink issue={issue.parent} setIssueKey={setIssueKey} />
       </div>
-      <span className="py-1.5 text-gray-500">/</span>
+      <span className="py-1.5 text-black ">/</span>
       <div className="relative flex items-center">
         <IssueSelectType
           key={issue.id + issue.type}
@@ -124,7 +124,7 @@ const IssueLink: React.FC<{
           router.push(`/${projectKey}/issue/${issue?.key}`)
         }}
         customColors
-        className=" bg-transparent text-xs text-gray-500 underline-offset-2 hover:underline"
+        className=" bg-transparent text-xs text-black underline-offset-2 hover:underline"
       >
         <span className="whitespace-nowrap">{issue?.key}</span>
       </Button>
@@ -134,7 +134,7 @@ const IssueLink: React.FC<{
 
 const AddEpic: React.FC = () => {
   return (
-    <div className="flex items-center rounded-xl font-normal text-gray-500">
+    <div className="flex items-center rounded-xl font-normal text-black">
       <AiOutlinePlus className="text-sm" />
       <span>Add Epic</span>
     </div>

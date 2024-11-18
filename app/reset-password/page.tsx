@@ -106,18 +106,13 @@ const ResetPassword = () => {
 
   return (
     <div
-      style={{
-        background:
-          "linear-gradient(125deg, #ECFCFF 0%, #ECFCFF 40%, #B2FCFF calc(40% + 1px), #B2FCFF 60%, #3E64FF calc(60% + 1px), #3E64FF 72%, #5EDFFF calc(72% + 1px),#5EDFFF  100%)",
-      }}
-      className="flex min-h-screen items-center justify-center  p-4"
+      className="flex min-h-screen bg-custom-background items-center justify-center  p-4"
     >
       <div
         style={{
-          background: " #3E64FF",
           boxShadow: "0px 0px 24px rgb(92, 86, 150)",
         }}
-        className="w-full max-w-md  overflow-hidden rounded-2xl"
+        className="w-full max-w-md bg-header overflow-hidden rounded-2xl"
       >
         {/* Content */}
         <div className="relative z-10">
@@ -137,10 +132,7 @@ const ResetPassword = () => {
           {/* Form */}
           <form
             onSubmit={handleSubmit}
-            style={{
-              background: " #5EDFFF",
-            }}
-            className=" space-y-6 rounded-t-3xl px-8 pb-8 pt-10"
+            className=" space-y-6 bg-body rounded-t-3xl px-8 pb-8 pt-10"
           >
             {/* New Password Field */}
             <div className="relative space-y-2">

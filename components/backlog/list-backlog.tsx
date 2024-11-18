@@ -28,7 +28,7 @@ const BacklogList: React.FC<{
 
   return (
     <Accordion
-      className="rounded-xl border-2 p-4 pb-20 "
+      className="rounded-xl bg-sprint border-2 p-4 pb-20 "
       type="single"
       value={openAccordion}
       onValueChange={setOpenAccordion}
@@ -68,13 +68,15 @@ const BacklogListHeader: React.FC<{ issues: IssueType[] }> = ({ issues }) => {
           />
           <div className="flex items-center gap-x-3">
             <div className="text-semibold text-xl">Backlog</div>
-            <div className="ml-3 font-normal text-gray-500">
+            <div className="ml-3 font-normal text-gray-800">
               ({issues.length} issues)
             </div>
-            <div className="font-normal text-gray-500">
+            <div className="font-normal text-gray-800">
               {convertedOriginalEstimate
                 ? convertedOriginalEstimate
                 : ""}
+
+
             </div>
           </div>
         </Fragment>
@@ -84,7 +86,8 @@ const BacklogListHeader: React.FC<{ issues: IssueType[] }> = ({ issues }) => {
         {(user?.role === "admin" || user?.role === "manager") && (
           <Button
             onClick={handleCreateSprint}
-            className="rounded-xl  px-4 !text-white bg-blue-600 "
+            className="rounded-xl  px-4 !text-white !bg-blue-600  hover:!bg-blue-700"
+
           >
             <span className="whitespace-nowrap text-white">Create Sprint</span>
           </Button>

@@ -10,7 +10,7 @@ import { getProjectKeyFromUrl, setCookie } from "@/utils/helpers";
 
 const IssueDetails: React.FC<{
   issueKey: string | null;
-  detailPage? : boolean
+  detailPage?: boolean
 }> = ({ issueKey, detailPage }) => {
   const { issues } = useIssues();
   const { setIssueKey } = useSelectedIssueContext();
@@ -71,7 +71,7 @@ const IssueDetails: React.FC<{
     <div
       ref={renderContainerRef}
       data-state={issueKey ? "open" : "closed"}
-      className="relative z-10 flex w-full flex-col overflow-y-auto pl-4 pr-2 [&[data-state=closed]]:hidden"
+      className="relative z-10 flex bg-sprint w-full flex-col overflow-y-auto pl-4 pr-2 [&[data-state=closed]]:hidden"
     >
       <IssueDetailsHeader
         detailPage={detailPage}

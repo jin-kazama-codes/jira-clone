@@ -58,7 +58,7 @@ const IssueDetailsInfoAccordion: React.FC<{ issue: IssueType }> = ({
         collapsible
       >
         <AccordionItem value={"details"}>
-          <AccordionTrigger className="flex w-full items-center justify-between p-2 font-medium hover:bg-gray-100 [&[data-state=open]>svg]:rotate-180 [&[data-state=open]]:border-b">
+          <AccordionTrigger className="flex w-full items-center justify-between p-2 hover:rounded-t-xl font-medium hover:bg-gray-100 [&[data-state=open]>svg]:rotate-180 [&[data-state=open]]:border-b">
             <div className="flex items-center gap-x-1">
               <span className="text-sm">Details</span>
               <span className="text-xs text-gray-500">
@@ -70,7 +70,7 @@ const IssueDetailsInfoAccordion: React.FC<{ issue: IssueType }> = ({
               aria-hidden
             />
           </AccordionTrigger>
-          <AccordionContent className="flex flex-col bg-white px-3 [&[data-state=open]]:py-2">
+          <AccordionContent className="flex flex-col bg-transparent px-3 [&[data-state=open]]:py-2">
             <div
               data-state={issue.assignee ? "assigned" : "unassigned"}
               className="my-2 grid grid-cols-3 [&[data-state=assigned]]:items-center"

@@ -21,7 +21,7 @@ const Login: React.FC = () => {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const redirectPath = searchParams.get("redirect");
-  
+
 
   useEffect(() => {
     setIsMounted(true);
@@ -47,11 +47,11 @@ const Login: React.FC = () => {
           setError("Error verifying reset link");
         }
       }
-      
+
     };
 
     verifyToken();
-    if(redirectPath){
+    if (redirectPath) {
       router.push(redirectPath || "/");
     }
   }, [token]);
@@ -100,18 +100,13 @@ const Login: React.FC = () => {
   }
 
   return (
-    <div
-      style={{
-        background: 'linear-gradient(125deg, #ECFCFF 0%, #ECFCFF 40%, #B2FCFF calc(40% + 1px), #B2FCFF 60%, #3E64FF calc(60% + 1px), #3E64FF 72%, #5EDFFF calc(72% + 1px),#5EDFFF  100%)'
-      }}
-      className="flex items-center justify-center min-h-screen p-4"
+    <div className="flex items-center bg-custom-background justify-center min-h-screen p-4"
     >
       <div
         style={{
-          background: " #3E64FF",
           boxShadow: '0px 0px 24px rgb(92, 86, 150)'
         }}
-        className="w-full max-w-md rounded-2xl overflow-hidden">
+        className="w-full bg-header max-w-md rounded-2xl overflow-hidden">
         {/* Content */}
         <div className="relative z-10">
           {/* Header */}
@@ -131,10 +126,7 @@ const Login: React.FC = () => {
 
           {/* Form */}
           <form onSubmit={handleSubmit}
-            style={{
-              background: " #5EDFFF"
-            }}
-            className="  px-8 pt-10 rounded-t-3xl pb-8 space-y-6">
+            className="  px-8 pt-10 bg-body rounded-t-3xl pb-8 space-y-6">
             {/* Email Field */}
             <div className="space-y-2">
               <label htmlFor="email" className="text-sm font-medium text-gray-800">
