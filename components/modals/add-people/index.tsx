@@ -12,9 +12,6 @@ import {
 } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { WelcomeNewMemberTemplate } from "@/components/email-template";
-import jwt from "jsonwebtoken";
-import { useCookie } from "@/hooks/use-cookie";
-import { getBaseUrl } from "@/utils/helpers";
 
 interface UserModalProps {
   children: ReactNode;
