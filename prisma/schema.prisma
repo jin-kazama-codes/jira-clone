@@ -110,6 +110,14 @@ model DefaultUser {
   id       Int     @id @default(autoincrement())
 }
 
+model Account {
+  id       Int     @id @default(autoincrement())
+  name     String?
+  logo     String?
+  contact  Int?
+
+}
+
 enum IssueType {
   BUG
   TASK

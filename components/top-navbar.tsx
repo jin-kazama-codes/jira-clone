@@ -2,7 +2,9 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCookie } from "@/hooks/use-cookie";
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from "react";
+import AccountSettingsModal from "./modals/account-settings";
+import { IoIosSettings } from "react-icons/io";
 
 const TopNavbar: React.FC = () => {
   const user = useCookie("user");
@@ -14,10 +16,9 @@ const TopNavbar: React.FC = () => {
     email: "",
   };
   const [showDropdown, setShowDropdown] = useState(false);
+  const [logo, setLogo] = useState("");
   const dropdownRef = useRef(null);
   const toggleDropdown = () => setShowDropdown((prev) => !prev);
-
-
 
   function getInitials(name: string) {
     const nameParts = name.split(" ");
@@ -29,7 +30,6 @@ const TopNavbar: React.FC = () => {
     return savedColorMap[memberId] || "#ccc";
   }
 
-
   function handleLogout() {
     document.cookie.split(";").forEach((cookie) => {
       document.cookie = cookie
@@ -40,9 +40,6 @@ const TopNavbar: React.FC = () => {
     window.location.reload();
   }
 
-
-
-
   const handleClickOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setShowDropdown(false);
@@ -50,22 +47,35 @@ const TopNavbar: React.FC = () => {
   };
 
   useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
+  useEffect(() => {
+    const fetchLogo = async () => {
+      try {
+        const response = await fetch("/api/account");
+        if (response.ok) {
+          const result = await response.json();
+          setLogo(result.account.logo)
+        } else {
+          console.error("Failed to fetch Logo");
+        }
+      } catch (err) {
+        console.error("Error fetching users:", err);
+      }
+    };
 
+    fetchLogo();
+  }, []);
 
   return (
-    <div style={{
-      background: '#3E64FF'
-    }}
-      className="flex h-12 w-full items-center justify-between border-b px-4">
+    <div className="flex  h-12 w-full items-center justify-between border-b bg-header px-4">
       <div className="flex items-center gap-x-2">
         <Image
-          src="https://cdn.worldvectorlogo.com/logos/jira-3.svg"
+          src={logo ? logo : 'https://cdn.worldvectorlogo.com/logos/jira-3.svg'}
           alt="Karya logo"
           width={25}
           height={25}
@@ -74,10 +84,19 @@ const TopNavbar: React.FC = () => {
       </div>
 
       <div className="relative flex items-center gap-x-5">
+        {(user?.role === "admin" || user?.role === "manager") && (
+          <AccountSettingsModal>
+            <button>
+              <IoIosSettings className="text-white" size={20} />
+            </button>
+          </AccountSettingsModal>
+        )}
         <div
           className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-300"
           style={{
-            backgroundColor: user.id ? getColorFromLocalStorage(user.id) : getColorFromLocalStorage(unassigned.id),
+            backgroundColor: user.id
+              ? getColorFromLocalStorage(user.id)
+              : getColorFromLocalStorage(unassigned.id),
           }}
           onClick={toggleDropdown}
           ref={dropdownRef}
@@ -89,31 +108,36 @@ const TopNavbar: React.FC = () => {
 
         {showDropdown && (
           <div
-            className="absolute right-0  top-11 w-80  bg-white rounded-md shadow-lg pt-2 z-10 border border-gray-300"
+            className="absolute right-0  top-11 z-10  w-80 rounded-md border border-gray-300 bg-white pt-2 shadow-lg"
             ref={dropdownRef}
           >
-            <p className="font-bold px-6  mt-4  ">Account</p>
+            <p className="mt-4 px-6  font-bold  ">Account</p>
 
             <div className="flex px-4  pt-3">
-
               <div
                 className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-300"
                 style={{
-                  backgroundColor: user.id ? getColorFromLocalStorage(user.id) : getColorFromLocalStorage(unassigned.id),
+                  backgroundColor: user.id
+                    ? getColorFromLocalStorage(user.id)
+                    : getColorFromLocalStorage(unassigned.id),
                 }}
               >
                 <span className="font-bold text-white">
-                  {user.name ? getInitials(user.name) : getInitials(unassigned.name)}
+                  {user.name
+                    ? getInitials(user.name)
+                    : getInitials(unassigned.name)}
                 </span>
               </div>
               <div className="px-4 ">
-                <p className="  text-sm font-medium text-gray-700">{user.name}</p>
+                <p className="  text-sm font-medium text-gray-700">
+                  {user.name}
+                </p>
                 <p className="  text-sm text-gray-500">{user.email}</p>
               </div>
             </div>
             <hr className="mt-5" />
             <button
-              className="w-full  px-5 py-3 text-sm text-left text-gray-600 hover:bg-slate-200"
+              className="w-full  px-5 py-3 text-left text-sm text-gray-600 hover:bg-slate-200"
               onClick={handleLogout}
             >
               Log out
@@ -124,6 +148,5 @@ const TopNavbar: React.FC = () => {
     </div>
   );
 };
-
 
 export { TopNavbar };
