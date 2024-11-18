@@ -72,9 +72,7 @@ const BacklogListHeader: React.FC<{ issues: IssueType[] }> = ({ issues }) => {
               ({issues.length} issues)
             </div>
             <div className="font-normal text-gray-500">
-              {convertedOriginalEstimate
-                ? convertedOriginalEstimate
-                : ""}
+              {convertedOriginalEstimate ? convertedOriginalEstimate : ""}
             </div>
           </div>
         </Fragment>
@@ -84,7 +82,7 @@ const BacklogListHeader: React.FC<{ issues: IssueType[] }> = ({ issues }) => {
         {(user?.role === "admin" || user?.role === "manager") && (
           <Button
             onClick={handleCreateSprint}
-            className="rounded-xl  px-4 !text-white bg-blue-600 "
+            className="rounded-xl  bg-blue-600 px-4 !text-white "
           >
             <span className="whitespace-nowrap text-white">Create Sprint</span>
           </Button>
