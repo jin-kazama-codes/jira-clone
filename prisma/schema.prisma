@@ -115,7 +115,9 @@ model Account {
   name     String?
   logo     String?
   contact  Int?
-
+  email    String?
+  bio       String?
+  url       String?
 }
 
 enum IssueType {

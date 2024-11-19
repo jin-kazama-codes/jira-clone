@@ -23,7 +23,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, contactNumber, logo } = await req.json();
+    const { name, contact, logo, bio, email, url } = await req.json();
 
     // First try to find the account
     const existingAccount = await prisma.account.findFirst({
@@ -42,8 +42,11 @@ export async function POST(req: NextRequest) {
         },
         data: {
           name,
-          contact: parseInt(contactNumber),
+          contact: parseInt(contact),
           logo,
+          email,
+          bio,
+          url
         },
       });
     } else {
@@ -52,8 +55,11 @@ export async function POST(req: NextRequest) {
         data: {
           id: 1,
           name,
-          contact: parseInt(contactNumber),
+          contact: parseInt(contact),
           logo,
+          email,
+          bio,
+          url
         },
       });
     }
