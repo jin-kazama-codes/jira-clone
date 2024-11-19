@@ -3,8 +3,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCookie } from "@/hooks/use-cookie";
 import React, { useState, useRef, useEffect } from "react";
-import AccountSettingsModal from "./modals/account-settings";
-import { IoIosSettings } from "react-icons/io";
+import Link from "next/link";
 
 const TopNavbar: React.FC = () => {
   const user = useCookie("user");
@@ -84,13 +83,6 @@ const TopNavbar: React.FC = () => {
       </div>
 
       <div className="relative flex items-center gap-x-5">
-        {(user?.role === "admin" || user?.role === "manager") && (
-          <AccountSettingsModal>
-            <button>
-              <IoIosSettings className="text-white" size={20} />
-            </button>
-          </AccountSettingsModal>
-        )}
         <div
           className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-300"
           style={{
@@ -136,6 +128,13 @@ const TopNavbar: React.FC = () => {
               </div>
             </div>
             <hr className="mt-5" />
+            <button
+              className="w-full  px-5 py-3 text-left text-sm text-gray-600 hover:bg-slate-200"
+            >
+              <Link className="w-full" href={'/organization/profile'}>
+              Organization settings
+              </Link>
+            </button>
             <button
               className="w-full  px-5 py-3 text-left text-sm text-gray-600 hover:bg-slate-200"
               onClick={handleLogout}
