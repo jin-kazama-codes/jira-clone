@@ -575,26 +575,6 @@ const UsersIcon: React.FC<{ className?: string; size?: number }> = ({
   );
 };
 
-// const ProjectsIcon: React.FC<{ className?: string; size?: number }> = ({
-//   className,
-//   size,
-// }) => {
-//   return (
-//     <svg
-//       className={className}
-//       width={size ?? 24}
-//       height={size ?? 24}
-//       viewBox="0 0 24 24"
-//       role="presentation"
-//     >
-//       <path
-//         d="M6 2h10a3 3 0 010 6H6a3 3 0 110-6zm0 2a1 1 0 100 2h10a1 1 0 000-2H6zm2 7h8a3 3 0 010 6h-8a3 3 0 010-6zm0 2a1 1 0 000 2h8a1 1 0 000-2H8zm-4 5h6a3 3 0 010 6H4a3 3 0 010-6zm0 2a1 1 0 000 2h6a1 1 0 000-2H4z"
-//         fill="currentColor"
-//       ></path>
-//     </svg>
-//   );
-// };
-
 const ProjectsIcon: React.FC<{ className?: string; size?: number }> = ({
   className,
   size,
@@ -607,11 +587,12 @@ const ProjectsIcon: React.FC<{ className?: string; size?: number }> = ({
       viewBox="0 0 24 24"
       role="presentation"
     >
-      <g fill="currentColor">
-        {/* Folder base */}
+      <g fill="none" stroke="currentColor" strokeWidth="1.8">
+        {/* Folder base outline */}
         <path d="M2 6.994C2 5.893 2.898 5 3.99 5H8l2 2h10.01c1.099 0 1.99.888 1.99 1.994V18.006c0 1.1-.892 1.994-1.99 1.994H3.99C2.892 20 2 19.105 2 18.006V6.994z" />
-        {/* Inner content lines */}
-        <path d="M6 12h12v1.5H6zm0 3h8v1.5H6z" fillOpacity="0.3" />
+
+        {/* Inner content lines outline */}
+        <path d="M6 12h12M6 15h8" />
       </g>
     </svg>
   );

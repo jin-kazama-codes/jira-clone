@@ -58,7 +58,7 @@ const TopNavbar: React.FC = () => {
         const response = await fetch("/api/account");
         if (response.ok) {
           const result = await response.json();
-          setLogo(result.account.logo)
+          setLogo(result.account.logo);
         } else {
           console.error("Failed to fetch Logo");
         }
@@ -74,7 +74,7 @@ const TopNavbar: React.FC = () => {
     <div className="flex  h-12 w-full items-center justify-between border-b bg-header px-4">
       <div className="flex items-center gap-x-2">
         <Image
-          src={logo ? logo : 'https://cdn.worldvectorlogo.com/logos/jira-3.svg'}
+          src={logo ? logo : "https://cdn.worldvectorlogo.com/logos/jira-3.svg"}
           alt="Karya logo"
           width={25}
           height={25}
