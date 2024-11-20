@@ -72,11 +72,9 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, admin }) => {
 
   return (
     <div
-      className="rounded-xl border bg-white pb-5">
-      <div style={{
-        background: '#3E64FF'
-      }}
-        className="p-4 rounded-t-xl ">
+      className="rounded-xl border overflow-y-scroll bg-white pb-5">
+      <div
+        className="p-4 bg-header rounded-t-xl ">
         <h2 className="text-center text-2xl font-semibold">Projects List</h2>
       </div>
       <div className="p-4">

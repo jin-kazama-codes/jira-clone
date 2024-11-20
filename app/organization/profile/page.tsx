@@ -1,10 +1,10 @@
 "use client";
-import withProjectLayout from "@/app/project-layout/withProjectLayout";
 import axios from "axios";
 import { Cropper } from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+"public/images/karya-io-logo.png"
 
 const ProfilePage = () => {
   const [name, setName] = useState("");
@@ -255,7 +255,7 @@ const ProfilePage = () => {
                       src={
                         logo
                           ? logo
-                          : "https://cdn.worldvectorlogo.com/logos/jira-3.svg"
+                          : "/images/karya-io-logo.png"
                       }
                       alt="Profile picture"
                       width={150}
@@ -315,4 +315,4 @@ const ProfilePage = () => {
   );
 };
 
-export default withProjectLayout(ProfilePage);
+export default ProfilePage;

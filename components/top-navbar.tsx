@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useCookie } from "@/hooks/use-cookie";
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+"public/images/karya-io-logo.png"
 
 const TopNavbar: React.FC = () => {
   const user = useCookie("user");
@@ -72,12 +73,12 @@ const TopNavbar: React.FC = () => {
 
   return (
     <div className="flex  h-12 w-full items-center justify-between border-b bg-header px-4">
-      <div className="flex items-center gap-x-2">
+      <div className="flex items-center gap-x-1">
         <Image
-          src={logo ? logo : "https://cdn.worldvectorlogo.com/logos/jira-3.svg"}
+          src={logo ? logo : "/images/karya-io-logo.png"}
           alt="Karya logo"
-          width={25}
-          height={25}
+          width={30}
+          height={30}
         />
         <span className="text-xl font-medium text-white">Karya - IO</span>
       </div>
@@ -132,7 +133,7 @@ const TopNavbar: React.FC = () => {
               className="w-full  px-5 py-3 text-left text-sm text-gray-600 hover:bg-slate-200"
             >
               <Link className="w-full" href={'/organization/profile'}>
-              Organization settings
+                Organization settings
               </Link>
             </button>
             <button
