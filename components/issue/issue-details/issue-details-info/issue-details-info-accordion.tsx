@@ -61,7 +61,7 @@ const IssueDetailsInfoAccordion: React.FC<{ issue: IssueType }> = ({
           <AccordionTrigger className="flex w-full items-center justify-between p-2 hover:rounded-t-xl font-medium hover:bg-gray-100 [&[data-state=open]>svg]:rotate-180 [&[data-state=open]]:border-b">
             <div className="flex items-center gap-x-1">
               <span className="text-sm">Details</span>
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-gray-600">
                 (Assignee, Sprint, Reporter)
               </span>
             </div>
@@ -75,7 +75,7 @@ const IssueDetailsInfoAccordion: React.FC<{ issue: IssueType }> = ({
               data-state={issue.assignee ? "assigned" : "unassigned"}
               className="my-2 grid grid-cols-3 [&[data-state=assigned]]:items-center"
             >
-              <span className="text-sm font-semibold text-gray-600">
+              <span className="text-sm font-semibold text-gray-800">
                 Assignee
               </span>
               <div className="flex flex-col">
@@ -92,18 +92,18 @@ const IssueDetailsInfoAccordion: React.FC<{ issue: IssueType }> = ({
               </div>
             </div>
             <div className="my-4 grid grid-cols-3 items-center">
-              <span className="text-sm font-semibold text-gray-600">
+              <span className="text-sm font-semibold text-gray-800">
                 Sprint
               </span>
               <div className="flex items-center">
-                <span className="text-sm text-gray-700">
+                <span className="text-sm text-gray-900">
                   {sprints?.find((sprint) => sprint?.id == issue.sprintId)
                     ?.name ?? "None"}
                 </span>
               </div>
             </div>
             <div className="my-2 grid grid-cols-3 items-center">
-              <span className="text-sm font-semibold text-gray-600">
+              <span className="text-sm font-semibold text-gray-800">
                 Reporter
               </span>
               <div className="flex items-center gap-x-3 ">
@@ -117,7 +117,7 @@ const IssueDetailsInfoAccordion: React.FC<{ issue: IssueType }> = ({
               </div>
             </div>
             <div className="my-6 grid grid-cols-3 items-center">
-              <span className="text-sm font-semibold text-gray-600">
+              <span className="text-sm font-semibold text-gray-800">
                 Original Estimate
               </span>
               <div className="flex items-center">
@@ -130,7 +130,7 @@ const IssueDetailsInfoAccordion: React.FC<{ issue: IssueType }> = ({
               </div>
             </div>
             <div className="my-6 grid grid-cols-3 items-center">
-              <span className="text-sm font-semibold text-gray-600">
+              <span className="text-sm font-semibold text-gray-800">
                 Time Tracking
               </span>
               <div

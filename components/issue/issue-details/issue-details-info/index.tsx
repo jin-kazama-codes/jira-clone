@@ -179,7 +179,7 @@ const LargeIssueDetails = React.forwardRef<
 
       </div>
 
-      <div className="mt-4 bg-white pl-3">
+      <div className="mt-4 bg-sprint pl-3">
         <div className="relative flex items-center gap-x-3">
           <IssueSelectStatus
             key={issue.id + issue.status}

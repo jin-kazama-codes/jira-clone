@@ -24,13 +24,17 @@ const StartSprintModal: React.FC<{
       <ModalPortal>
         <ModalOverlay />
         <ModalContent>
-          <ModalTitle>Start Sprint</ModalTitle>
-          <ModalDescription>
-            <span className="font-bold text-gray-600">{issueCount}</span>
-            {issueCount > 1 ? " issues" : " issue"} will be included in this
-            sprint.
-          </ModalDescription>
-          <StartSprintForm sprint={sprint} setModalIsOpen={setIsOpen} />
+          <div className="p-5 text-white">
+            <ModalTitle>Start Sprint</ModalTitle>
+            <ModalDescription>
+              <span className="font-bold text-white">{issueCount}
+                {issueCount > 1 ? " issues" : " issue"} will be included in this
+                sprint.</span>
+            </ModalDescription>
+          </div>
+          <div className="rounded-xl bg-white p-6">
+            <StartSprintForm sprint={sprint} setModalIsOpen={setIsOpen} />
+          </div>
         </ModalContent>
       </ModalPortal>
     </Modal>
