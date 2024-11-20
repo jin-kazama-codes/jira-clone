@@ -66,20 +66,19 @@ const WorklogDlt: React.FC<WorklogDltProps> = ({
         <ModalOverlay />
         <ModalContent className="flex items-center  justify-center">
           <div className="w-full max-w-sm rounded-xl  h-70">
-
             <div className="mb-4   p-5 text-white flex items-center gap-3">
               <CgDanger className="text-red-600 text-3xl" />
               <ModalTitle className="text-2xl font-bold text-white">
                 Delete worklog entry?
               </ModalTitle>
             </div>
-            <div className=" pb-3 rounded-xl p-6">
+            <div className=" pb-3 rounded-xl p-6 bg-white">
               <div className="mb-5 flex items-center">
                 <p> Once you delete, it's gone for good </p>
               </div>
 
               <div>
-                <div className="flex gap-4   p-6 bg-white pt-10 justify-end ">
+                <div className="flex gap-4   p-6  pt-10 justify-end ">
                   <button
                     className="bg-red-500 text-white text-sm font-medium py-2 px-3 rounded-xl hover:bg-red-600 transition-colors duration-200"
                     // eslint-disable-next-line @typescript-eslint/no-misused-promises

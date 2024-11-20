@@ -8,7 +8,7 @@ export const FormSubmit: React.FC<{
   ariaLabel: string;
 }> = ({ isLoading, onCancel, submitText, ariaLabel }) => {
   return (
-    <div className="mt-5 flex w-full justify-end">
+    <div className="mt-5 pb-6 flex w-full justify-end">
       <Button
         customColors
         customPadding
