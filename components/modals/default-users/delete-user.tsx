@@ -61,13 +61,15 @@ const DeleteUserModal: React.FC<DeleteUserModalProps> = ({
       <ModalPortal>
         <ModalOverlay />
         <ModalContent>
-          <ModalTitle>Remove member</ModalTitle>
-          <ModalDescription className="mt-1">
-            Are you sure you want to remove the member ?
-          </ModalDescription>
-          <div className="mt-5 space-x-4">
+          <div className="p-5 text-white">
+            <ModalTitle>Remove member</ModalTitle>
+            <ModalDescription className="mt-1">
+              Are you sure you want to remove the member ?
+            </ModalDescription>
+          </div>
+          <div className="mt-5 rounded-xl p-6 bg-white space-x-4">
             <Button
-            onClick={handleDelete}
+              onClick={handleDelete}
               className="flex  justify-center px-4 py-1 rounded-xl !bg-red-600 text-white"
             >
               Ok
