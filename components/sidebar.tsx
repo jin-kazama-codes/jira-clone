@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { FaClipboardList } from "react-icons/fa";
+import { CgGoogleTasks } from "react-icons/cg";
 import {
   BacklogIcon,
   BoardIcon,
@@ -83,7 +83,6 @@ const Sidebar: React.FC = () => {
       icon: ProjectsIcon,
       href: `/project`,
     },
-
   ];
 
   // Configuration items, with Users section shown only if the user is an admin or manager
@@ -118,12 +117,11 @@ const Sidebar: React.FC = () => {
   ];
 
   if (loading) {
-    return <SidebarSkeleton />
+    return <SidebarSkeleton />;
   }
 
   return (
-    <div
-      className="flex bg-sidebar h-full w-64 flex-col gap-y-3 p-3 shadow-inner">
+    <div className="flex h-full w-64 flex-col gap-y-3 bg-sidebar p-3 shadow-inner">
       <div className="my-5 flex items-center gap-x-2 border-b-2 px-3 pb-7">
         <div className="mt-1 flex items-center justify-center rounded-full bg-[#FF5630] p-1 text-xs font-bold text-white">
           <FaChessPawn className="aspect-square text-2xl" />
@@ -135,25 +133,23 @@ const Sidebar: React.FC = () => {
         </div>
       </div>
 
-
       <NavList label={"PLANNING"} items={planningItems} />
       <NavList label={"MY WORKSPACE"} items={myWorkSpaceItems} />
       {!isOnUsersPage && !isOnProjectPage && (
         <button
           onClick={toggleAssigneeFilter}
-          className=" flex w-full rounded-sm rounded-r-xl py-2 items-center border-l-4 border-inherit bg-inherit px-2  hover:bg-slate-200"
+          className="flex w-full items-center rounded-sm rounded-r-xl border-l-4 border-inherit bg-inherit px-2 py-2  hover:bg-slate-200"
         >
-          <FaClipboardList className="w-5 h-5 mr-3" /> {/* Task-related icon */}
+          <CgGoogleTasks className="mr-3 h-[22px] w-6" />
           <span className=" text-sm">
             {assignees.length === 0 ? "My Tasks" : "All Tasks"}
           </span>
         </button>
       )}
-      {isAdminOrManager && <NavList label={"CONFIGURATION"} items={configurationItems} />}
+      {isAdminOrManager && (
+        <NavList label={"CONFIGURATION"} items={configurationItems} />
+      )}
       <NavList label={"REPORTS"} items={reportingItems} />
-
-
-
     </div>
   );
 };
