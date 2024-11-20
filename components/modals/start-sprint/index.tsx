@@ -32,7 +32,7 @@ const StartSprintModal: React.FC<{
                 sprint.</span>
             </ModalDescription>
           </div>
-          <div className="rounded-xl bg-white p-6">
+          <div className="rounded-xl bg-white p-6  h-96 overflow-y-scroll">
             <StartSprintForm sprint={sprint} setModalIsOpen={setIsOpen} />
           </div>
         </ModalContent>

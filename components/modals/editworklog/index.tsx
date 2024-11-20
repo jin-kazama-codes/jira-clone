@@ -102,13 +102,13 @@ const EditWorklog: React.FC<EditWorklogProps> = ({
       <ModalPortal>
         <ModalOverlay />
         <ModalContent className="flex items-center justify-center ">
-          <div className="w-full max-w-sm rounded-xl bg-header p-1 overflow-y-scroll h-96">
+          <div className="w-full max-w-sm rounded-xl bg-header  overflow-y-scroll h-96">
             <div className="mb-3 flex items-center align-middle p-5  justify-between">
               <ModalTitle className="text-2xl font-bold text-white">
                 Edit Worklog
               </ModalTitle>
               <button
-                className="text-gray-500 hover:text-white"
+                className="text-white"
                 onClick={() => setIsOpen(false)}
               >
 
