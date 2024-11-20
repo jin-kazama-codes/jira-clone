@@ -2,7 +2,7 @@
 import withProjectLayout from "@/app/project-layout/withProjectLayout";
 import axios from "axios";
 import { Cropper } from "react-cropper";
-import "cropperjs/dist/cropper.css"; 
+import "cropperjs/dist/cropper.css";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
@@ -15,7 +15,7 @@ const ProfilePage = () => {
   const [url, setUrl] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [croppedImage, setCroppedImage] = useState<string | null>(null); 
+  const [croppedImage, setCroppedImage] = useState<string | null>(null);
   const [profileLoading, setProfileLoading] = useState(false);
   const cropperRef = useRef(null);
 
@@ -97,16 +97,15 @@ const ProfilePage = () => {
       const accountData = {
         name,
         contact,
-        logo: croppedImage || logo ,
+        logo: croppedImage || logo,
         bio,
         url,
         email,
       };
 
-    
       await axios.post("/api/account", accountData);
-      setLogo(croppedImage || logo); 
-      setSelectedFile(null); 
+      setLogo(croppedImage || logo);
+      setSelectedFile(null);
     } catch (error) {
       console.error("Error updating account:", error);
     } finally {
@@ -116,7 +115,7 @@ const ProfilePage = () => {
 
   const handleCancel = () => {
     setSelectedFile(null);
-    setCroppedImage(null); 
+    setCroppedImage(null);
   };
 
   return (
@@ -156,6 +155,7 @@ const ProfilePage = () => {
                 </label>
                 <input
                   type="text"
+                  placeholder="Name"
                   id="name"
                   value={name}
                   required
@@ -173,6 +173,7 @@ const ProfilePage = () => {
                 </label>
                 <input
                   type="email"
+                  placeholder="Email address"
                   id="email"
                   required
                   value={email}
@@ -190,6 +191,7 @@ const ProfilePage = () => {
                 </label>
                 <input
                   type="number"
+                  placeholder="Phone number"
                   id="contact"
                   required
                   value={contact}
@@ -224,6 +226,7 @@ const ProfilePage = () => {
                 </label>
                 <input
                   type="url"
+                  placeholder="www.example.com"
                   id="url"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
@@ -290,7 +293,6 @@ const ProfilePage = () => {
 
               {selectedFile && !croppedImage && (
                 <div className="mt-4 space-x-4">
-                  
                   <button
                     onClick={handleCrop}
                     className="rounded-xl bg-green-600 px-4 py-2 text-white transition hover:bg-green-700"
