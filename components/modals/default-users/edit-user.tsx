@@ -65,11 +65,13 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ children, user, onClose }
       <ModalPortal>
         <ModalOverlay />
         <ModalContent>
-          <ModalTitle>Edit User</ModalTitle>
-          <ModalDescription className="mt-1">
-            Enter the name of the user.
-          </ModalDescription>
-          <form onSubmit={handleSubmit} className="mt-5 space-y-4">
+          <div className="p-5 text-white">
+            <ModalTitle>Edit User</ModalTitle>
+            <ModalDescription className="mt-1">
+              Enter the name of the user.
+            </ModalDescription>
+          </div>
+          <form onSubmit={handleSubmit} className="mt-5 rounded-xl bg-white p-6 space-y-4">
             <div>
               <label
                 htmlFor="name"

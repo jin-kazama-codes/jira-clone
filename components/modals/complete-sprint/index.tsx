@@ -28,26 +28,31 @@ const CompleteSprintModal: React.FC<{
       <ModalPortal>
         <ModalOverlay />
         <ModalContent className="max-w-[540px]">
-          <SprintTrophy className="-m-8 mb-8" size={540} />
-          <ModalTitle>Complete {sprint.name}</ModalTitle>
-          <ModalDescription>
-            <span className="text-gray-600">This sprint contains:</span>
-            <ul className="ml-6 mt-2 list-disc text-sm text-gray-900">
-              <li>
-                <span className="font-bold">{completedIssues.length} </span>
-                completed issues
-              </li>
-              <li>
-                <span className="font-bold">{openIssues.length} </span>
-                open issues
-              </li>
-            </ul>
-          </ModalDescription>
-          <CompleteSprintForm
-            sprint={sprint}
-            setModalIsOpen={setIsOpen}
-            issues={issues}
-          />
+          <div className="p-5 text-white">
+            <SprintTrophy className="-m-8 mb-8" size={540} />
+            <ModalTitle>Complete {sprint.name}</ModalTitle>
+            <ModalDescription>
+              <span className="text-white">This sprint contains:</span>
+              <ul className="ml-6 mt-2 list-disc text-sm text-white">
+                <li>
+                  <span className="font-bold">{completedIssues.length} </span>
+                  completed issues
+                </li>
+                <li>
+                  <span className="font-bold">{openIssues.length} </span>
+                  open issues
+                </li>
+              </ul>
+            </ModalDescription>
+          </div>
+          <div className="bg-white text-black rounded-xl p-6">
+            <CompleteSprintForm
+              sprint={sprint}
+              setModalIsOpen={setIsOpen}
+              issues={issues}
+
+            />
+          </div>
         </ModalContent>
       </ModalPortal>
     </Modal>

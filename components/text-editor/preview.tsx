@@ -45,7 +45,7 @@ export const EditorPreview: React.FC<{
   return (
     <EditorComposer readonly={true} jsonState={jsonState}>
       <div
-        className={`w-full rounded-md bg-white relative`}
+        className={`w-full rounded-md bg-transparent relative`}
       >
         <RichTextPlugin
           ErrorBoundary={LexicalErrorBoundary}
@@ -74,7 +74,7 @@ export const EditorPreview: React.FC<{
                       width={50}
                       src={image}
                       alt={`image-preview-${index}`}
-                      onClick={() => handleImageClick(image)} 
+                      onClick={() => handleImageClick(image)}
                       className="cursor-pointer"
                     />
                   )}

@@ -126,15 +126,17 @@ const UserModal: React.FC<UserModalProps> = ({ children, refetch }) => {
       <ModalPortal>
         <ModalOverlay />
         <ModalContent>
-          <ModalTitle>Add Member</ModalTitle>
-          <ModalDescription className="mt-1">
-            Enter the name and email of the new user.
-          </ModalDescription>
-          <form onSubmit={handleSubmit} className="mt-5 space-y-4">
+          <div className="p-5 ">
+            <ModalTitle className="text-white">Add Member</ModalTitle>
+            <ModalDescription className="mt-1 text-white">
+              Enter the name and email of the new user.
+            </ModalDescription>
+          </div>
+          <form onSubmit={handleSubmit} className="mt-5 rounded-xl p-6 bg-white space-y-4">
             <div>
               <label
                 htmlFor="name"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-gray-900"
               >
                 Name
               </label>
@@ -144,7 +146,7 @@ const UserModal: React.FC<UserModalProps> = ({ children, refetch }) => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                className="mt-1 rounded-md bg-slate-100 px-2 py-1"
+                className="mt-1 rounded-md bg-slate-300 w-full px-2 py-1"
                 autoComplete="off"
               />
               {/* Render suggestions */}
@@ -165,7 +167,7 @@ const UserModal: React.FC<UserModalProps> = ({ children, refetch }) => {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-gray-900"
               >
                 Email
               </label>
@@ -175,13 +177,13 @@ const UserModal: React.FC<UserModalProps> = ({ children, refetch }) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="mb-3 mt-1 rounded-md bg-slate-100 px-2 py-1"
+                className="mb-3 mt-1 w-full rounded-md bg-slate-300 px-2 py-1"
               />
             </div>
             {error && <p className="mt-2 text-red-500">{error}</p>}
             <Button
               type="submit"
-              className="flex w-full justify-center rounded-xl !bg-black text-white"
+              className="flex w-full justify-center rounded-xl !bg-header hover:!bg-blue-600 text-white"
             >
               Add
             </Button>
