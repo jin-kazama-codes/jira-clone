@@ -72,59 +72,63 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, admin }) => {
 
   return (
     <div
-      className="rounded-xl border overflow-y-scroll bg-white pb-5">
+      className="rounded-xl border bg-white pb-5">
       <div
         className="p-4 bg-header rounded-t-xl ">
-        <h2 className="text-center text-2xl font-semibold">Projects List</h2>
+        <h2 className="text-center text-2xl font-semibold text-white">Projects List</h2>
       </div>
-      <div className="p-4">
-        <div className="grid grid-cols-2 gap-4">
-          {projects.map((project) => (
-            <div
-              key={project.id}
-              onClick={() => handleProjectClick(project)}
-              className={`group flex cursor-pointer items-center ${admin ? "justify-between" : "justify-center"
-                }  rounded-xl bg-gray-200 p-3 shadow-sm transition-shadow hover:shadow-md`}
-            >
-              <div className={`text-sm  text-gray-700 font-medium`}>{project.name}</div>
-              {admin && (
-                <button
-                  className="rounded-full p-2 text-red-400 opacity-0 transition-opacity hover:bg-red-100 hover:text-red-600 group-hover:opacity-100"
-                  onClick={(e) => openDeleteDialog(e, project)}
-                >
-                  <FaTrashAlt className="h-4 w-4" />
-                </button>
-              )}
-            </div>
-          ))}
+      <div className="h-[27rem] overflow-y-scroll">
+        <div className="p-4">
+          <div className="grid grid-cols-2 gap-4">
+            {projects.map((project) => (
+              <div
+                key={project.id}
+                onClick={() => handleProjectClick(project)}
+                className={`group flex cursor-pointer items-center ${admin ? "justify-between" : "justify-center"
+                  }  rounded-xl bg-gray-200 p-3 shadow-sm transition-shadow hover:shadow-md`}
+              >
+                <div className={`text-sm  text-gray-700 font-medium`}>{project.name}</div>
+                {admin && (
+                  <button
+                    className="rounded-full p-2 text-red-400 opacity-0 transition-opacity hover:bg-red-100 hover:text-red-600 group-hover:opacity-100"
+                    onClick={(e) => openDeleteDialog(e, project)}
+                  >
+                    <FaTrashAlt className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
       {showDeleteDialog && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="w-full max-w-sm rounded-lg bg-white p-6">
-            <h3 className="mb-4 text-lg font-semibold">Delete Project</h3>
-            <p className="mb-6">
-              Are you sure you want to delete <span className="">{projectToDelete.name}
-              </span>? This action cannot be undone.
-            </p>
-            <div className="flex justify-end space-x-4">
-              <button
-                onClick={() => setShowDeleteDialog(false)}
-                className="px-4 py-2 text-gray-600 hover:text-gray-800"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={(e) => handleDelete(e, projectToDelete.id)}
-                className="rounded bg-red-600 px-4 py-2 text-white hover:bg-red-700"
-              >
-                Delete
-              </button>
+          <div className="w-full max-w-sm rounded-lg bg-header   ">
+            <h3 className="mb-4 text-lg font-semibold text-white pl-4 py-4">Delete Project</h3>
+            <div className="bg-white p-6 rounded-lg">
+              <p className="mb-6">
+                Are you sure you want to delete <span className="">{projectToDelete.name}
+                </span>? This action cannot be undone.
+              </p>
+              <div className="flex justify-end space-x-4">
+                <button
+                  onClick={() => setShowDeleteDialog(false)}
+                  className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={(e) => handleDelete(e, projectToDelete.id)}
+                  className="rounded-xl bg-red-600 px-4 py-2 text-white hover:bg-red-700"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           </div>
         </div>
       )}
-    </div>
+    </div >
   );
 };
 
