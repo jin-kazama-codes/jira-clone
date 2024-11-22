@@ -236,7 +236,7 @@ const Board: React.FC = () => {
         <DragDropContext onDragEnd={onDragEnd}>
           <div
             ref={renderContainerRef}
-            className="relative flex w-full max-w-full gap-x-4 overflow-y-auto  p-2"
+            className="relative flex w-full max-w-full gap-x-4 overflow-y-auto  m-2"
           >
             {STATUSES.map((status) => (
               <IssueList
