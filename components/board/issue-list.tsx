@@ -63,7 +63,7 @@ const IssueList: React.FC<{
     );
   }
 
-  
+
 
   const getDroppable = () => {
     return (
@@ -110,11 +110,24 @@ const IssueList: React.FC<{
         <>
           <div
             className={clsx(
-              "mb-5 h-max min-h-fit w-[350px] rounded-xl  border-x-2  border-b-2 px-1.5 pb-3 ",
-              status === "TODO" ? "bg-gray-100" : status === "IN_PROGRESS" ? "bg-blue-100" : "bg-green-100"
+              "mb-5 sticky top-0 min-h-fit h-max w-[350px] rounded-xl border-x-2 border-b-2 px-1.5 pb-3",
+              status === "TODO"
+                ? "bg-gray-100"
+                : status === "IN_PROGRESS"
+                  ? "bg-blue-100"
+                  : "bg-green-100"
             )}
           >
-            <h2 className={`text-md sticky top-[0.5px] -mx-1.5 -mt-1.5 mb-1.5 rounded-t-md border-y-2 px-2 py-3 font-semibold ${status === "TODO" ? "bg-gray-300" : status === "IN_PROGRESS" ? "bg-blue-300" : "bg-green-300"} text-black`}>
+            <h2
+              className={clsx(
+                "text-md sticky top-0 -mx-1.5 -mt-1.5 mb-1.5 rounded-t-md border-y-2 px-2 py-3 font-semibold text-black z-10",
+                status === "TODO"
+                  ? "bg-gray-300"
+                  : status === "IN_PROGRESS"
+                    ? "bg-blue-300"
+                    : "bg-green-300"
+              )}
+            >
               {statusMap[status]}{" "}
               {issues.filter((issue) => issue.status == status).length}
               {` ISSUE${getPluralEnd(issues).toUpperCase()}`}
