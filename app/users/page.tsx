@@ -6,53 +6,60 @@ import withProjectLayout from "@/app/project-layout/withProjectLayout";
 import React, { Fragment } from "react";
 
 const Userspage = () => {
-  const { members } = useMembers();
+  // const { members } = useMembers();
+
+  const { members, refetch } = useMembers(); // Ensure `useMembers` provides a refetch method
+
+  const refreshMembers = async () => {
+    await refetch(); // Trigger a fresh fetch of members
+  };
 
   return (
     <Fragment>
       <div className="p-4">
-        <h2 className="text-3xl text-center mb-8">All Users</h2>
+        <h2 className="mb-8 text-center text-3xl">All Users</h2>
         {members ? (
           <div className=" mx-auto">
-            <div className="bg-white shadow-md rounded-lg overflow-hidden">
+            <div className="overflow-hidden rounded-lg bg-white shadow-md">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                       Name
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                       Email
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                       Role
                     </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="divide-y divide-gray-200 bg-white">
                   {members.map((user) => (
                     <tr key={user.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="whitespace-nowrap px-6 py-4">
                         <div className="text-sm font-medium text-gray-900">
                           {user.name}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="whitespace-nowrap px-6 py-4">
                         <div className="text-sm text-gray-600">
                           {user.email}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-400">
-                          {user.role}
-                        </div>
+                      <td className="whitespace-nowrap px-6 py-4">
+                        <div className="text-sm text-gray-400">{user.role}</div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right">
+                      <td className="whitespace-nowrap px-6 py-4 text-right">
                         <div className="flex justify-end space-x-2">
-                          <EditUserModal user={user}>
+                          <EditUserModal
+                            user={user}
+                            onEditSuccess={refreshMembers}
+                          >
                             <button className="inline-flex items-center rounded-lg bg-blue-500 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300">
                               Edit
                             </button>
