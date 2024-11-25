@@ -6,8 +6,6 @@ import withProjectLayout from "@/app/project-layout/withProjectLayout";
 import React, { Fragment } from "react";
 
 const Userspage = () => {
-  // const { members } = useMembers();
-
   const { members, refetch } = useMembers(); // Ensure `useMembers` provides a refetch method
 
   const refreshMembers = async () => {
