@@ -138,7 +138,7 @@ const Sidebar: React.FC = () => {
       {!isOnUsersPage && !isOnProjectPage && (
         <button
           onClick={toggleAssigneeFilter}
-          className="flex w-full items-center rounded-sm rounded-r-xl border-l-4 border-inherit bg-inherit px-2 py-2  hover:bg-slate-200"
+          className="flex w-full items-center  rounded-sm rounded-r-xl  border-inherit bg-inherit px-2 py-2  hover:bg-slate-200"
         >
           <CgGoogleTasks className="mr-3 h-[22px] w-6" />
           <span className=" text-sm">
