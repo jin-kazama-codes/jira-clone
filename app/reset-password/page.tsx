@@ -150,7 +150,7 @@ const ResetPassword = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 minLength={8}
                 required
-                className="w-full rounded-xl border border-blue-300 border-opacity-50 px-4 py-3  text-black placeholder-gray-600 transition  duration-200 ease-in-out focus:border-transparent focus:outline-none focus:ring-blue-300"
+                className="w-full rounded-xl border border-blue-300 border-opacity-50 px-4 py-3  text-black placeholder-gray-700 transition  duration-200 ease-in-out focus:border-transparent focus:outline-none bg-gray-200 focus:ring-blue-300"
               />
             </div>
 
@@ -169,7 +169,7 @@ const ResetPassword = () => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
-                className="w-full rounded-xl border border-blue-300 border-opacity-50 px-4 py-3  text-black placeholder-gray-600 transition  duration-200 ease-in-out focus:border-transparent focus:outline-none focus:ring-blue-300"
+                className="w-full rounded-xl border border-blue-300 border-opacity-50 px-4 py-3  text-black bg-gray-200 placeholder-gray-700 transition  duration-200 ease-in-out focus:border-transparent focus:outline-none focus:ring-blue-300"
               />
               <button
                 type="button"

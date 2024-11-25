@@ -140,7 +140,7 @@ const Login: React.FC = () => {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 rounded-xl border border-blue-300 border-opacity-50  text-black placeholder-gray-600 focus:outline-none  focus:ring-blue-300 focus:border-transparent transition duration-200 ease-in-out"
+                className="w-full px-4 py-3 bg-gray-200 rounded-xl border border-blue-300 border-opacity-50  text-black placeholder-gray-600 focus:outline-none  focus:ring-blue-300 focus:border-transparent transition duration-200 ease-in-out"
               />
             </div>
 
@@ -158,7 +158,7 @@ const Login: React.FC = () => {
                   value={formData.password}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-xl border border-blue-300 border-opacity-50  text-black placeholder-gray-600 focus:outline-none  focus:ring-blue-300 focus:border-transparent transition duration-200 ease-in-out"
+                  className="w-full px-4 py-3 bg-gray-200 rounded-xl border border-blue-300 border-opacity-50  text-black placeholder-gray-700 focus:outline-none  focus:ring-blue-300 focus:border-transparent transition duration-200 ease-in-out"
                 />
                 <button
                   type="button"

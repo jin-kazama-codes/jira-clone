@@ -86,17 +86,17 @@ const UpdateProject: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto max-w-md py-12">
-      <div className="space-y-6">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold tracking-tight">Update Project</h1>
-          <p className="text-muted-foreground text-lg">
+    <div className="container mx-auto max-w-md bg-header rounded-xl my-12">
+      <div className=" my-5">
+        <div className="text-center py-5 rounded-t-xl ">
+          <h1 className="text-3xl font-bold text-white tracking-tight">Update Project</h1>
+          <p className="text-muted-foreground text-white text-lg">
             Enter the new project details below.
           </p>
         </div>
         <form
           onSubmit={handleSubmit}
-          className="mt-5 rounded-xl bg-white p-6 shadow-lg"
+          className="pt-5 rounded-xl bg-white p-6 shadow-lg"
         >
           <div className="grid gap-4">
             <div className="flex flex-col">
@@ -108,7 +108,7 @@ const UpdateProject: React.FC = () => {
                 name="name"
                 type="text"
                 placeholder="Enter new project name"
-                className="focus:border-primary focus:ring-primary mt-3 rounded-xl border border-gray-300 px-3 py-2"
+                className="focus:border-primary bg-gray-200 focus:ring-primary mt-3 rounded-xl border border-gray-300 px-3 py-2"
                 onChange={handleChange}
                 value={formData.name}
                 required
@@ -138,7 +138,7 @@ const UpdateProject: React.FC = () => {
               <select
                 id="workingDays"
                 name="workingDays"
-                className="focus:border-primary focus:ring-primary mt-3 rounded-xl border border-gray-300 px-3 py-2"
+                className="focus:border-primary focus:ring-primary mt-3 bg-gray-200 rounded-xl border border-gray-300 px-3 py-2"
                 onChange={handleChange}
                 value={formData.workingDays}
               >
@@ -155,7 +155,7 @@ const UpdateProject: React.FC = () => {
             ) : (
               <button
                 type="submit"
-                className="focus:ring-primary rounded-xl bg-black px-4 py-2 text-white hover:bg-slate-800 focus:outline-none focus:ring-2"
+                className="w-full py-3 border border-transparent rounded-xl shadow-sm text-lg  font-medium text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition duration-200 ease-in-out"
               >
                 Update Project
               </button>
