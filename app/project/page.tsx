@@ -17,7 +17,7 @@ const Project: React.FC = async () => {
 
   return (
     <>
-      <div className="container mx-auto py-16">
+      <div className="container h-screen mx-auto py-16">
         <div
           className={`grid gap-6 ${isAdminOrManager ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1"
             }`}
