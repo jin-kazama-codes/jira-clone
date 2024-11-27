@@ -43,7 +43,9 @@ const EpicsTable: React.FC = () => {
   const renderContainerRef = useRef<HTMLDivElement>(null);
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
   // const { user } = useUser();
-  const user = useCookie('user')
+  const user = useCookie('user');
+  const userId = `${user?.id}`;
+
 
   useLayoutEffect(() => {
     if (!renderContainerRef.current) return;
@@ -71,7 +73,7 @@ const EpicsTable: React.FC = () => {
         parentId,
         sprintId: null,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        reporterId: user!.id,
+        reporterId: userId,
         sprintColor,
       },
       {
@@ -174,7 +176,7 @@ const EpicsAccordion: React.FC<{
             <div
               className={clsx(
                 index % 2 == 0 ? "bg-white" : "bg-gray-100",
-                "flex w-full rounded-xl items-center justify-between hover:bg-gray-200"
+                "flex w-full  items-center justify-between hover:bg-gray-200"
               )}
             >
               <AccordionTrigger className="flex w-full items-center px-2 py-2.5 font-medium [&[data-state=open]>svg]:rotate-90">
