@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import {
   Modal,
   ModalContent,
@@ -21,9 +21,15 @@ interface EditUserModalProps {
     role?: string;
   };
   onClose?: () => void;
+  onEditSuccess?: () => void; // Callback to refresh parent data
 }
 
-const EditUserModal: React.FC<EditUserModalProps> = ({ children, user, onClose }) => {
+const EditUserModal: React.FC<EditUserModalProps> = ({
+  children,
+  user,
+  onClose,
+  onEditSuccess,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState(user.name);
   const [error, setError] = useState<string | null>(null);
@@ -45,6 +51,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ children, user, onClose }
       });
 
       if (response.ok) {
+        onEditSuccess?.(); // Notify parent to refresh data
         const result = await response.json();
         onClose?.();
         setIsOpen(false);
@@ -71,7 +78,10 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ children, user, onClose }
               Enter the name of the user.
             </ModalDescription>
           </div>
-          <form onSubmit={handleSubmit} className="mt-5 rounded-xl bg-white p-6 space-y-4">
+          <form
+            onSubmit={handleSubmit}
+            className="mt-5 space-y-4 rounded-xl bg-white p-6"
+          >
             <div>
               <label
                 htmlFor="name"
