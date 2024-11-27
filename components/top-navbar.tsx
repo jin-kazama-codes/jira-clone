@@ -80,7 +80,7 @@ const TopNavbar: React.FC = () => {
           width={30}
           height={30}
         />
-        <span className="text-xl font-medium text-white">Karya - IO</span>
+        <span className="text-xl font-medium text-white">Karya.IO</span>
       </div>
 
       <div className="relative flex items-center gap-x-5">
