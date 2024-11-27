@@ -68,6 +68,7 @@ const IssueDetails: React.FC<{
       ref={renderContainerRef}
       data-state={issueKey ? "open" : "closed"}
       className="relative z-10 flex w-full flex-col bg-sprint  pl-4 pr-2 [&[data-state=closed]]:hidden"
+
     >
       <IssueDetailsHeader
         detailPage={detailPage}
