@@ -4,6 +4,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import { setCookie } from "@/utils/helpers";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import Image from "next/image";
+"public/images/karya-io-logo.png"
 
 const Login: React.FC = () => {
   const router = useRouter();
@@ -112,13 +114,20 @@ const Login: React.FC = () => {
           {/* Header */}
           <div className="relative text-center  p-8 min-w-screen flex items-center justify-center">
             {/* Content */}
+
             <div className="relative z-10">
-              <h1
-                className="text-3xl text-white font-bold tracking-tight">
+              <div className="flex items-center gap-x-2">
+                <Image
+                  src="/images/karya-io-logo.png"
+                  alt="Karya logo"
+                  width={30}
+                  height={40}
+                  style={{ width: '40px', height: '40px' }}
+                />
+                <h1 className="text-3xl font-bold text-white">Karya.io</h1>
+              </div>
+              <p className="text-base text-white opacity-90 mt-2">
                 Login to Continue
-              </h1>
-              <p className="text-lg text-blue-100 opacity-90 mt-2">
-                Fill out the form below to get started.
               </p>
             </div>
           </div>

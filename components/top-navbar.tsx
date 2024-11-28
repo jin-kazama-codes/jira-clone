@@ -101,7 +101,7 @@ const TopNavbar: React.FC = () => {
 
         {showDropdown && (
           <div
-            className="absolute right-0  top-11 z-10  w-80 rounded-md border border-gray-300 bg-white pt-2 shadow-lg"
+            className="absolute right-0  top-11 z-20  w-80 rounded-md border border-gray-300 bg-white pt-2 shadow-lg"
             ref={dropdownRef}
           >
             <p className="mt-4 px-6  font-bold  ">Account</p>
