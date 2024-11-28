@@ -22,7 +22,7 @@ const BurndownIssueList = ({ issues }) => {
       <h2 className="mb-1  text-xl font-semibold">All Issues</h2>
       <div className="overflow-hidden rounded-lg border">
         {/* Column Headers */}
-        <div className="grid grid-cols-5 gap-4 border-b bg-gray-100 px-4 py-2 font-medium text-gray-700">
+        <div className="grid grid-cols-5 gap-4 border-b bg-sprint px-4 py-2 font-medium text-gray-700">
           <div>Date</div>
           <div>Issue Key</div>
           <div>Title</div>
@@ -39,7 +39,7 @@ const BurndownIssueList = ({ issues }) => {
                 setIssueKey(issue.key);
                 router.push(`/issue/${issue?.key}`)
               }}
-              className="grid cursor-pointer grid-cols-5 items-center gap-4 px-4 py-3 hover:bg-slate-50"
+              className="grid cursor-pointer grid-cols-5 items-center gap-4 bg-cyan-100 px-4 py-3 hover:bg-gray-00"
             >
               <div className="text-sm text-gray-600">
                 {new Date(issue.createdAt).toISOString().split("T")[0]}
