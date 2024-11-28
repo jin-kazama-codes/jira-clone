@@ -59,7 +59,7 @@ const Burndown: React.FC = () => {
 
             {/* Pagination Controls */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-between border-t bg-white px-4 py-3 w-full">
+              <div className="flex items-center justify-between border-t bg-sprint px-4 py-3 w-full">
                 <div className="flex items-center gap-2">
                   <p className="text-sm text-gray-700">
                     Showing {startIndex + 1} to{" "}
