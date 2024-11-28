@@ -18,8 +18,8 @@ const BurndownIssueList = ({ issues }) => {
   }, [issues]);
 
   return (
-    <div className="mt-2 w-full h-[58vh] overflow-y-scroll" ref={scrollRef}>
-      <h2 className="mb-1 mt-4 text-xl font-semibold">All Issues</h2>
+    <div className=" w-full h-[58vh] overflow-y-scroll" ref={scrollRef}>
+      <h2 className="mb-1  text-xl font-semibold">All Issues</h2>
       <div className="overflow-hidden rounded-lg border">
         {/* Column Headers */}
         <div className="grid grid-cols-5 gap-4 border-b bg-gray-100 px-4 py-2 font-medium text-gray-700">
@@ -37,7 +37,7 @@ const BurndownIssueList = ({ issues }) => {
               key={issue.id}
               onClick={() => {
                 setIssueKey(issue.key);
-                router.push(`/issue/${issue?.key}`) 
+                router.push(`/issue/${issue?.key}`)
               }}
               className="grid cursor-pointer grid-cols-5 items-center gap-4 px-4 py-3 hover:bg-slate-50"
             >
