@@ -10,29 +10,28 @@ import { getProjectKeyFromUrl, setCookie } from "@/utils/helpers";
 
 const IssueDetails: React.FC<{
   issueKey: string | null;
-  detailPage?: boolean
+  detailPage?: boolean;
 }> = ({ issueKey, detailPage }) => {
   const { issues } = useIssues();
   const { setIssueKey } = useSelectedIssueContext();
   const renderContainerRef = React.useRef<HTMLDivElement>(null);
   const [isInViewport, viewportRef] = useIsInViewport({ threshold: 1 });
-  const project = useCookie('project');
+  const project = useCookie("project");
   const [loading, setLoading] = useState(true); // Initial loading state
   const projectKey = getProjectKeyFromUrl();
 
   useEffect(() => {
     // Only execute if project cookie is not found
     if (!project) {
-
       async function fetchProjectByKey(projectKey) {
         try {
           const response = await fetch(`/api/project/${projectKey}`);
           if (!response.ok) {
-            throw new Error('Failed to fetch project');
+            throw new Error("Failed to fetch project");
           }
           const data = await response.json();
           // Optionally, set cookie here
-          setCookie('project', data.project);
+          setCookie("project", data.project);
         } catch (error) {
           console.error("Error fetching project:", error);
         } finally {
@@ -62,9 +61,6 @@ const IssueDetails: React.FC<{
     }
   }, [issueKey, getIssue]);
 
-  // If loading, render a loader or empty state
-  if (loading) return <div>Loading...</div>;
-
   if (!issueInfo || !issues) return <div />;
 
   return (
@@ -79,7 +75,11 @@ const IssueDetails: React.FC<{
         setIssueKey={setIssueKey}
         isInViewport={isInViewport}
       />
-      <IssueDetailsInfo detailPage={detailPage} issue={issueInfo} ref={viewportRef} />
+      <IssueDetailsInfo
+        detailPage={detailPage}
+        issue={issueInfo}
+        ref={viewportRef}
+      />
     </div>
   );
 };
