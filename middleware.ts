@@ -8,7 +8,7 @@ export function middleware(request: NextRequest) {
   const token = cookieStore.get("user")?.value;
 
   // Define routes that do not require authentication
-  const publicPaths = ["/login", "/forgot-password", "/reset-password"];
+  const publicPaths = ["/login", "/forgot-password", "/reset-password","/images/karya-io-logo.png"];
   
   const url = request.nextUrl.clone();
   // Check if the user is authenticated
