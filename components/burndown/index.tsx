@@ -16,11 +16,11 @@ const Burndown: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const { issues } = useIssues();
 
-  useLayoutEffect(() => {
-    if (!renderContainerRef.current) return;
-    const calculatedHeight = renderContainerRef.current.offsetTop;
-    renderContainerRef.current.style.height = `calc(100vh - ${calculatedHeight}px)`;
-  }, []);
+  // useLayoutEffect(() => {
+  //   if (!renderContainerRef.current) return;
+  //   const calculatedHeight = renderContainerRef.current.offsetTop;
+  //   renderContainerRef.current.style.height = `calc(100vh - ${calculatedHeight}px)`;
+  // }, []);
 
   const allIssues =
     issues?.flatMap((issue) =>
@@ -52,7 +52,7 @@ const Burndown: React.FC = () => {
         sprintId={sprintId}
         setSprintId={setSprintId}
       />
-      <div ref={renderContainerRef} className="min-w-full max-w-max flex flex-col items-center justify-center">
+      <div className="min-w-full mt-8 max-w-max flex flex-col items-center justify-center">
         {allIssues.length > 0 ? (
           <>
             <BurndownIssueList issues={paginatedIssues} />
