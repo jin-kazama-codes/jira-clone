@@ -155,7 +155,7 @@ const VelocityChart = () => {
           </>
         ) : (
 
-          <p className="text-center text-gray-500">Complete your first sprint to view this report </p>
+          <p className="text-center text-gray-800">Complete your first sprint to view this report </p>
         )}
       </div>
     </div>
