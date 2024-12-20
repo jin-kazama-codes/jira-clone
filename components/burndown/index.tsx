@@ -115,7 +115,7 @@ const Burndown: React.FC = () => {
             )}
           </>
         ) : (
-          <p className="text-center text-gray-500 text-lg">Complete your first sprint to view this report </p>
+          <p className="text-center mt-36 text-gray-800 text-lg">Complete your first sprint to view this report </p>
         )}
       </div>
     </Fragment>

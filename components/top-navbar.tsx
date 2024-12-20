@@ -53,6 +53,10 @@ const TopNavbar: React.FC = () => {
     };
   }, []);
 
+  const handleNavigation = () => {
+    router.push('/project'); // Navigate to the home page
+  };
+
   useEffect(() => {
     const fetchLogo = async () => {
       try {
@@ -73,15 +77,17 @@ const TopNavbar: React.FC = () => {
 
   return (
     <div className="flex  h-12 w-full items-center justify-between border-b bg-header px-4">
-      <div className="flex items-center gap-x-1">
+      <button
+        onClick={handleNavigation}
+        className="flex items-center gap-x-1">
         <Image
           src={logo ? logo : "/images/karya-io-logo.png"}
           alt="Karya logo"
           width={30}
           height={30}
         />
-        <span className="text-xl font-medium text-white">Karya.IO</span>
-      </div>
+        <span className="text-xl font-medium text-white">Karya.io</span>
+      </button>
 
       <div className="relative flex items-center gap-x-5">
         <div

@@ -180,7 +180,7 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
                   <Button
                     type="button"
                     customColors
-                    className="flex gap-2 whitespace-nowrap rounded-lg border hover:bg-gray-100"
+                    className="flex gap-2 whitespace-nowrap rounded-lg  hover:bg-gray-100"
                     onClick={handleButtonClick} // Handle button click
                   >
                     <CgAttachment className="rotate-45 text-xl" />
@@ -258,7 +258,7 @@ const CommentPreview: React.FC<{
         src={comment.author?.avatar ?? ""}
         alt={`${comment.author?.name ?? "Guest"}`}
       />
-      <div className="w-full rounded-xl border p-2 px-3">
+      <div className="w-full rounded-xl  p-2 px-3">
         <div className="flex items-center gap-x-3 text-xs">
           <span className="font-bold text-black ">
             {comment.author?.name}
@@ -332,7 +332,7 @@ const AddComment: React.FC<{
   return (
     <div
       data-state={commentsInViewport ? "inViewport" : "notInViewport"}
-      className="flex w-full gap-x-2 border-t-2 border-transparent py-3 [&[data-state=notInViewport]]:border-gray-200"
+      className="flex w-full gap-x-2  border-transparent py-3 [&[data-state=notInViewport]]:border-gray-200"
     >
       <div className="mt-2">
         <Avatar src={user?.avatar} alt={user ? user.name : "Guest"} />

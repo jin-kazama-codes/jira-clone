@@ -20,7 +20,7 @@ const IssueDetailsHeader: React.FC<{
   return (
     <div
       data-state={isInViewport ? "inViewport" : "notInViewport"}
-      className="sticky top-0 z-10 flex h-fit w-full items-center justify-between border-b-2 border-transparent bg-sprint p-0.5 [&[data-state=notInViewport]]:border-gray-200"
+      className="sticky top-0 z-10 flex h-fit w-full items-center justify-between   border-transparent bg-sprint p-0.5 [&[data-state=notInViewport]]:border-b border-b-black"
     >
       <IssuePath issue={issue} setIssueKey={setIssueKey} />
       <div className="relative flex items-center gap-x-0.5">
