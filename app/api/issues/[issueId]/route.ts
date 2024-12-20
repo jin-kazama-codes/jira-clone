@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { prisma, ratelimit } from "@/server/db";
+import { prisma } from "@/server/db";
 import {
   IssueStatus,
   type Issue,
@@ -74,8 +74,8 @@ export async function PATCH(req: NextRequest, { params }: ParamsType) {
   const baseUrl = getBaseUrl();
 
   if (!userId) return new Response("Unauthenticated request", { status: 403 });
-  const { success } = await ratelimit.limit(userId);
-  if (!success) return new Response("Too many requests", { status: 429 });
+  // const { success } = await ratelimit.limit(userId);
+  // if (!success) return new Response("Too many requests", { status: 429 });
   const { issueId } = params;
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const body = await req.json();
@@ -144,8 +144,8 @@ export async function PATCH(req: NextRequest, { params }: ParamsType) {
 export async function DELETE(req: NextRequest, { params }: ParamsType) {
   const userId = parseCookies(req, "user").id;
   if (!userId) return new Response("Unauthenticated request", { status: 403 });
-  const { success } = await ratelimit.limit(userId);
-  if (!success) return new Response("Too many requests", { status: 429 });
+  // const { success } = await ratelimit.limit(userId);
+  // if (!success) return new Response("Too many requests", { status: 429 });
 
   const { issueId } = params;
 
