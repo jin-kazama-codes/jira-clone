@@ -28,6 +28,7 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, admin }) => {
   const handleProjectClick = (project: Project) => {
     setCookie("project", project);
     router.push(`/${project.key}/backlog`);
+
   };
 
   useEffect(() => {
@@ -50,6 +51,7 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, admin }) => {
       if (response.ok) {
         toast.success(data); // Show success toast
         setShowDeleteDialog(false);
+        router.refresh();
       } else {
         toast.error(data); // Show error toast if project has active issues
         setShowDeleteDialog(false);
@@ -70,6 +72,10 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, admin }) => {
     setShowDeleteDialog(true);
   };
 
+  const sortedProjects = [...projects].sort((a, b) => {
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });
+
   return (
     <div
       className="rounded-xl border bg-white pb-5">
@@ -80,7 +86,7 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, admin }) => {
       <div className="h-[27rem] overflow-y-scroll">
         <div className="p-4">
           <div className="grid grid-cols-2 gap-4">
-            {projects.map((project) => (
+            {sortedProjects.map((project) => (
               <div
                 key={project.id}
                 onClick={() => handleProjectClick(project)}

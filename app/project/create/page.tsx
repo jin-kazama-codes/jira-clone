@@ -1,5 +1,6 @@
 'use client';
 import { useCookie } from '@/hooks/use-cookie';
+import { useRouter } from 'next/navigation';
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 
 const CreateProject: React.FC = () => {
@@ -10,6 +11,7 @@ const CreateProject: React.FC = () => {
 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const router = useRouter();
 
   // Handle input changes
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -46,6 +48,7 @@ const CreateProject: React.FC = () => {
         });
         setError(null);
         setSuccess("Project Created Successfully");
+        router.refresh();
       } else {
         setError('Failed to create project');
         setSuccess(null);

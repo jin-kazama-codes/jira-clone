@@ -10,6 +10,7 @@ import {
   ProjectsIcon,
   RoadmapIcon,
   TaskIcon,
+  DocumentIcon,
   UsersIcon,
   VelocityIcon,
 } from "./svgs";
@@ -74,6 +75,12 @@ const Sidebar: React.FC = () => {
       icon: BoardIcon,
       href: `/${project?.key}/board`,
     },
+    {
+      id: "document",
+      label: "Documents",
+      icon: DocumentIcon,
+      href: `/${project.key}/document`
+    }
   ];
 
   const myWorkSpaceItems = [
