@@ -1,4 +1,4 @@
-import { prisma, ratelimit } from "@/server/db";
+import { prisma } from "@/server/db";
 import { parseCookies } from "@/utils/cookies";
 import { SprintStatus, type Sprint } from "@prisma/client";
 import { type NextRequest, NextResponse } from "next/server";
@@ -16,8 +16,8 @@ export async function POST(req: NextRequest) {
   const { id: projectId } = parseCookies(req, "project");
 
   if (!userId) return new Response("Unauthenticated request", { status: 403 });
-  const { success } = await ratelimit.limit(userId);
-  if (!success) return new Response("Too many requests", { status: 429 });
+  // const { success } = await ratelimit.limit(userId);
+  // if (!success) return new Response("Too many requests", { status: 429 });
 
   const sprints = await prisma.sprint.findMany({
     where: {

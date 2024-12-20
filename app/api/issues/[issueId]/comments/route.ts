@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { prisma, ratelimit } from "@/server/db";
+import { prisma } from "@/server/db";
 import { type DefaultUser, type Comment } from "@prisma/client";
 import { z } from "zod";
 import { parseCookies } from "@/utils/cookies";
@@ -60,8 +60,8 @@ export async function POST(
 ) {
   const userId = parseCookies(req, 'user').id;
   if (!userId) return new Response("Unauthenticated request", { status: 403 });
-  const { success } = await ratelimit.limit(userId);
-  if (!success) return new Response("Too many requests", { status: 429 });
+  // const { success } = await ratelimit.limit(userId);
+  // if (!success) return new Response("Too many requests", { status: 429 });
 
   const { issueId } = params;
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
