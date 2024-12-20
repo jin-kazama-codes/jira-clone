@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 // Adjust the path according to your project structure
 export function middleware(request: NextRequest) {
   const cookieStore = cookies();
-  const token = cookieStore.get("token")?.value;
+  const token = cookieStore.get("user")?.value;
 
   // Define routes that do not require authentication
   const publicPaths = [
