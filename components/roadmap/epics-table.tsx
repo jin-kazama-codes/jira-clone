@@ -43,9 +43,8 @@ const EpicsTable: React.FC = () => {
   const renderContainerRef = useRef<HTMLDivElement>(null);
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
   // const { user } = useUser();
-  const user = useCookie('user');
+  const user = useCookie("user");
   const userId = `${user?.id}`;
-
 
   useLayoutEffect(() => {
     if (!renderContainerRef.current) return;
@@ -83,6 +82,8 @@ const EpicsTable: React.FC = () => {
       }
     );
   }
+  const { issues } = useIssues();
+  const epics = issues?.filter((issue) => issue.type === "EPIC");
 
   return (
     <div
@@ -90,13 +91,20 @@ const EpicsTable: React.FC = () => {
       ref={renderContainerRef}
     >
       <div className="sticky top-0 z-10 h-10 bg-gray-100" />
-      <EpicsAccordion handleCreateIssue={handleCreateIssue} />
+      {epics?.length ? (
+        <EpicsAccordion handleCreateIssue={handleCreateIssue} />
+      ) : (
+        <div className="flex h-8 items-center justify-center text-gray-500">
+          No Epic Found
+        </div>
+      )}
+
       <div className="sticky bottom-0 h-12  bg-white">
         <Button
           onClick={() => setIsCreatingEpic(true)}
           data-state={isCreatingEpic ? "closed" : "open"}
           customColors
-          className="flex w-full rounded-xl items-center gap-x-1.5 hover:bg-gray-100 [&[data-state=closed]]:hidden"
+          className="flex w-full items-center gap-x-1.5 rounded-xl hover:bg-gray-100 [&[data-state=closed]]:hidden"
         >
           <AiOutlinePlus />
           <span className="text-[14px] font-medium">Create Epic</span>
@@ -224,7 +232,7 @@ const EpicsAccordion: React.FC<{
                   key={child.key}
                   role="button"
                   onClick={() => setIssueKey(child.key)}
-                  className="flex items-center justify-between p-1.5 rounded-xl pl-12 hover:bg-gray-200"
+                  className="flex items-center justify-between rounded-xl p-1.5 pl-12 hover:bg-gray-200"
                 >
                   <div className="flex items-center gap-x-2">
                     <IssueIcon issueType={child.type} />
