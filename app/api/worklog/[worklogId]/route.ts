@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma, ratelimit } from "@/server/db";
+import { prisma } from "@/server/db";
 import { parseCookies } from "@/utils/cookies";
 
 export async function PATCH(
@@ -55,8 +55,8 @@ export async function DELETE(
   const userId = parseCookies(req, "user").id;
   if (!userId) return new Response("Unauthenticated request", { status: 403 });
 
-  const { success } = await ratelimit.limit(userId);
-  if (!success) return new Response("Too many requests", { status: 429 });
+  // const { success } = await ratelimit.limit(userId);
+  // if (!success) return new Response("Too many requests", { status: 429 });
 
   const { worklogId } = params;
 

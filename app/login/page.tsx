@@ -24,7 +24,6 @@ const Login: React.FC = () => {
   const token = searchParams.get("token");
   const redirectPath = searchParams.get("redirect");
 
-
   useEffect(() => {
     setIsMounted(true);
     // Verify token on component mount if token is present
@@ -49,7 +48,6 @@ const Login: React.FC = () => {
           setError("Error verifying reset link");
         }
       }
-
     };
 
     verifyToken();
@@ -102,17 +100,17 @@ const Login: React.FC = () => {
   }
 
   return (
-    <div className="flex items-center bg-custom-background justify-center min-h-screen p-4"
-    >
+    <div className="flex min-h-screen items-center justify-center bg-custom-background p-4">
       <div
         style={{
-          boxShadow: '0px 0px 24px rgb(92, 86, 150)'
+          boxShadow: "0px 0px 24px rgb(92, 86, 150)",
         }}
-        className="w-full bg-header max-w-md rounded-2xl overflow-hidden">
+        className="w-full max-w-md overflow-hidden rounded-2xl bg-header"
+      >
         {/* Content */}
         <div className="relative z-10">
           {/* Header */}
-          <div className="relative text-center  p-8 min-w-screen flex items-center justify-center">
+          <div className="min-w-screen relative  flex items-center justify-center p-8 text-center">
             {/* Content */}
 
             <div className="relative z-10">
@@ -132,13 +130,17 @@ const Login: React.FC = () => {
             </div>
           </div>
 
-
           {/* Form */}
-          <form onSubmit={handleSubmit}
-            className="  px-8 pt-10 bg-body rounded-t-3xl pb-8 space-y-6">
+          <form
+            onSubmit={handleSubmit}
+            className="  space-y-6 rounded-t-3xl bg-body px-8 pb-8 pt-10"
+          >
             {/* Email Field */}
             <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium text-gray-800">
+              <label
+                htmlFor="email"
+                className="text-sm font-medium text-gray-800"
+              >
                 Email
               </label>
               <input
@@ -155,7 +157,10 @@ const Login: React.FC = () => {
 
             {/* Password Field */}
             <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
               <div className="relative">
@@ -171,22 +176,21 @@ const Login: React.FC = () => {
                 />
                 <button
                   type="button"
-                  onClick={() => setShowPassword(prev => !prev)}
-                  className="absolute text-gray-500 right-4 top-1/2 -translate-y-1/2"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"
                 >
                   {showPassword ? (
                     <AiFillEyeInvisible className="text-xl" />
                   ) : (
                     <AiFillEye className="text-xl" />
                   )}
-
                 </button>
               </div>
             </div>
 
             {/* Forgot Password Link */}
             <p
-              className="text-gray-800 hover:text-gray-900 mt-2 hover:underline cursor-pointer"
+              className="mt-2 cursor-pointer text-gray-800 hover:text-gray-900 hover:underline"
               onClick={() => {
                 router.push("/forgot-password");
               }}
@@ -195,7 +199,7 @@ const Login: React.FC = () => {
             </p>
 
             {/* Error Message */}
-            {error && <p className="text-red-500 text-sm">{error}</p>}
+            {error && <p className="text-sm text-red-500">{error}</p>}
 
             {/* Submit Button */}
             <div className="mt-4 flex justify-center">
@@ -205,16 +209,14 @@ const Login: React.FC = () => {
                 <button
                   type="submit"
                   disabled={Loading}
-                  className="w-full py-3 border border-transparent rounded-xl shadow-sm text-lg  font-medium text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition duration-200 ease-in-out"
+                  className="w-full rounded-xl border border-transparent bg-blue-700 py-3 text-lg  font-medium text-white shadow-sm transition duration-200 ease-in-out hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2"
                 >
                   Log in
                 </button>
               )}
             </div>
-
           </form>
         </div>
-
       </div>
     </div>
   );

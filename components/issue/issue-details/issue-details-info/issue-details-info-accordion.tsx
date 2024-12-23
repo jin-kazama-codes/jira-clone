@@ -53,12 +53,12 @@ const IssueDetailsInfoAccordion: React.FC<{ issue: IssueType }> = ({
       <Accordion
         onValueChange={setOpenAccordion}
         value={openAccordion}
-        className="my-3 w-min min-w-full rounded-xl border"
+        className="my-3 w-min min-w-full rounded-xl  "
         type="single"
         collapsible
       >
         <AccordionItem value={"details"}>
-          <AccordionTrigger className="flex w-full items-center justify-between p-2 hover:rounded-t-xl font-medium hover:bg-gray-100 [&[data-state=open]>svg]:rotate-180 [&[data-state=open]]:border-b">
+          <AccordionTrigger className="flex w-full items-center justify-between p-2 hover:rounded-t-xl font-medium hover:bg-gray-100 [&[data-state=open]>svg]:rotate-180 [&[data-state=open]]:border-b border-b-black">
             <div className="flex items-center gap-x-1">
               <span className="text-sm">Details</span>
               <span className="text-xs text-gray-600">
@@ -125,7 +125,7 @@ const IssueDetailsInfoAccordion: React.FC<{ issue: IssueType }> = ({
                   isEditing={isEditing}
                   setIsEditing={setisEditing}
                   issue={issue}
-                  className="text-sm bg-slate-200 rounded-xl px-2"
+                  className="text-sm bg-slate-200 p-2 rounded-xl "
                 />
               </div>
             </div>

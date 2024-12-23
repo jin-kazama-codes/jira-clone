@@ -8,8 +8,13 @@ export function middleware(request: NextRequest) {
   const token = cookieStore.get("user")?.value;
 
   // Define routes that do not require authentication
-  const publicPaths = ["/login", "/forgot-password", "/reset-password","/images/karya-io-logo.png"];
-  
+  const publicPaths = [
+    "/login",
+    "/forgot-password",
+    "/reset-password",
+    "/images/karya-io-logo.png",
+  ];
+
   const url = request.nextUrl.clone();
   // Check if the user is authenticated
   if (!token && !publicPaths.includes(request.nextUrl.pathname)) {
@@ -20,7 +25,8 @@ export function middleware(request: NextRequest) {
   // Clone the URL for manipulation
 
   // Match any URL with a dynamic project key, e.g., /{PROJECT-KEY}/backlog
-  const projectKeyPattern = /^\/([^/]+)\/(backlog|report(?:\/[^/]+)?|users|issue(?:\/[^/]+)?|roadmap|board|settings)/;
+  const projectKeyPattern =
+    /^\/([^/]+)\/(backlog|report(?:\/[^/]+)?|users|issue(?:\/[^/]+)?|roadmap|board|settings|document)/;
   const matchResult = url.pathname.match(projectKeyPattern);
 
   // If the URL matches the project key pattern
@@ -29,9 +35,9 @@ export function middleware(request: NextRequest) {
 
     // Rewrite the URL to remove {PROJECT-KEY} from the path
     url.pathname = `/${route}`;
-    
+
     // Pass the project key as a query parameter for use in the app
-    url.searchParams.set('projectKey', projectKey);
+    url.searchParams.set("projectKey", projectKey);
 
     // Rewrite to the new URL
     return NextResponse.rewrite(url);

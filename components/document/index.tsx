@@ -1,0 +1,378 @@
+"use client";
+import React, { ReactNode, useEffect, useState } from "react";
+import DocumentUpload from "@/components/modals/documentUpload";
+import CreateFolderButton from "./createFolder";
+import { useDocuments } from "@/hooks/query-hooks/use-documents";
+import { FaTrashAlt, FaFolder, FaFile } from "react-icons/fa";
+import { CiImageOn } from "react-icons/ci";
+import { VscFilePdf } from "react-icons/vsc";
+import { useCookie } from "@/hooks/use-cookie";
+
+interface FileItem {
+  link(link: any, arg1: string): void;
+  DefaultUser: any;
+  createdAt: ReactNode;
+  id: string;
+  name: string;
+  extensions: "pdf" | "image" | "document";
+  type: string;
+  parentId?: string | null;
+  ownerId: number
+}
+
+const Document: React.FC = () => {
+  const userId = useCookie('user').id;
+  console.log(typeof userId)
+  const FileIcon = ({ extensions }: { extensions: FileItem["extensions"] }) => {
+    switch (extensions) {
+      case "pdf":
+        return (
+          <VscFilePdf className="text-red-700 h-5 w-5" />
+        )
+      case "image":
+        return (
+          <CiImageOn />
+        )
+      default:
+        return (
+          <>
+            {/* <VscFilePdf /> */}
+            <CiImageOn className="h-5 w-5 text-blue-600" />
+          </>
+
+        )
+    }
+  }
+  const { documents: allFiles, isLoading, error, refetch, deletedocument } = useDocuments()
+  const [folders, setFolders] = useState<FileItem[]>([]);
+  const [files, setFiles] = useState<FileItem[]>([]);
+  const [selectedFolder, setSelectedFolder] = useState<FileItem | null>(null);
+
+  useEffect(() => {
+    if (allFiles) {
+      console.log('ownerID', userId === allFiles[0].ownerId)
+      const sortedFiles = allFiles.slice().sort((a, b) => {
+        const createdAtDiff = new Date(b.createdAt) - new Date(a.createdAt);
+        return createdAtDiff !== 0 ? createdAtDiff : a.name.localeCompare(b.name);
+      });
+
+      // Filter folders (items with type other than 'file')
+      setFolders(sortedFiles.filter((file) => file.type !== "file"));
+
+      // Filter files (items with type 'file')
+      setFiles(sortedFiles.filter((file) => file.type === "file"));
+    }
+  }, [allFiles]);
+
+  const handleFolderClick = (folder: FileItem) => {
+    // If clicking the same folder, deselect it
+    setSelectedFolder(prevFolder =>
+      prevFolder?.id === folder.id ? null : folder
+
+    );
+  };
+
+  // Filter files based on selected folder or null parentId
+  const displayedFiles = selectedFolder
+    ? files.filter((file) => file.parentId === selectedFolder.id)
+    : files.filter((file) => file.parentId === null);
+
+  const displayedFolder = selectedFolder
+    ? folders.filter((folder) => folder.parentId === selectedFolder.id)
+    : folders.filter((folder) => folder.parentId === null);
+
+
+  // Render for different views
+  const renderContent = () => {
+    // If a folder is selected, show its specific files
+    if (selectedFolder) {
+      return (
+        <div>
+          {/* Folder Details Header */}
+          <div className="flex justify-between items-center mb-2">
+
+            <div className="flex items-center ">
+              <button
+                onClick={() => setSelectedFolder(null)}
+                className="text-sm  hover:underline"
+              >
+                documents
+              </button>
+              <span className=" text-sm">/{selectedFolder.name}</span>
+            </div>
+            <CreateFolderButton
+              onFolderCreated={refetch}
+              selectedFolderId={selectedFolder.id}
+            />
+          </div>
+
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-2">
+            {displayedFolder.map((folder) => (
+              <div
+                key={folder.id}
+                className={`group flex justify-between p-2 rounded-lg border cursor-pointer 
+                  ${selectedFolder?.id === folder.id ? "bg-blue-50" : "bg-white"}
+                  hover:bg-gray-50 transition-colors`}
+                onClick={() => handleFolderClick(folder)}
+              >
+                <div className="flex items-center">
+                  <FaFolder className={`mr-2 ${selectedFolder?.id === folder.id ? "text-blue-500" : "text-body"}`} />
+                  <span className="font-medium">{folder.name}</span>
+                </div>
+                {folder.ownerId === userId && (
+                  <button
+                    className="rounded-full p-2 text-red-400 opacity-0 transition-opacity hover:bg-red-100 hover:text-red-600 group-hover:opacity-100"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deletedocument(folder.id);
+                    }}
+                  >
+                    <FaTrashAlt className="h-3 w-3" />
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div className="flex justify-between items-center mt-2">
+            <h2 className="text-lg font-bold px-4 py-2"> Files</h2>
+            <DocumentUpload
+              onUploadComplete={refetch}
+              selectedFolderId={selectedFolder.id}
+            >
+              <button className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                Add File
+              </button>
+            </DocumentUpload>
+          </div>
+
+          {displayedFiles.length === 0 ? (
+            <div className="text-center text-gray-500 py-4">
+              No files in this folder
+            </div>
+          ) : (
+            <div className="w-full mt-1  rounded-lg border bg-white shadow h-96 overflow-y-scroll">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-gray-50 text-xs uppercase text-gray-700">
+                  <tr>
+                    <th
+                      scope="col"
+                      className="cursor-pointer px-6 py-3"
+                    >
+                      File Name
+                    </th>
+                    <th
+                      scope="col"
+                      className="cursor-pointer px-6 py-3"
+                    >
+                      Uploaded By
+                    </th>
+                    <th
+                      scope="col"
+                      className="cursor-pointer px-6 py-3"
+                    >
+                      Upload Date
+                    </th>
+
+                    <th scope="col" className="px-6 py-3">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {displayedFiles?.map((file => (
+                    <tr
+                      key={file.id}
+                      className="border-b hover:bg-gray-50"
+                    >
+                      <td className="flex items-center gap-2 px-6 py-4">
+                        <FileIcon extensions={file.extensions} />
+                        <button
+                          onClick={() => window.open(file.link, "_blank")}
+                          className="text-black hover:underline "
+                        >
+                          {file.name}
+                        </button>
+                      </td>
+                      <td className="px-6 py-4">{file.DefaultUser.name}</td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-1">
+                          {new Date(file.createdAt).toLocaleDateString()}{" "}
+                          {new Date(file.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        {Number(userId) === Number(file.ownerId) && (
+                          <button
+                            className="rounded-full p-2 text-red-400 opacity-0 transition-opacity hover:bg-red-100 hover:text-red-600 group-hover:opacity-100"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deletedocument(file.id);
+                            }}
+                          >
+                            Delete
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  )))}
+                </tbody>
+
+              </table>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // Default view: All folders and root files
+    return (
+      <>
+        {/* Folders Section */}
+        <div>
+          <div className="flex justify-between items-center">
+            <h2 className="text-lg font-bold px-4 py-2">Folders</h2>
+            <CreateFolderButton onFolderCreated={refetch} />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-2">
+            {displayedFolder.map((folder) => (
+              <div
+                key={folder.id}
+                className={`group flex justify-between p-2 rounded-lg border cursor-pointer 
+                  ${selectedFolder?.id === folder.id ? "bg-blue-50" : "bg-white"}
+                  hover:bg-gray-50 transition-colors`}
+                onClick={() => handleFolderClick(folder)}
+              >
+                <div className="flex items-center">
+                  <FaFolder className={`mr-2 ${selectedFolder?.id === folder.id ? "text-blue-500" : "text-body"}`} />
+                  <span className="font-medium">{folder.name}</span>
+                </div>
+                {Number(userId) === Number(folder.ownerId) && (
+                  <button
+                    className="rounded-full p-2 text-red-400 opacity-0 transition-opacity hover:bg-red-100 hover:text-red-600 group-hover:opacity-100"
+                    onClick={() => deletedocument(folder.id)}
+                  >
+                    <FaTrashAlt className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Root Files Section */}
+        <div className="mt-2">
+          <div className="flex justify-between items-center">
+            <h2 className="text-lg font-bold px-4 py-2"> Files</h2>
+            <DocumentUpload onUploadComplete={refetch}>
+              <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                Add File
+              </button>
+            </DocumentUpload>
+          </div>
+
+          {displayedFiles.length === 0 ? (
+            <div className="text-center text-gray-500 py-4">
+              No  files uploaded
+            </div>
+          ) : (
+            // eslint-disable-next-line react/jsx-key
+            <div className="w-full mt-1  rounded-lg border bg-white shadow h-96 overflow-y-scroll">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-gray-50 text-xs uppercase text-gray-700">
+                  <tr>
+                    <th
+                      scope="col"
+                      className="cursor-pointer px-6 py-3"
+                    >
+                      File Name
+                    </th>
+                    <th
+                      scope="col"
+                      className="cursor-pointer px-6 py-3"
+                    >
+                      Uploaded By
+                    </th>
+                    <th
+                      scope="col"
+                      className="cursor-pointer px-6 py-3"
+                    >
+                      Upload Date
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {displayedFiles?.map((file => (
+                    <tr
+                      key={file.id}
+                      className="border-b hover:bg-gray-50"
+                    >
+                      <td className="flex items-center gap-2 px-6 py-4">
+                        <FileIcon extensions={file.extensions} />
+                        <button
+                          onClick={() => window.open(file.link, "_blank")}
+                          className="text-black hover:underline "
+                        >
+                          {file.name}
+                        </button>
+                      </td>
+                      <td className="px-6 py-4">{file.DefaultUser.name}</td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-1">
+                          {new Date(file.createdAt).toLocaleDateString()}{" "}
+                          {new Date(file.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        {Number(userId) === Number(file.ownerId) && (
+                          <button
+                            className="text-red-600 hover:text-red-900 hover:bg-gray-100 px-4 py-2 rounded"
+                            onClick={() => deletedocument(file.id)}
+                          >
+                            Delete
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  )))}
+                </tbody>
+
+              </table>
+            </div>
+          )}
+        </div>
+      </>
+    );
+  };
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
+  return (
+
+    <div className=" ">
+      <div className="flex justify-between pb-2">
+        <h1 className="text-2xl font-bold ">Documents</h1>
+        {selectedFolder && (
+          <button
+            onClick={() => setSelectedFolder(null)}
+            className="px-3 py-2 bg-blue-500 rounded hover:bg-blue-600 text-white"
+          >
+            Back
+          </button>
+        )
+        }
+
+      </div>
+      {renderContent()}
+    </div>
+
+  );
+};
+
+export default Document;

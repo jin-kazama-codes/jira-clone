@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { prisma, ratelimit } from "@/server/db";
+import { prisma } from "@/server/db";
 import { SprintStatus, type Sprint } from "@prisma/client";
 import { z } from "zod";
 import { parseCookies } from "@/utils/cookies";
@@ -29,8 +29,8 @@ export async function PATCH(req: NextRequest, { params }: ParamsType) {
   const userId = parseCookies(req, 'user').id;
   const projectId = parseCookies(req, 'project').id;
   if (!userId) return new Response("Unauthenticated request", { status: 403 });
-  const { success } = await ratelimit.limit(userId);
-  if (!success) return new Response("Too many requests", { status: 429 });
+  // const { success } = await ratelimit.limit(userId);
+  // if (!success) return new Response("Too many requests", { status: 429 });
 
   const { sprint_id } = params;
 
@@ -82,8 +82,8 @@ export async function PATCH(req: NextRequest, { params }: ParamsType) {
 export async function DELETE(req: NextRequest, { params }: ParamsType) {
   const userId = parseCookies(req, 'user').id;
   if (!userId) return new Response("Unauthenticated request", { status: 403 });
-  const { success } = await ratelimit.limit(userId);
-  if (!success) return new Response("Too many requests", { status: 429 });
+  // const { success } = await ratelimit.limit(userId);
+  // if (!success) return new Response("Too many requests", { status: 429 });
 
   const { sprint_id } = params;
 

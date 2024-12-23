@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { prisma, ratelimit } from "@/server/db";
+import { prisma } from "@/server/db";
 import { filterUserForClient } from "@/utils/helpers";
 import { parseCookies } from "@/utils/cookies";
 
@@ -14,8 +14,8 @@ export async function PATCH(
 ) {
   const userId = parseCookies(req, 'user').id;
   if (!userId) return new Response("Unauthenticated request", { status: 403 });
-  const { success } = await ratelimit.limit(userId);
-  if (!success) return new Response("Too many requests", { status: 429 });
+  // const { success } = await ratelimit.limit(userId);
+  // if (!success) return new Response("Too many requests", { status: 429 });
 
   const { commentId } = params;
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -63,8 +63,8 @@ export async function DELETE(
   const userId = parseCookies(req, "user").id;
   if (!userId) return new Response("Unauthenticated request", { status: 403 });
 
-  const { success } = await ratelimit.limit(userId);
-  if (!success) return new Response("Too many requests", { status: 429 });
+  // const { success } = await ratelimit.limit(userId);
+  // if (!success) return new Response("Too many requests", { status: 429 });
 
   const { commentId } = params;
 

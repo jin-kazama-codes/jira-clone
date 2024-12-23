@@ -4,6 +4,7 @@ import { Cropper } from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 "public/images/karya-io-logo.png"
 
 const ProfilePage = () => {
@@ -120,11 +121,18 @@ const ProfilePage = () => {
 
   return (
     <div className="min-h-screen p-6 text-white">
+
       <form
         onSubmit={(e) => e.preventDefault()}
         className="mx-auto max-w-full space-y-8"
       >
         <div className="flex items-center justify-between">
+          <Link href="/backlog">
+            <button className="rounded bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700">
+              Back
+            </button>
+          </Link>
+
           <h1 className="text-3xl font-bold text-gray-700">
             Organization Profile
           </h1>

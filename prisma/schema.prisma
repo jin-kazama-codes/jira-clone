@@ -37,6 +37,22 @@ model Worklog {
   id              String   @id @default(uuid())
 }
 
+model Document {
+  id         Int      @id @default(autoincrement())
+  projectId  Int
+  name       String
+  link       String?
+  extensions String?
+  ownerId    Int
+  createdAt  DateTime @default(now())
+  parentId   Int?
+  type       String
+
+  DefaultUser DefaultUser @relation(fields: [ownerId], references: [id])
+
+  @@index([ownerId])
+}
+
 model Issue {
   id             String      @id @default(uuid())
   key            String
@@ -101,23 +117,24 @@ model Comment {
 }
 
 model DefaultUser {
-  name     String
-  email    String  @unique(map: "unique_email")
-  avatar   String?
-  password String? @default("member@f2-fin")
-  role     role?   @default(member)
-  status   Boolean @default(false)
-  id       Int     @id @default(autoincrement())
+  name      String
+  email     String     @unique(map: "unique_email")
+  avatar    String?
+  password  String?    @default("member@f2-fin")
+  role      role?      @default(member)
+  status    Boolean    @default(false)
+  id        Int        @id @default(autoincrement())
+  documents Document[]
 }
 
 model Account {
-  id       Int     @id @default(autoincrement())
-  name     String?
-  logo     String?
-  contact  Int?
-  email    String?
-  bio       String?
-  url       String?
+  id      Int     @id @default(autoincrement())
+  name    String?
+  logo    String?
+  contact Int?
+  email   String?
+  bio     String?
+  url     String?
 }
 
 enum IssueType {
