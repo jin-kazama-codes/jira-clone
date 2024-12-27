@@ -121,10 +121,37 @@ const SidebarSkeleton = () => {
   );
 };
 
+const DocumentSkeleton = () => {
+  return (
+    <div className="space-y-6 mt-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-2">
+        {Array.from({ length: 10 }).map((_, index) => (
+          <div
+            key={index}
+            className="animate-pulse h-8 bg-gray-200 group flex justify-between p-2 rounded-lg border cursor-pointer w-3/4"
+          ></div>
+        ))}
+      </div>
+      <div>
+        <div className="space-y-3 mt-5">
+          {Array.from({ length: 9 }).map((_, index) => (
+            <div
+              key={index}
+              className="animate-pulse h-6 bg-gray-200 rounded w-full"
+            ></div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
 export {
   IssueSkeleton,
   BreadCrumbSkeleton,
   TitleSkeleton,
+  DocumentSkeleton,
   SprintHeaderSkeleton,
   SprintSearchSkeleton,
   BoardColumnSkeleton,

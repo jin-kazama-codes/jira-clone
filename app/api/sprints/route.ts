@@ -51,8 +51,12 @@ export async function GET(req: NextRequest) {
     projectId: projectId,
     ...(isClosedOnly
       ? { status: SprintStatus.CLOSED } // Only get closed sprints if closed parameter is true
-      : { OR: [{ status: SprintStatus.ACTIVE }, { status: SprintStatus.PENDING }] }
-    ),
+      : {
+          OR: [
+            { status: SprintStatus.ACTIVE },
+            { status: SprintStatus.PENDING },
+          ],
+        }),
   };
 
   // Get the position from the query parameters
@@ -71,5 +75,3 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json({ sprints });
 }
-
-

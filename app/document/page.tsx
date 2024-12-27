@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "Document",
 };
 
-const DocumentPage = async () => {
+const DocumentPage = () => {
   const queryClient = getQueryClient();
 
 
