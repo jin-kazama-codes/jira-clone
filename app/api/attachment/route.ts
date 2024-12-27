@@ -16,7 +16,7 @@ async function uploadFileToS3(
     Key: `${CURRENT_DATE}-${fileName}`,
     Body: file,
     ContentType: contentType,
-    ContentDisposition: "attachment"
+    ContentDisposition: "attachment",
   };
 
   const command = new PutObjectCommand(params);
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
     // Determine the appropriate content type
     let contentType: string;
     if (mimeType.startsWith("image/")) {
-      contentType = "image/jpeg";  // or match the specific image type
+      contentType = "image/jpeg"; // or match the specific image type
     } else if (mimeType === "application/pdf") {
       contentType = "application/pdf";
     } else {
@@ -66,6 +66,9 @@ export async function POST(request: NextRequest, response: NextResponse) {
     });
   } catch (error) {
     console.error("Error uploading file:", error);
-    return NextResponse.json({ message: "Error uploading file" }, { status: 500 });
+    return NextResponse.json(
+      { message: "Error uploading file" },
+      { status: 500 }
+    );
   }
 }

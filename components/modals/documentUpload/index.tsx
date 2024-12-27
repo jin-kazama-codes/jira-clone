@@ -31,17 +31,28 @@ const DocumentPage: React.FC<DocumentUploadProps> = ({
 
   const handleFileSelection = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files ? Array.from(e.target.files) : [];
+    const allowedExtensions = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx'];
 
-    if (files.length > 5) {
+    const validFiles = files.filter((file) => {
+      const fileExtension = file.name.split('.').pop()?.toLowerCase();
+      return fileExtension && allowedExtensions.includes(fileExtension);
+    });
+
+    if (validFiles.length === 0) {
+      alert("Only PDF, image, and Microsoft Word files are allowed.");
+      e.target.value = ""; // Clear the file input
+      return;
+    }
+
+    if (validFiles.length > 5) {
       alert("You can upload up to 5 files.");
       e.target.value = ""; // Clear the file input
       return;
     }
 
-    setDocument(files); // Set selected files in state
-    setFileName(files.map((file) => file.name)); // Store file names
+    setDocument(validFiles);
+    setFileName(validFiles.map((file) => file.name));
   };
-
   const handleFileUpload = async (files) => {
     const fileURLs = [];
 
@@ -147,7 +158,7 @@ const DocumentPage: React.FC<DocumentUploadProps> = ({
                       handleFileSelection(e);
                     }}
                     multiple
-                    accept="image/*, application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, text/plain"
+                    accept="image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                     className="file:mr-4 file:rounded-full file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
                   />
 
