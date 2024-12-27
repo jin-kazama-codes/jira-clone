@@ -14,16 +14,19 @@ export const documentsRoutes = {
       console.error(error);
     }
   },
-  getdocuments: async () => {
-    const { data } = await axios.get(`${baseUrl}/api/document`, {
-      headers: getHeaders(),
-    });
+  getDocuments: async (parentId?: Number) => {
+    const { data } = await axios.get(
+      `${baseUrl}/api/document?parentId=${parentId || null}`,
+      {
+        headers: getHeaders(),
+      }
+    );
     return data.documents;
   },
-  deletedocument: async (documentId: number) => {
+  deleteDocument: async (documentId: number, folder?: boolean) => {
     console.log("Documentid", documentId);
     const { data } = await axios.delete(
-      `${baseUrl}/api/document/${documentId}`,
+      `${baseUrl}/api/document/${documentId}?folder=${folder || false}`,
       {
         headers: getHeaders(),
       }
