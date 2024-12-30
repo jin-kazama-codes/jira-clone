@@ -8,6 +8,7 @@ import {
   ModalTitle,
   ModalTrigger,
 } from "@/components/ui/modal";
+import { toast } from "@/components/toast";
 
 
 
@@ -39,13 +40,13 @@ const DocumentPage: React.FC<DocumentUploadProps> = ({
     });
 
     if (validFiles.length === 0) {
-      alert("Only PDF, image, and Microsoft Word files are allowed.");
+      toast.error("Only PDF, image, and Microsoft Word files are allowed.");
       e.target.value = ""; // Clear the file input
       return;
     }
 
     if (validFiles.length > 5) {
-      alert("You can upload up to 5 files.");
+      toast.error("You can upload up to 5 files.");
       e.target.value = ""; // Clear the file input
       return;
     }

@@ -79,7 +79,7 @@ const Sidebar: React.FC = () => {
       id: "document",
       label: "Documents",
       icon: DocumentIcon,
-      href: `/${project.key}/document`
+      href: `/${project?.key}/document`
     }
   ];
 
