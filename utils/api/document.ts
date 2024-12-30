@@ -24,7 +24,6 @@ export const documentsRoutes = {
     return data.documents;
   },
   deleteDocument: async (documentId: number, folder?: boolean) => {
-    console.log("Documentid", documentId);
     const { data } = await axios.delete(
       `${baseUrl}/api/document/${documentId}?folder=${folder || false}`,
       {
