@@ -1,6 +1,7 @@
 import { api } from "@/utils/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCookie } from "../use-cookie";
+import toast from "@/components/toast";
 
 export const useDocuments = (parentId?: string | number) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -42,8 +43,7 @@ export const useDocuments = (parentId?: string | number) => {
       });
     },
     onError: (error: any) => {
-      console.error("Failed to delete document:", error);
-      alert("Failed to delete document. Please try again.");
+      toast.error("Failed to delete document:", error);
     },
   });
 

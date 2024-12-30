@@ -22,7 +22,6 @@ export async function POST(req: Request) {
         { status: 401 }
       );
     }
-
     // Validate type value
     if (!["file", "folder"].includes(type)) {
       return NextResponse.json(
@@ -30,7 +29,6 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-
     // Create resource in the database
     const newDocument = await prisma.document.create({
       data: {
@@ -61,13 +59,10 @@ export async function GET(req: Request) {
     const { id } = parseCookies(req, "project");
     const url = new URL(req.url);
     const parentId = url.searchParams.get("parentId");
-    console.log("Parent ID:", parentId);
-
     const documents = await prisma.document.findMany({
       where: {
         projectId: id,
         parentId: parentId === "null" ? null : Number(parentId),
-        // parentId: parentId ? Number(parentId) : null,
       },
       include: { DefaultUser: true },
     });

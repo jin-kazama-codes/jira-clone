@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 
 import s3Client from "@/s3";
+import { toast } from "@/components/toast";
 
 const prisma = new PrismaClient();
 
@@ -35,10 +36,9 @@ export async function DELETE(
         Key: objectKey,
       });
       await s3Client.send(deleteCommand);
-      console.log("File deleted from S3:", s3Url);
       return true;
     } catch (error) {
-      console.error("Failed to delete file from S3:", error);
+      toast.error("Failed to delete file from S3:", error);
       return false;
     }
   };
@@ -54,7 +54,7 @@ export async function DELETE(
       for (const file of folderFiles) {
         if (file.link) {
           // Delete file from S3 if it has a link
-          // if change a settings in s3 wait a few hours and try again 
+          // if change a settings in s3 wait a few hours and try again
           const success = await deleteFromS3(file.link);
           if (!success) {
             throw new Error(`Failed to delete file from S3: ${file.link}`);
@@ -80,7 +80,7 @@ export async function DELETE(
 
       return true;
     } catch (error) {
-      console.error("Error in deleteFilesAndFolders:", error);
+      toast.error("Error in deleteFilesAndFolders:", error);
       return false;
     }
   };
@@ -122,7 +122,7 @@ export async function DELETE(
       });
     }
   } catch (error) {
-    console.error("Error deleting document or folder:", error);
+    toast.error("Error deleting document or folder:", error);
     return new Response("Failed to delete document or folder", { status: 500 });
   }
 }
