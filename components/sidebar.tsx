@@ -33,13 +33,7 @@ const Sidebar: React.FC = () => {
   const pathname = usePathname();
   const [loading, setLoading] = useState(!project);
   const { assignees, setAssignees } = useFiltersContext();
-  const [isCollapsed, setIsCollapsed] = useState(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      return saved ? JSON.parse(saved) : false;
-    }
-    return false;
-  });
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
 
   const isAdminOrManager =
@@ -51,9 +45,6 @@ const Sidebar: React.FC = () => {
     }
   }, [project]);
 
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(isCollapsed));
-  }, [isCollapsed]);
 
   const toggleAssigneeFilter = () => {
     setAssignees(assignees.length === 0 ? [user.id] : []);
