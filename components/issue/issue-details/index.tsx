@@ -67,7 +67,7 @@ const IssueDetails: React.FC<{
     <div
       ref={renderContainerRef}
       data-state={issueKey ? "open" : "closed"}
-      className="relative z-10 flex rounded-xl bg-sprint w-full flex-col overflow-y-scroll pl-4 pr-2 [&[data-state=closed]]:hidden"
+      className="relative z-10 flex rounded-xl bg-white w-full flex-col overflow-y-scroll pl-4 pr-2 [&[data-state=closed]]:hidden"
     >
       <IssueDetailsHeader
         detailPage={detailPage}

@@ -5,6 +5,7 @@ import { useCookie } from "@/hooks/use-cookie";
 import { useRouter } from "next/navigation";
 import { setCookie } from "@/utils/helpers";
 import withProjectLayout from "@/app/project-layout/withProjectLayout";
+import Link from "next/link";
 
 const UpdateProject: React.FC = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -12,7 +13,7 @@ const UpdateProject: React.FC = () => {
     projectId: "",
     name: "",
     cloneChild: false,
-    workingDays: 5,  // Default to 5 working days, stored as an integer
+    workingDays: 5, // Default to 5 working days, stored as an integer
   });
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
@@ -43,7 +44,12 @@ const UpdateProject: React.FC = () => {
     const { name, value, type, checked } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: type === "checkbox" ? checked : name === "workingDays" ? parseInt(value, 10) : value,
+      [name]:
+        type === "checkbox"
+          ? checked
+          : name === "workingDays"
+          ? parseInt(value, 10)
+          : value,
     }));
   };
 
@@ -81,22 +87,25 @@ const UpdateProject: React.FC = () => {
     }
   };
 
+
   if (!isMounted) {
     return null;
   }
 
   return (
-    <div className="container mx-auto max-w-md bg-header rounded-xl my-12">
+    <div className="container mx-auto my-12 max-w-md rounded-xl bg-header">
       <div className=" my-5">
-        <div className="text-center py-5 rounded-t-xl ">
-          <h1 className="text-3xl font-bold text-white tracking-tight">Update Project</h1>
-          <p className="text-muted-foreground text-white text-lg">
+        <div className="rounded-t-xl py-5 text-center ">
+          <h1 className="text-3xl font-bold tracking-tight text-white">
+            Update Project
+          </h1>
+          <p className="text-muted-foreground text-lg text-white">
             Enter the new project details below.
           </p>
         </div>
         <form
           onSubmit={handleSubmit}
-          className="pt-5 rounded-xl bg-white p-6 shadow-lg"
+          className="rounded-xl bg-white p-6 pt-5 shadow-lg"
         >
           <div className="grid gap-4">
             <div className="flex flex-col">
@@ -108,7 +117,7 @@ const UpdateProject: React.FC = () => {
                 name="name"
                 type="text"
                 placeholder="Enter new project name"
-                className="focus:border-primary bg-gray-200 focus:ring-primary mt-3 rounded-xl border border-gray-300 px-3 py-2"
+                className="focus:border-primary focus:ring-primary mt-3 rounded-xl border border-gray-300 bg-gray-200 px-3 py-2"
                 onChange={handleChange}
                 value={formData.name}
                 required
@@ -138,7 +147,7 @@ const UpdateProject: React.FC = () => {
               <select
                 id="workingDays"
                 name="workingDays"
-                className="focus:border-primary focus:ring-primary mt-3 bg-gray-200 rounded-xl border border-gray-300 px-3 py-2"
+                className="focus:border-primary focus:ring-primary mt-3 rounded-xl border border-gray-300 bg-gray-200 px-3 py-2"
                 onChange={handleChange}
                 value={formData.workingDays}
               >
@@ -149,17 +158,28 @@ const UpdateProject: React.FC = () => {
           </div>
 
           {error && <p className="mt-2 text-red-500">{error}</p>}
-          <div className="mt-4 flex justify-end">
+          <div className="mt-4">
             {loading ? (
               <div className="h-10 w-10 animate-spin rounded-full border-4 border-t-4 border-gray-200 border-t-black"></div>
             ) : (
               <button
                 type="submit"
-                className="w-full py-3 border border-transparent rounded-xl shadow-sm text-lg  font-medium text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition duration-200 ease-in-out"
+                className="w-full rounded-xl border border-transparent bg-button py-3 text-lg  font-medium text-white shadow-sm transition duration-200 ease-in-out hover:bg-buttonHover focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2"
               >
                 Update Project
               </button>
             )}
+            <div>
+              <button
+                onClick={(e) => {
+                  e.preventDefault(); 
+                  router.push('/workflow');
+                }}
+                className="w-full mt-2 rounded-xl border border-button bg-transparent py-3 text-lg font-medium text-button shadow-sm transition duration-200 ease-in-out hover:border-buttonHover hover:bg-buttonHover hover:text-buttonHover focus:ring-2 focus:ring-blue-300 focus:ring-offset-2"
+              >
+                View Workflow
+              </button>
+            </div>
           </div>
         </form>
       </div>

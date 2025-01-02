@@ -141,7 +141,7 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
   return (
     <Fragment>
       <h2>Comments</h2>
-      <div className="sticky bottom-0 mb-5 w-full bg-transparent">
+      <div className="sticky bottom-0 mb-5 w-full bg-white">
         <div ref={scrollRef} id="dummy-scroll-div" />
         {isWritingComment ? (
           <Editor

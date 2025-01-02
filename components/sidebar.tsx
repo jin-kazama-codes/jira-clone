@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { CgGoogleTasks } from "react-icons/cg";
 import {
@@ -20,17 +20,12 @@ import {
   NavigationMenuList,
 } from "./ui/navigation-menu";
 import { usePathname } from "next/navigation";
-import { FaChessPawn, FaChevronRight } from "react-icons/fa";
+import { FaChessPawn, FaChevronRight, FaChevronLeft } from "react-icons/fa";
 import { useCookie } from "@/hooks/use-cookie";
 import { useFiltersContext } from "@/context/use-filters-context";
 import { SidebarSkeleton } from "./skeletons";
 
-type NavItemType = {
-  id: string;
-  label: string;
-  icon: React.FC<{ className?: string }>;
-  href: string;
-};
+const STORAGE_KEY = "sidebarCollapsed";
 
 const Sidebar: React.FC = () => {
   const user = useCookie("user");
@@ -38,19 +33,27 @@ const Sidebar: React.FC = () => {
   const pathname = usePathname();
   const [loading, setLoading] = useState(!project);
   const { assignees, setAssignees } = useFiltersContext();
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      return saved ? JSON.parse(saved) : false;
+    }
+    return false;
+  });
+  const [isHovered, setIsHovered] = useState(false);
+
   const isAdminOrManager =
     user && (user.role === "admin" || user.role === "manager");
-
-  const isOnProjectPage = pathname === "/project";
-  const isOnUsersPage = pathname === "/users";
-
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 
   useEffect(() => {
     if (project) {
       setLoading(false);
     }
   }, [project]);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(isCollapsed));
+  }, [isCollapsed]);
 
   const toggleAssigneeFilter = () => {
     setAssignees(assignees.length === 0 ? [user.id] : []);
@@ -79,8 +82,8 @@ const Sidebar: React.FC = () => {
       id: "document",
       label: "Documents",
       icon: DocumentIcon,
-      href: `/${project?.key}/document`
-    }
+      href: `/${project?.key}/document`,
+    },
   ];
 
   const myWorkSpaceItems = [
@@ -92,7 +95,6 @@ const Sidebar: React.FC = () => {
     },
   ];
 
-  // Configuration items, with Users section shown only if the user is an admin or manager
   const configurationItems = [
     {
       id: "users",
@@ -106,7 +108,7 @@ const Sidebar: React.FC = () => {
       icon: DevelopmentIcon,
       href: `/${project?.key}/settings`,
     },
-  ].filter(Boolean); // Filter out any null values if isAdminOrManager is false
+  ].filter(Boolean);
 
   const reportingItems = [
     {
@@ -127,52 +129,97 @@ const Sidebar: React.FC = () => {
     return <SidebarSkeleton />;
   }
 
+  const sidebarWidth = isCollapsed && !isHovered ? "w-16" : "w-64";
+
   return (
-    <div className="flex h-full w-64 flex-col gap-y-3 bg-indigo-50 p-3 shadow-inner">
-      <div className="my-5 flex items-center gap-x-2 border-b-2 px-3 pb-7">
+    <div
+      className={`relative flex h-full ${sidebarWidth} z-20 flex-col gap-y-3 bg-indigo-50 p-3 shadow-inner transition-all duration-300`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{
+        position: isCollapsed ? "absolute" : "relative",
+        height: "100vh",
+      }}
+    >
+      <div
+        className={`my-5 flex items-center border-b-2 pb-7 ${
+          isCollapsed && !isHovered ? "justify-center px-0" : "gap-x-2 px-3"
+        }`}
+      >
         <div className="mt-1 flex items-center justify-center rounded-full bg-[#FF5630] p-1 text-xs font-bold text-white">
           <FaChessPawn className="aspect-square text-2xl" />
         </div>
-        <div>
-          <h2 className="text-md -mb-[0.5px] font-semibold text-black">
-            {project?.name}
-          </h2>
-        </div>
+        {(!isCollapsed || isHovered) && (
+          <div className="transition-all duration-300">
+            <h2 className="text-md -mb-[0.5px] whitespace-nowrap font-semibold text-black">
+              {project?.name}
+            </h2>
+          </div>
+        )}
       </div>
 
-      <NavList label={"PLANNING"} items={planningItems} />
-      <NavList label={"MY WORKSPACE"} items={myWorkSpaceItems} />
-      {!isOnUsersPage && !isOnProjectPage && (
+      <NavList
+        label="PLANNING"
+        items={planningItems}
+        isCollapsed={isCollapsed}
+        isHovered={isHovered}
+      />
+      <NavList
+        label="MY WORKSPACE"
+        items={myWorkSpaceItems}
+        isCollapsed={isCollapsed}
+        isHovered={isHovered}
+      />
+
+      {!pathname.includes("/users") && !pathname.includes("/project") && (
         <button
           onClick={toggleAssigneeFilter}
-          className="flex w-full items-center  rounded-sm rounded-r-xl  border-inherit bg-inherit px-2 py-2  hover:bg-slate-200"
+          className="flex items-center rounded-sm rounded-r-xl border-inherit bg-inherit px-2 py-2 hover:bg-slate-200"
         >
-          <CgGoogleTasks className="mr-3 h-[22px] w-6" />
-          <span className=" text-sm">
-            {assignees.length === 0 ? "My Tasks" : "All Tasks"}
-          </span>
+          <CgGoogleTasks className="h-[22px] w-6" />
+          {(!isCollapsed || isHovered) && (
+            <span className="ml-3 text-sm transition-all duration-300">
+              {assignees.length === 0 ? "My Tasks" : "All Tasks"}
+            </span>
+          )}
         </button>
       )}
+
       {isAdminOrManager && (
-        <NavList label={"CONFIGURATION"} items={configurationItems} />
+        <NavList
+          label="CONFIGURATION"
+          items={configurationItems}
+          isCollapsed={isCollapsed}
+          isHovered={isHovered}
+        />
       )}
-      <NavList label={"REPORTS"} items={reportingItems} />
+      <NavList
+        label="REPORTS"
+        items={reportingItems}
+        isCollapsed={isCollapsed}
+        isHovered={isHovered}
+      />
     </div>
   );
 };
 
-const NavList: React.FC<{ items: NavItemType[]; label: string }> = ({
-  items,
-  label,
-}) => {
+const NavList: React.FC<{
+  items: NavItemType[];
+  label: string;
+  isCollapsed: boolean;
+  isHovered: boolean;
+}> = ({ items, label, isCollapsed, isHovered }) => {
   const [isVisible, setIsVisible] = useState(true);
+
   return (
     <div className="flex flex-col gap-y-2">
-      <NavListHeader
-        label={label}
-        isVisible={isVisible}
-        setIsVisible={setIsVisible}
-      />
+      {(!isCollapsed || isHovered) && (
+        <NavListHeader
+          label={label}
+          isVisible={isVisible}
+          setIsVisible={setIsVisible}
+        />
+      )}
       <NavigationMenu
         data-state={isVisible ? "open" : "closed"}
         className="hidden [&[data-state=open]]:block"
@@ -182,6 +229,8 @@ const NavList: React.FC<{ items: NavItemType[]; label: string }> = ({
             <NavItem
               key={item.id}
               item={item}
+              isCollapsed={isCollapsed}
+              isHovered={isHovered}
               disabled={label === "DEVELOPMENT"}
             />
           ))}
@@ -208,35 +257,49 @@ const NavListHeader: React.FC<{
   </div>
 );
 
-const NavItem: React.FC<{ item: NavItemType; disabled?: boolean }> = ({
-  item,
-  disabled = false,
-}) => {
+const NavItem: React.FC<{
+  item: NavItemType;
+  disabled?: boolean;
+  isCollapsed: boolean;
+  isHovered: boolean;
+}> = ({ item, disabled = false, isCollapsed, isHovered }) => {
   const currentPath = usePathname();
+
   if (disabled) {
     return (
       <div className="w-full rounded-lg text-gray-600 hover:cursor-not-allowed">
-        <div className="flex w-full items-center gap-x-3 border-l-4 border-transparent px-2 py-2">
+        <div className="flex items-center gap-x-3 border-l-4 border-transparent px-2 py-2">
           <item.icon />
-          <span className="text-sm">{item.label}</span>
+          {(!isCollapsed || isHovered) && (
+            <span className="text-sm">{item.label}</span>
+          )}
         </div>
       </div>
     );
   }
+
   return (
     <Link
       href={item.href}
-      className="w-full rounded-lg text-gray-600 "
+      className="w-full rounded-lg text-gray-600"
       passHref
       legacyBehavior
     >
       <NavigationMenuLink
         active={currentPath === item.href}
-        className="flex w-full rounded-sm rounded-r-xl border-transparent py-2 hover:bg-slate-200 [&[data-active]]:rounded-r-xl [&[data-active]]:border-l-black [&[data-active]]:bg-slate-200 [&[data-active]]:text-black"
+        className={`flex rounded-sm rounded-r-xl border-transparent py-2 hover:bg-slate-200 
+          [&[data-active]]:rounded-r-xl [&[data-active]]:border-l-black [&[data-active]]:bg-slate-200 [&[data-active]]:text-black`}
       >
-        <div className="flex w-full items-center gap-x-3 border-l-4 border-inherit bg-inherit px-2">
+        <div
+          className={`flex items-center gap-x-3 border-l-4 border-inherit bg-inherit px-2
+          ${
+            isCollapsed && !isHovered ? "justify-center border-l-0" : "w-full"
+          }`}
+        >
           <item.icon className="[&[data-active]]:text-blue-500" />
-          <span className="text-sm">{item.label}</span>
+          {(!isCollapsed || isHovered) && (
+            <span className="whitespace-nowrap text-sm">{item.label}</span>
+          )}
         </div>
       </NavigationMenuLink>
     </Link>

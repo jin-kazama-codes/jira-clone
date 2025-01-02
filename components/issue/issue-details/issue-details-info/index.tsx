@@ -21,7 +21,7 @@ import Worklog from "./issue-details-info-worklog";
 
 const IssueDetailsInfo = React.forwardRef<
   HTMLDivElement,
-  { issue: IssueType | undefined, detailPage?: boolean }
+  { issue: IssueType | undefined; detailPage?: boolean }
 >(({ issue, detailPage }, ref) => {
   const [parentRef, parentWidth] = useContainerWidth();
 
@@ -59,7 +59,7 @@ const SmallIssueDetailsInfo = React.forwardRef<
           role="button"
           onClick={() => setIsEditing(true)}
           data-state={isEditing ? "editing" : "notEditing"}
-          className="w-full transition-all rounded-xl [&[data-state=notEditing]]:hover:bg-gray-100"
+          className="w-full rounded-xl transition-all [&[data-state=notEditing]]:hover:bg-gray-100"
         >
           <IssueTitle
             className="mr-1 py-1"
@@ -83,7 +83,7 @@ const SmallIssueDetailsInfo = React.forwardRef<
           variant="lg"
         />
         <NotImplemented>
-          <Button customColors className="hover:bg-gray-200 rounded-xl">
+          <Button customColors className="rounded-xl hover:bg-gray-200">
             <div className="flex items-center">
               <LightningIcon className="mt-0.5" />
               <span>Actions</span>
@@ -104,14 +104,30 @@ const SmallIssueDetailsInfo = React.forwardRef<
       <IssueDetailsInfoAccordion issue={issue} />
       <IssueMetaInfo issue={issue} />
 
-      <div className="row  flex  mt-2">
+      <div className="row  mt-2  flex">
         <h2 className="pr-2">Activity :</h2>
-        <button className={`${activity === "comments" ? "bg-slate-300 border-2 " : "bg-slate-100"} rounded-md rounded-r-none  px-2 py-1 border-2 `} onClick={() => setActivity("comments")}>Comments</button>
-        <button className={`${activity === "worklog" ? "bg-slate-300 border-2 " : "bg-slate-100"} rounded-md rounded-l-none  px-2 py-1 border-2 `} onClick={() => setActivity("worklog")}>Worklog</button>
+        <button
+          className={`${
+            activity === "comments" ? "border-2 bg-slate-300 " : "bg-slate-100"
+          } rounded-md rounded-r-none  border-2 px-2 py-1 `}
+          onClick={() => setActivity("comments")}
+        >
+          Comments
+        </button>
+        <button
+          className={`${
+            activity === "worklog" ? "border-2 bg-slate-300 " : "bg-slate-100"
+          } rounded-md rounded-l-none  border-2 px-2 py-1 `}
+          onClick={() => setActivity("worklog")}
+        >
+          Worklog
+        </button>
       </div>
-      {activity === "comments" ? <Comments issue={issue} /> : <Worklog
-        issue={issue} />}
-
+      {activity === "comments" ? (
+        <Comments issue={issue} />
+      ) : (
+        <Worklog issue={issue} />
+      )}
     </Fragment>
   );
 });
@@ -120,7 +136,7 @@ SmallIssueDetailsInfo.displayName = "SmallIssueDetailsInfo";
 
 const LargeIssueDetails = React.forwardRef<
   HTMLDivElement,
-  { issue: IssueType, detailPage?: boolean }
+  { issue: IssueType; detailPage?: boolean }
 >(({ issue, detailPage }, ref) => {
   const { issueKey } = useSelectedIssueContext();
   const nameRef = useRef<HTMLInputElement>(null);
@@ -128,12 +144,13 @@ const LargeIssueDetails = React.forwardRef<
   const [activity, setActivity] = useState("comments");
   const [isAddingChildIssue, setIsAddingChildIssue] = useState(false);
 
-
   return (
     <Split
       sizes={[60, 40]}
       gutterSize={2}
-      className={`flex ${detailPage ? 'max-h-[87vh]' : 'max-h-[70vh]'} w-full overflow-hidden`}
+      className={`flex ${
+        detailPage ? "max-h-[87vh]" : "max-h-[70vh]"
+      } w-full overflow-hidden`}
       minSize={300}
     >
       <div className="overflow-y-auto pr-3">
@@ -170,16 +187,37 @@ const LargeIssueDetails = React.forwardRef<
             setIsAddingChildIssue={setIsAddingChildIssue}
           />
         ) : null}
-        <div className="row flex  mt-2">
+        <div className="row mt-6  flex">
           <h2 className="pr-2">Activity :</h2>
-          <button className={`${activity === "comments" ? "bg-slate-300 border-2 " : "bg-slate-100"} rounded-md rounded-r-none  px-2 py-1 border-2 `} onClick={() => setActivity("comments")}>Comments</button>
-          <button className={`${activity === "worklog" ? "bg-slate-300 border-2 " : "bg-slate-100"} rounded-md rounded-l-none  px-2 py-1 border-2 `} onClick={() => setActivity("worklog")}>Worklog</button>
+          <button
+            className={`${
+              activity === "comments"
+                ? "border-2 bg-slate-300 "
+                : "bg-slate-100"
+            } rounded-md rounded-r-none  border-2 px-2 py-1 `}
+            onClick={() => setActivity("comments")}
+          >
+            Comments
+          </button>
+          <button
+            className={`${
+              activity === "worklog" ? "border-2 bg-slate-300 " : "bg-slate-100"
+            } rounded-md rounded-l-none  border-2 px-2 py-1 `}
+            onClick={() => setActivity("worklog")}
+          >
+            Worklog
+          </button>
         </div>
-        {activity === "comments" ? <Comments issue={issue} /> : <Worklog issue={issue} />}
-
+        <div className="mt-4">
+          {activity === "comments" ? (
+            <Comments issue={issue} />
+          ) : (
+            <Worklog issue={issue} />
+          )}
+        </div>
       </div>
 
-      <div className="mt-4 bg-sprint pl-3 overflow-y-scroll">
+      <div className="mt-4 overflow-y-scroll pl-3">
         <div className="relative flex items-center gap-x-3">
           <IssueSelectStatus
             key={issue.id + issue.status}

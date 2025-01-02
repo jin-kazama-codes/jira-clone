@@ -65,7 +65,7 @@ const Issue: React.FC<{
               ? "bg-gray-200"
               : isDragging
                 ? "rounded-xl border-[0.3px] border-gray-300 bg-transparent"
-                : "border-[0.3px] border-slate-200 bg-cyan-100",
+                : "border-[0.3px] border-slate-200 bg-slate-50",
             "group flex w-full max-w-full items-center justify-between rounded-xl   px-3 py-1.5 text-sm hover:bg-gray-300 [&[data-state=selected]]:bg-transparent"
           )}
           style={{

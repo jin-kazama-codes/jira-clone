@@ -44,7 +44,7 @@ const patchIssueBodyValidator = z.object({
   name: z.string().optional(),
   description: z.string().optional(),
   type: z.nativeEnum(IssueType).optional(),
-  status: z.nativeEnum(IssueStatus).optional(),
+  status: z.string().optional(),
   sprintPosition: z.number().optional(),
   boardPosition: z.number().optional(),
   assigneeId: z.number().nullable().optional(),

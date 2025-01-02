@@ -4,10 +4,10 @@ import { removeCookie, setCookie } from "@/utils/helpers";
 import { Project } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { MdOutlineDelete } from "react-icons/md";
 import { toast } from "../toast";
 import { FaTrashAlt } from "react-icons/fa";
 import { useCookie } from "@/hooks/use-cookie";
+import { useWorkflow } from "@/hooks/query-hooks/use-workflow";
 
 type ProjectList = Project[];
 
@@ -23,12 +23,12 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, admin }) => {
   const projectId = useCookie('Invited Project')
 
   const invitedProject = projects.find((project) => project.id === projectId)
-
+  const { createWorkflow } = useWorkflow()
 
   const handleProjectClick = (project: Project) => {
     setCookie("project", project);
     router.push(`/${project.key}/backlog`);
-
+    createWorkflow()
   };
 
   useEffect(() => {

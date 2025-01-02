@@ -1,11 +1,8 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useIssues } from "@/hooks/query-hooks/use-issues";
 import { FaChevronDown } from "react-icons/fa";
 import clsx from "clsx";
-import { type IssueStatus } from "@prisma/client";
-import { type IssueType } from "@/utils/types";
 import { NotImplemented } from "@/components/not-implemented";
-import { capitalizeMany } from "@/utils/helpers";
 import {
   Select,
   SelectContent,
@@ -19,76 +16,48 @@ import {
   SelectViewport,
 } from "@/components/ui/select";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
+import { useWorkflow } from "@/hooks/query-hooks/use-workflow";
+import { useRouter } from "next/navigation";
 
-export const statuses: StatusObject[] = [
-  {
-    value: "TODO",
-    smBgColor: "#000",
-    lgBgColor: "#000",
-    smTextColor: "#fff",
-    lgTextColor: "#fff",
-  },
-  {
-    value: "IN_PROGRESS",
-    smBgColor: "#e0ecfc",
-    lgBgColor: "#0854cc",
-    smTextColor: "#0854cc",
-    lgTextColor: "#fff",
-  },
-  {
-    value: "DONE",
-    smBgColor: "#e8fcec",
-    lgBgColor: "#08845c",
-    smTextColor: "#08845c",
-    lgTextColor: "#fff",
-  },
-];
-
-export type StatusObject = {
-  value: IssueType["status"];
-  smBgColor: string;
-  smTextColor: string;
-  lgBgColor: string;
-  lgTextColor: string;
-};
-type StatusMap = {
-  [key in IssueStatus]: string;
-};
-
-export const statusMap: StatusMap = {
-  DONE: "DONE",
-  IN_PROGRESS: "IN PROGRESS",
-  TODO: "TO DO",
-};
 
 const IssueSelectStatus: React.FC<{
-  currentStatus: IssueType["status"];
+  currentStatus: string;
   issueId: string;
   variant?: "sm" | "lg";
   page?: string;
 }> = ({ currentStatus, issueId, variant = "sm", page = "backlog" }) => {
-  const [selected, setSelected] = useState<StatusObject>(
-    () =>
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      statuses.find((status) => status.value == currentStatus) ?? statuses[0]!
-  );
+
+  const [selectedStatus, setSelectedStatus] = useState(currentStatus);
+  const { data: workflow, isLoading, isError } = useWorkflow()
+    const [Statuses, setStatuses] = useState([])
+    const router = useRouter()
+    
+    useEffect(() => {
+      if(workflow){
+        const labels = workflow.nodes.map(node => node.data.label);
+        setStatuses(labels)
+      }
+    }, [workflow])
 
   const { updateIssue, isUpdating } = useIssues();
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
 
-  function handleSelectChange(value: IssueType["status"]) {
+
+  function handleSelectChange(value: string) {
     if (!isAuthenticated) {
       openAuthModal();
       return;
     }
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const newStatus = statuses.find((status) => status.value == value)!;
     updateIssue({
       issueId,
       status: value,
     });
-    setSelected(newStatus);
+    setSelectedStatus(value);
   }
+
+  if (isLoading) return <div>Loading...</div>;
+  if (isError){
+    return (<div>Error: {error?.message || "Failed to load data"}</div>)}
 
   return (
     <Fragment>
@@ -96,24 +65,15 @@ const IssueSelectStatus: React.FC<{
         <SelectTrigger
           onClick={(e) => e.stopPropagation()}
           disabled={isUpdating}
-          // TODO: Colors could be managed with data-state?
-          style={{
-            backgroundColor:
-              variant == "sm" ? selected.smBgColor : selected.lgBgColor,
-            color:
-              variant == "sm" ? selected.smTextColor : selected.lgTextColor,
-          }}
           className={clsx(
-            variant == "sm" && "bg-opacity-20 px-1.5 py-0.5 text-xs font-bold",
-            variant == "lg" && "my-2 px-3 py-1.5 text-[16px] font-semibold",
-            isUpdating && "cursor-not-allowed",
+            variant == "sm" && "bg-opacity-20 px-1.5 py-0.5 border-1 border-buttonHover text-xs font-bold",
+            variant == "lg" && "my-1 px-3 py-1.5 text-[16px] border-1 border-buttonHover font-semibold",
+            isUpdating && "cursor-no1-allowed",
             "flex items-center gap-x-2 whitespace-nowrap rounded-xl px-2 py-1 focus:ring-2"
           )}
         >
           <SelectValue className="w-full whitespace-nowrap bg-transparent text-white">
-            {variant == "sm"
-              ? statusMap[selected.value]
-              : capitalizeMany(statusMap[selected.value])}
+            {variant == "sm" ? selectedStatus : selectedStatus}
           </SelectValue>
           {page === "backlog" && (
             <SelectIcon>
@@ -125,35 +85,26 @@ const IssueSelectStatus: React.FC<{
           <SelectContent position="popper">
             <SelectViewport className="w-60 rounded-md border border-gray-300 bg-white pt-2 shadow-md">
               <SelectGroup>
-                {statuses.map((status) => (
+                {Statuses.map((status) => (
                   <SelectItem
-                    key={status.value}
-                    value={status.value}
-                    data-state={
-                      status.value == selected.value ? "checked" : "unchecked"
-                    }
+                    key={status}
+                    value={status}
                     className={clsx(
-                      "border-l-[3px] border-transparent py-1 pl-2 text-sm hover:cursor-default hover:border-blue-600 hover:bg-gray-100 [&[data-state=checked]]:border-blue-600"
+                      "border-l-[3px] border-transparent py-1 pl-2 text-sm hover:cursor-default hover:border-blue-600 hover:bg-gray-100"
                     )}
                   >
-                    <span
-                      style={{
-                        color:
-                          status.value === "TODO" ? "#000" : status.smTextColor,
-                      }}
-                      className="rounded-md bg-opacity-30 px-2 text-xs font-semibold"
-                    >
-                      {statusMap[status.value]}
+                    <span className="rounded-md px-2 text-xs font-semibold">
+                      {status}
                     </span>
                   </SelectItem>
                 ))}
               </SelectGroup>
               <SelectSeparator className="mt-2 h-[1px] bg-gray-300" />
-              <NotImplemented feature="workflow">
-                <button className="w-full border py-4 pl-5 text-left text-sm font-medium hover:cursor-default hover:bg-gray-100">
+                <button onClick={(e) => {
+                  e.stopPropagation()
+                  router.push('/workflow')}} className="w-full border py-4 pl-5 text-left text-sm font-medium hover:cursor-default hover:bg-gray-100">
                   View Workflow
                 </button>
-              </NotImplemented>
             </SelectViewport>
           </SelectContent>
         </SelectPortal>

@@ -5,13 +5,14 @@ const Container: React.FC<{
   className?: string;
   children: ReactNode;
   screen?: boolean;
-}> = ({ className, screen, children }) => {
+  board?: boolean
+}> = ({ className, screen, children, board = false }) => {
   return (
     <div
       className={clsx(
         screen
           ? "item flex h-screen w-screen items-center justify-center"
-          : "max-w-9xl mx-auto px-4 sm:px-6 sm:py-4 lg:px-8",
+          : `${board ? 'max-w-7xl': 'max-w-9xl'} mx-auto px-4 sm:px-6 sm:py-4 lg:px-8`,
         className
       )}
     >
