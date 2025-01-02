@@ -33,6 +33,10 @@ const useUpdateIssue = () => {
           });
           return newIssues;
         });
+        toast.success({
+          message: `Issue ${newIssue.issueId} updated!`,
+          description: "Changes saved successfully.",
+        });
         // }
         // Return a context object with the snapshotted value
         return { previousIssues };

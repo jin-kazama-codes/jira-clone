@@ -1,4 +1,5 @@
 'use client';
+import { useWorkflow } from '@/hooks/query-hooks/use-workflow';
 import { useCookie } from '@/hooks/use-cookie';
 import { useRouter } from 'next/navigation';
 import React, { useState, ChangeEvent, FormEvent } from 'react';
@@ -12,6 +13,7 @@ const CreateProject: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const router = useRouter();
+  const { createWorkflow } = useWorkflow()
 
   // Handle input changes
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -49,6 +51,7 @@ const CreateProject: React.FC = () => {
         setError(null);
         setSuccess("Project Created Successfully");
         router.refresh();
+        createWorkflow()
       } else {
         setError('Failed to create project');
         setSuccess(null);
@@ -110,7 +113,7 @@ const CreateProject: React.FC = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full py-3 border border-transparent rounded-xl shadow-sm text-lg  font-medium text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition duration-200 ease-in-out">
+            className="w-full py-3 border border-transparent rounded-xl shadow-sm text-lg  font-medium text-white bg-button hover:bg-buttonHover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition duration-200 ease-in-out">
             Create Project
           </button>
         </form>

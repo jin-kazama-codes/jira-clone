@@ -42,7 +42,7 @@ const SprintList: React.FC<{
     <Accordion
       onValueChange={setOpenAccordion}
       value={openAccordion}
-      className="overflow-hidden rounded-xl border-2 bg-sprint p-4"
+      className="overflow-hidden rounded-xl border-2 bg-slate-100 p-4"
       type="single"
       collapsible
     >
@@ -195,7 +195,7 @@ const SprintActionButton: React.FC<{ sprint: Sprint; issues: IssueType[] }> = ({
   ) {
     return (
       <CompleteSprintModal issues={issues} sprint={sprint}>
-        <Button className="rounded-xl px-4 !bg-blue-600 hover:!bg-blue-700">
+        <Button className="rounded-xl px-4 !bg-button hover:!bg-buttonHover">
           <span className="whitespace-nowrap text-white">Complete sprint</span>
         </Button>
       </CompleteSprintModal>
@@ -209,7 +209,7 @@ const SprintActionButton: React.FC<{ sprint: Sprint; issues: IssueType[] }> = ({
     return (
       <StartSprintModal issueCount={issues.length} sprint={sprint}>
         <Button
-          className="rounded-xl !bg-blue-600 hover:!bg-blue-700  px-4 ">
+          className="rounded-xl !bg-button hover:!bg-buttonHover  px-4 ">
           <span className="whitespace-nowrap text-white">Start sprint</span>
         </Button>
       </StartSprintModal>

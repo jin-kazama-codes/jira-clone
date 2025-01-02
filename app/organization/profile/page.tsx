@@ -128,7 +128,7 @@ const ProfilePage = () => {
       >
         <div className="flex items-center justify-between">
           <Link href="/backlog">
-            <button className="rounded bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700">
+            <button className="rounded bg-button px-4 py-2 text-white transition hover:bg-buttonHover">
               Back
             </button>
           </Link>
@@ -140,7 +140,7 @@ const ProfilePage = () => {
             type="button"
             disabled={isLoading}
             onClick={handleSave}
-            className="rounded bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700 disabled:bg-gray-500"
+            className="rounded bg-button px-4 py-2 text-white transition hover:bg-buttonHover disabled:bg-gray-500"
           >
             {isLoading ? "Saving..." : "Save Changes"}
           </button>
@@ -295,7 +295,7 @@ const ProfilePage = () => {
                     onChange={handleFileChange}
                     className="hidden"
                   />
-                  <span className="rounded-full bg-blue-500 p-2">✏️</span>
+                  <span className="rounded-full bg-button p-2">✏️</span>
                 </label>
               </div>
 

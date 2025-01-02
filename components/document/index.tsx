@@ -113,7 +113,7 @@ const Document: React.FC = () => {
       <button
         onClick={handlePreviousPage}
         disabled={currentPage === 1}
-        className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        className="mb-4 px-4 py-2 bg-button text-white rounded hover:bg-buttonHover"
       >
         Previous
       </button>
@@ -123,7 +123,7 @@ const Document: React.FC = () => {
       <button
         onClick={handleNextPage}
         disabled={currentPage === totalPages}
-        className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        className="mb-4 px-4 py-2 bg-button text-white rounded hover:bg-buttonHover"
       >
         Next
       </button>
@@ -219,7 +219,7 @@ const Document: React.FC = () => {
               onUploadComplete={refetch}
               selectedFolderId={selectedFolder.id}
             >
-              <button className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+              <button className="mb-4 px-4 py-2 bg-button text-white rounded hover:bg-buttonHover">
                 Add File
               </button>
             </DocumentUpload>
@@ -353,7 +353,7 @@ const Document: React.FC = () => {
           <div className="flex justify-between items-center">
             <h2 className="text-lg font-bold px-4 py-2"> Files</h2>
             <DocumentUpload onUploadComplete={refetch}>
-              <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+              <button className="px-4 py-2 bg-button text-white rounded hover:bg-buttonHover">
                 Add File
               </button>
             </DocumentUpload>

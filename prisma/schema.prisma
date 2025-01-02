@@ -58,7 +58,7 @@ model Issue {
   key            String
   name           String
   description    String?
-  status         IssueStatus @default(TODO)
+  status         String?     
   type           IssueType   @default(TASK)
   sprintPosition Float
   boardPosition  Float       @default(-1)
@@ -135,6 +135,13 @@ model Account {
   email   String?
   bio     String?
   url     String?
+}
+
+model Workflow {
+  projectId       Int       @id
+  workflow        Json
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime? @updatedAt
 }
 
 enum IssueType {

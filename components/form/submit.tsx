@@ -12,7 +12,7 @@ export const FormSubmit: React.FC<{
       <Button
         customColors
         customPadding
-        className="flex items-center gap-x-2 bg-inprogress px-3 py-1.5 font-medium text-white hover:brightness-110"
+        className="flex items-center gap-x-2 bg-button px-3 py-1.5 font-medium text-white hover:brightness-110"
         type="submit"
         name={ariaLabel}
         disabled={isLoading}
@@ -25,7 +25,7 @@ export const FormSubmit: React.FC<{
         customColors
         customPadding
         onClick={onCancel}
-        className="px-3 py-1.5 font-medium text-inprogress underline-offset-2 hover:underline hover:brightness-110"
+        className="px-3 py-1.5 font-medium text-button underline-offset-2 hover:underline hover:brightness-110"
         name="cancel"
         aria-label={"cancel"}
       >

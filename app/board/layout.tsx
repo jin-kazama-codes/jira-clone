@@ -4,7 +4,7 @@ import withProjectLayout from "@/app/project-layout/withProjectLayout";
 
 const BoardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <Container className="h-full">
+    <Container className="h-full" board={true}>
       <main className="w-full">
         <SelectedIssueProvider>{children}</SelectedIssueProvider>
       </main>

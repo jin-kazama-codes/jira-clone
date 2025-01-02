@@ -39,7 +39,7 @@ const ForgotPassword = () => {
   }
 
   return (
-    <div className="flex bg-custom-background items-center justify-center min-h-screen   p-4">
+    <div className="flex items-center justify-center min-h-screen   p-4">
       <div style={{
         boxShadow: '0px 0px 24px rgb(92, 86, 150)'
       }}
@@ -100,7 +100,7 @@ const ForgotPassword = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3 border border-transparent rounded-xl shadow-sm text-lg  font-medium text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition duration-200 ease-in-out"
+                  className="w-full py-3 border border-transparent rounded-xl shadow-sm text-lg  font-medium text-white bg-button hover:bg-buttonHover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition duration-200 ease-in-out"
                 >
                   Send Reset Link
                 </button>

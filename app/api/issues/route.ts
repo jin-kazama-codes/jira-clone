@@ -27,7 +27,7 @@ export type PostIssueBody = z.infer<typeof postIssuesBodyValidator>;
 const patchIssuesBodyValidator = z.object({
   ids: z.array(z.string()),
   type: z.nativeEnum(IssueType).optional(),
-  status: z.nativeEnum(IssueStatus).optional(),
+  status: z.string().optional(),
   assigneeId: z.string().nullable().optional(),
   reporterId: z.string().optional(),
   parentId: z.string().nullable().optional(),

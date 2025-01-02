@@ -225,7 +225,7 @@ const TimeTrackingModal: React.FC<TimeTrackingModalProps> = ({
                 </Button>
                 <Button
                   onClick={onSave}
-                  className="rounded-2xl !bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="rounded-2xl !bg-button px-4 py-2 text-sm font-medium text-white hover:bg-buttonHover focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
                   Save
                 </Button>

@@ -189,7 +189,7 @@ const DocumentPage: React.FC<DocumentUploadProps> = ({
                     setMessage("No files selected. Please choose files to upload.");
                   }
                 }}
-                className="rounded bg-blue-600 text-end px-4 py-2 text-white transition hover:bg-blue-700 disabled:bg-gray-500"
+                className="rounded bg-button text-end px-4 py-2 text-white transition hover:bg-buttonHover disabled:bg-gray-500"
                 disabled={uploading}
               >
                 {uploading ? "Uploading..." : "Upload"}

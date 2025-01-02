@@ -382,4 +382,19 @@ export function getProjectKeyFromUrl() {
   return segments[1]; // "KARYA-IO" in this example
 }
 
+  // Recalculate edges based on nodes' position
+  export const recalculateEdges = (updatedNodes, setEdges) => {
+    // Sort nodes by x-coordinate
+    const sortedNodes = [...updatedNodes].sort((a, b) => a.position.x - b.position.x);
+
+    // Generate new edges based on sorted nodes
+    const newEdges = sortedNodes.slice(0, -1).map((node, index) => ({
+      id: `e${node.id}-${sortedNodes[index + 1].id}`,
+      source: node.id,
+      target: sortedNodes[index + 1].id,
+    }));
+
+    setEdges(newEdges);
+  };
+
 

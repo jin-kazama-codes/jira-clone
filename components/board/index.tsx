@@ -2,6 +2,7 @@
 import React, {
   Fragment,
   useCallback,
+  useEffect,
   useLayoutEffect,
   useRef,
   useState,
@@ -36,18 +37,30 @@ import { useSprints } from "@/hooks/query-hooks/use-sprints";
 import { useFiltersContext } from "@/context/use-filters-context";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
 import { useCookie } from "@/hooks/use-cookie";
-import { statusMap } from "../issue/issue-select-status";
 import clsx from "clsx";
 import { IssueIcon } from "../issue/issue-icon";
 import { useSelectedIssueContext } from "@/context/use-selected-issue-context";
+import { useWorkflow } from "@/hooks/query-hooks/use-workflow";
 
-const STATUSES: IssueStatus[] = ["TODO", "IN_PROGRESS", "DONE"];
+// const STATUSES: IssueStatus[] = ["TODO", "IN_PROGRESS", "DONE"];
 
 const Board: React.FC = () => {
   const renderContainerRef = useRef<HTMLDivElement>(null);
 
+  
   const { issues } = useIssues();
   const { sprints } = useSprints();
+  const { data: workflow, isLoading, isError } = useWorkflow()
+  const [STATUSES, setStatuses] = useState([])
+  
+  useEffect(() => {
+    if(workflow){
+      const labels = workflow.nodes.map(node => node.data.label);
+      setStatuses(labels)
+    }
+  }, [workflow])
+  
+
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const project = useCookie("project");
   const {
@@ -63,7 +76,7 @@ const Board: React.FC = () => {
   const activeSprintId = activeSprint ? activeSprint.id : null;
 
   const filterIssues = useCallback(
-    (issues: IssueType[] | undefined, status: IssueStatus | null = null) => {
+    (issues: IssueType[] | undefined, status: string | null = null) => {
       if (!issues) return [];
       let filteredWithStatus = issues;
       if (status) {
@@ -101,6 +114,10 @@ const Board: React.FC = () => {
     return null;
   }
 
+  if (isLoading) return <div>Loading...</div>;
+  if (isError){
+    return (<div>Error: {error?.message || "Failed to load data"}</div>)}
+
   const onDragEnd = (result: DropResult, childIssues = []) => {
     if (!isAuthenticated) {
       openAuthModal();
@@ -110,7 +127,7 @@ const Board: React.FC = () => {
     if (isNullish(destination) || isNullish(source)) return;
     updateIssue({
       issueId: result.draggableId,
-      status: destination.droppableId as IssueStatus,
+      status: destination.droppableId as string,
       boardPosition: calculateIssueBoardPosition({
         activeIssues: showChild
           ? childIssues
@@ -142,7 +159,7 @@ const Board: React.FC = () => {
       {/* CHILD ISSUE VIEW  */}
       {showChild && (
         // STATUS
-        <div className="relative flex w-[1090px] max-w-full flex-col gap-x-4 overflow-y-auto p-2">
+        <div className="relative flex max-w-full flex-col gap-x-4 overflow-y-hidden ">
           <div className="flex gap-x-4">
             {STATUSES.map((status) => {
               return (
@@ -151,12 +168,12 @@ const Board: React.FC = () => {
                   <div
                     className={clsx(
                       " h-max min-h-fit w-[350px] rounded-xl  border-x-2  px-1.5  ",
-                      status === "TODO" ? "bg-gray-300" : status === "IN_PROGRESS" ? "bg-blue-300" : "bg-green-300"
+                      status === "To Do" ? "bg-gray-300" : status === "In Progress" ? "bg-blue-300" : "bg-green-300"
                     )}
                   >
 
                     <h2 className={`text-md sticky top-[0.5px] -mx-1.5 -mt-1.5 mb-0  rounded-b-md border-b-2  px-2 py-3 font-semibold text-black`}>
-                      {statusMap[status]}{" "}
+                      {status}{" "}
                       {showChild ?
                         child.filter((childIssue) => childIssue.status === status).length
                         : issues.filter(
@@ -207,7 +224,7 @@ const Board: React.FC = () => {
                         <div
                           className={clsx(
                             " h-max min-h-fit w-[350px] rounded-xl border-x-2 border-b-2 px-1.5 pb-3",
-                            status === "TODO" ? "bg-gray-100" : status === "IN_PROGRESS" ? "bg-blue-100" : "bg-green-100"
+                            status === "To Do" ? "bg-gray-100" : status === "In Progress" ? "bg-blue-100" : "bg-green-100"
                           )}
                           key={status}
                         >
@@ -236,7 +253,7 @@ const Board: React.FC = () => {
         <DragDropContext onDragEnd={onDragEnd}>
           <div
             ref={renderContainerRef}
-            className="relative flex w-full max-w-full gap-x-4 overflow-y-auto  m-2"
+            className="relative flex  max-w-full gap-x-4"
           >
             {STATUSES.map((status) => (
               <IssueList
@@ -285,7 +302,7 @@ function getAfterDropPrevNextIssue(props: IssueListPositionProps) {
   const { activeIssues, destination, source, droppedIssueId } = props;
   const beforeDropDestinationIssues = getSortedBoardIssues({
     activeIssues,
-    status: destination.droppableId as IssueStatus,
+    status: destination.droppableId as string,
   });
   const droppedIssue = activeIssues.find(
     (issue) => issue.id === droppedIssueId
@@ -319,7 +336,7 @@ function getSortedBoardIssues({
   status,
 }: {
   activeIssues: IssueType[];
-  status: IssueStatus;
+  status: string;
 }) {
   return activeIssues
     .filter((issue) => issue.status === status)
