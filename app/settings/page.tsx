@@ -175,7 +175,7 @@ const UpdateProject: React.FC = () => {
                   e.preventDefault(); 
                   router.push('/workflow');
                 }}
-                className="w-full mt-2 rounded-xl border border-button bg-transparent py-3 text-lg font-medium text-button shadow-sm transition duration-200 ease-in-out hover:border-buttonHover hover:bg-buttonHover hover:text-buttonHover focus:ring-2 focus:ring-blue-300 focus:ring-offset-2"
+                className="w-full mt-2 rounded-xl border border-button bg-transparent py-3 text-lg font-medium text-button shadow-sm transition duration-200 ease-in-out hover:border-buttonHover  hover:text-buttonHover focus:ring-2 focus:ring-blue-300 focus:ring-offset-2"
               >
                 View Workflow
               </button>
