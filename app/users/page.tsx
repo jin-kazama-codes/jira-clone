@@ -20,25 +20,25 @@ const Userspage = () => {
           <div className=" mx-auto">
             <div className="overflow-hidden rounded-lg bg-white shadow-md">
               <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+                <thead className="bg-slate-300">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-700">
                       Name
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-700">
                       Email
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-700">
                       Role
                     </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
+                    <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-700">
                       Actions
                     </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
                   {members.map((user) => (
-                    <tr key={user.id} className="hover:bg-gray-50">
+                    <tr key={user.id} className="bg-slate-100 hover:bg-gray-50">
                       <td className="whitespace-nowrap px-6 py-4">
                         <div className="text-sm font-medium text-gray-900">
                           {user.name}
@@ -58,7 +58,7 @@ const Userspage = () => {
                             user={user}
                             onEditSuccess={refreshMembers}
                           >
-                            <button className="inline-flex items-center rounded-lg bg-blue-500 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                            <button className="inline-flex items-center rounded-lg bg-button px-3 py-1.5 text-sm font-medium text-white hover:bg-buttonHover focus:outline-none focus:ring-4 focus:ring-blue-300">
                               Edit
                             </button>
                           </EditUserModal>

@@ -28,7 +28,7 @@ const BacklogList: React.FC<{
 
   return (
     <Accordion
-      className="rounded-xl bg-sprint border-2 p-4 pb-20 "
+      className="rounded-xl bg-slate-100 border-2 p-4 pb-20 "
       type="single"
       value={openAccordion}
       onValueChange={setOpenAccordion}
@@ -86,7 +86,7 @@ const BacklogListHeader: React.FC<{ issues: IssueType[] }> = ({ issues }) => {
         {(user?.role === "admin" || user?.role === "manager") && (
           <Button
             onClick={handleCreateSprint}
-            className="rounded-xl  px-4 !text-white !bg-blue-600  hover:!bg-blue-700"
+            className="rounded-xl  px-4 !text-white !bg-button  hover:!bg-buttonHover"
 
           >
             <span className="whitespace-nowrap text-white">Create Sprint</span>

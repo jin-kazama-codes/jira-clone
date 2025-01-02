@@ -76,7 +76,7 @@ const TopNavbar: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex  h-12 w-full items-center justify-between border-b bg-header px-4">
+    <div className="flex bg-indigo-50  h-12 w-full items-center justify-between border-b  px-4">
       <button
         onClick={handleNavigation}
         className="flex items-center gap-x-1">
@@ -86,7 +86,7 @@ const TopNavbar: React.FC = () => {
           width={30}
           height={30}
         />
-        <span className="text-xl font-medium text-white">Karya.io</span>
+        <span className="text-xl font-medium text-gray-700">Karya.io</span>
       </button>
 
       <div className="relative flex items-center gap-x-5">

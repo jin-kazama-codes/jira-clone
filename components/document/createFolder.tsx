@@ -61,7 +61,7 @@ const CreateFolderButton: React.FC<CreateFolderButtonProps> = ({ onFolderCreated
     <div>
       <button
         onClick={() => setIsModalOpen(true)}
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        className="bg-button text-white px-4 py-2 rounded hover:bg-buttonHover"
       >
         + Create Folder
       </button>
@@ -103,7 +103,7 @@ const CreateFolderButton: React.FC<CreateFolderButtonProps> = ({ onFolderCreated
                 </button>
                 <button
                   onClick={handleCreateFolder}
-                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  className="px-4 py-2 bg-button text-white rounded hover:bg-buttonHover"
                   disabled={isCreating || !folderName.trim()}
                 >
                   {isCreating ? 'Creating...' : 'Create'}

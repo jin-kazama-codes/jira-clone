@@ -3,8 +3,6 @@ import { type IssueType } from "@/utils/types";
 import { Droppable } from "react-beautiful-dnd";
 import { Issue } from "./issue";
 import clsx from "clsx";
-import { statusMap } from "../issue/issue-select-status";
-import { type IssueStatus } from "@prisma/client";
 import { getPluralEnd, hasChildren } from "@/utils/helpers";
 import { EmtpyIssue } from "../issue/issue-empty";
 import { AiOutlinePlus } from "react-icons/ai";
@@ -12,11 +10,10 @@ import { Button } from "../ui/button";
 import { useState } from "react";
 import { useIssues } from "@/hooks/query-hooks/use-issues";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
-import { useSelectedIssueContext } from "@/context/use-selected-issue-context";
 
 const IssueList: React.FC<{
   sprintId: string | null;
-  status: IssueStatus;
+  status: string;
   issues: IssueType[];
 }> = ({ sprintId, status, issues, showChild, parentId }) => {
   const [droppableEnabled] = useStrictModeDroppable();
@@ -111,9 +108,9 @@ const IssueList: React.FC<{
           <div
             className={clsx(
               "mb-5 sticky top-0 min-h-fit h-max w-[350px] rounded-xl border-x-2 border-b-2 px-1.5 pb-3",
-              status === "TODO"
+              status === "To Do"
                 ? "bg-gray-100"
-                : status === "IN_PROGRESS"
+                : status === "In Progress"
                   ? "bg-blue-100"
                   : "bg-green-100"
             )}
@@ -121,14 +118,14 @@ const IssueList: React.FC<{
             <h2
               className={clsx(
                 "text-md sticky top-0 -mx-1.5 -mt-1.5 mb-1.5 rounded-t-md border-y-2 px-2 py-3 font-semibold text-black z-10",
-                status === "TODO"
+                status === "To Do"
                   ? "bg-gray-300"
-                  : status === "IN_PROGRESS"
+                  : status === "In Progress"
                     ? "bg-blue-300"
                     : "bg-green-300"
               )}
             >
-              {statusMap[status]}{" "}
+              {status}{" "}
               {issues.filter((issue) => issue.status == status).length}
               {` ISSUE${getPluralEnd(issues).toUpperCase()}`}
             </h2>

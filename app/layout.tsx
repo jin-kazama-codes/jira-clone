@@ -41,7 +41,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en">
       <head />
-      <body className="bg-custom-background">
+      <body className="">
         <QueryProvider>
           <AuthModalProvider>
             <Toaster

@@ -183,7 +183,7 @@ const UserModal: React.FC<UserModalProps> = ({ children, refetch }) => {
             {error && <p className="mt-2 text-red-500">{error}</p>}
             <Button
               type="submit"
-              className="flex w-full justify-center rounded-xl !bg-header hover:!bg-blue-600 text-white"
+              className="flex w-full justify-center rounded-xl !bg-button hover:!bg-buttonHover text-white"
             >
               Add
             </Button>

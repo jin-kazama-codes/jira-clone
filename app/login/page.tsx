@@ -100,7 +100,7 @@ const Login: React.FC = () => {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-custom-background p-4">
+    <div className="flex min-h-screen items-center justify-center p-4">
       <div
         style={{
           boxShadow: "0px 0px 24px rgb(92, 86, 150)",
@@ -209,7 +209,7 @@ const Login: React.FC = () => {
                 <button
                   type="submit"
                   disabled={Loading}
-                  className="w-full rounded-xl border border-transparent bg-blue-700 py-3 text-lg  font-medium text-white shadow-sm transition duration-200 ease-in-out hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2"
+                  className="w-full rounded-xl border border-transparent bg-button py-3 text-lg  font-medium text-white shadow-sm transition duration-200 ease-in-out hover:bg-buttonHover focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2"
                 >
                   Log in
                 </button>
