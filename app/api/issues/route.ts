@@ -3,7 +3,6 @@ import { prisma } from "@/server/db";
 import {
   IssueType,
   type Issue,
-  IssueStatus,
   type DefaultUser,
 } from "@prisma/client";
 import { z } from "zod";
@@ -16,6 +15,7 @@ import { parseCookies } from "@/utils/cookies";
 const postIssuesBodyValidator = z.object({
   name: z.string(),
   type: z.enum(["BUG", "STORY", "TASK", "EPIC", "SUBTASK"]),
+  status: z.string().optional(),
   sprintId: z.string().nullable(),
   reporterId: z.string().nullable(),
   parentId: z.string().nullable(),
@@ -195,7 +195,7 @@ export async function POST(req: NextRequest) {
   if (sprint && sprint.status === "ACTIVE") {
     // If issue is created in active sprint, add it to the bottom of the TODO column in board
     const issuesInColum = currentSprintIssues.filter(
-      (issue) => issue.status === "TODO"
+      (issue) => issue.status === "To Do"
     );
     boardPosition = calculateInsertPosition(issuesInColum);
   }
@@ -209,6 +209,7 @@ export async function POST(req: NextRequest) {
       key: `${KEY}-${k}`,
       name: valid.name,
       type: valid.type,
+      status: valid.status ?? "To Do",
       reporterId: userId, // Admin as default reporter
       sprintId: valid.sprintId ?? undefined,
       projectId: projectId,

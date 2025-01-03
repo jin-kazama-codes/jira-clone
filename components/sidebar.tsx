@@ -142,7 +142,7 @@ const Sidebar: React.FC = () => {
         </div>
         {(!isCollapsed || isHovered) && (
           <div className="transition-all duration-300">
-            <h2 className="text-md -mb-[0.5px] whitespace-nowrap font-semibold text-black">
+            <h2 className="text-md -mb-[0.5px] font-semibold text-black">
               {project?.name}
             </h2>
           </div>
