@@ -23,12 +23,10 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, admin }) => {
   const projectId = useCookie('Invited Project')
 
   const invitedProject = projects.find((project) => project.id === projectId)
-  const { createWorkflow } = useWorkflow()
 
   const handleProjectClick = (project: Project) => {
     setCookie("project", project);
     router.push(`/${project.key}/backlog`);
-    createWorkflow()
   };
 
   useEffect(() => {

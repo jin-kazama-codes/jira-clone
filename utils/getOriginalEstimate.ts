@@ -21,7 +21,7 @@ export const getTimeEstimates = (issues, page = 'sprint') => {
             if (page !== 'sprint') {
                 totalTime += convertedTimeSpent;
             } else {
-                if (issue.status === 'TODO' || issue.status === 'IN_PROGRESS' || issue.status === 'DONE') {
+                if (issue.status === 'To Do' || issue.status === 'In Progress' || issue.status === 'Done') {
                     totalTime[issue.status] += convertedTime;
                 } else {
                     console.warn(`Unknown status "${issue.status}" found. Skipping...`);
