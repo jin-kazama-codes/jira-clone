@@ -29,8 +29,8 @@ const Issue: React.FC<{ issue: IssueType; index: number }> = ({
           {...draggableProps}
           {...dragHandleProps}
           className={clsx(
-            isDragging && "bg-white",
-            "group my-2 max-w-full rounded-xl bg-slate-50 border-[0.2px] border-slate-200  p-2 text-sm shadow-sm shadow-gray-300 hover:bg-gray-200 "
+            isDragging && "bg-white z-auto",
+            "group my-2 max-w-full  rounded-xl bg-slate-50 border-[0.2px] border-slate-200  p-2 text-sm shadow-sm shadow-gray-300 hover:bg-gray-200 "
           )}
         >
           <div className="flex items-start justify-between">

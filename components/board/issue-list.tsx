@@ -48,6 +48,7 @@ const IssueList: React.FC<{
       {
         name,
         type,
+        status,
         parentId: issueParentId,
         sprintId: newSprintId,
         reporterId: null,
