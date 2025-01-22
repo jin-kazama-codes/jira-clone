@@ -86,7 +86,7 @@ const IssueList: React.FC<{
           onClick={() => setIsEditing(true)}
           data-state={isEditing ? "closed" : "open"}
           customColors
-          className="my-1 flex w-full rounded-xl bg-transparent hover:bg-gray-200 [&[data-state=closed]]:hidden"
+          className="my-1 flex w-full rounded-xl bg-transparent dark:text-dark-50 dark:hover:bg-darkSprint-40 dark:hover:text-white hover:bg-gray-200 [&[data-state=closed]]:hidden"
         >
           <AiOutlinePlus className="text-sm" />
           <span className="text-md ml-1">Create Issue</span>
@@ -108,17 +108,17 @@ const IssueList: React.FC<{
         <>
           <div
             className={clsx(
-              "mb-5 sticky top-0 min-h-fit h-max w-[350px] rounded-xl border-x-2 border-b-2 px-1.5 pb-3",
+              "mb-5 sticky top-0 min-h-fit h-max w-[350px] rounded-xl dark:border-darkSprint-30 border-x-2 border-b-2 px-1.5 pb-3",
               status === "To Do"
-                ? "bg-gray-100"
+                ? "bg-gray-100 dark:bg-darkSprint-20"
                 : status === "In Progress"
-                  ? "bg-blue-100"
-                  : "bg-green-100"
+                  ? "bg-blue-100 dark:bg-darkSprint-20"
+                  : "bg-green-100 dark:bg-darkSprint-20"
             )}
           >
             <h2
               className={clsx(
-                "text-md sticky top-0 -mx-1.5 -mt-1.5 mb-1.5 rounded-t-md border-y-2 px-2 py-3 font-semibold text-black z-10",
+                "text-md sticky top-0 -mx-1.5 -mt-1.5 mb-1.5 rounded-t-md dark:border-y-darkSprint-30  border-y-2 px-2 py-3 font-semibold text-black z-10",
                 status === "To Do"
                   ? "bg-gray-300"
                   : status === "In Progress"

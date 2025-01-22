@@ -72,7 +72,7 @@ const WorklogDlt: React.FC<WorklogDltProps> = ({
                 Delete worklog entry?
               </ModalTitle>
             </div>
-            <div className=" pb-3 rounded-xl p-6 bg-white">
+            <div className=" pb-3 rounded-xl p-6 dark:bg-darkSprint-20 bg-white">
               <div className="mb-5 flex items-center">
                 <p> Once you delete, it's gone for good </p>
               </div>
@@ -88,7 +88,7 @@ const WorklogDlt: React.FC<WorklogDltProps> = ({
                   </button>
 
                   <button
-                    className=" text-black  text-sm font-medium py-2 px-3 rounded-xl hover:bg-gray-200 transition-colors duration-200"
+                    className=" text-black  text-sm font-medium dark:bg-dark-50 py-2 px-3 rounded-xl hover:bg-gray-200 transition-colors duration-200"
                     onClick={() => setIsOpen(false)}
                   >
                     Cancel

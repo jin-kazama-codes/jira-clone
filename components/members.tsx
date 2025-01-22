@@ -72,7 +72,7 @@ const Members = () => {
   return (
     <div
 
-      className="flex bg-transparent items-center">
+      className="flex bg-transparent  items-center">
       <div className="relative bg-transparent">
         {/* Subtle fade effects */}
         {/* <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-6 bg-gradient-to-r from-white to-transparent opacity-90" /> */}
@@ -89,7 +89,7 @@ const Members = () => {
                 <div
                   key={member.id}
                   style={{ zIndex: members.length - index }}
-                  className="-ml-2 first:ml-0 hover:!z-10"
+                  className="-ml-2  first:ml-0 hover:!z-10"
                 >
                   <Button
                     onClick={() => handleAssigneeFilter(member.id)}
@@ -98,7 +98,7 @@ const Members = () => {
                     data-state={
                       assignees.includes(member.id) ? "selected" : "not-selected"
                     }
-                    className="flex border-spacing-2 rounded-full border-2 border-transparent bg-white p-0.5 transition-all duration-75 hover:-mt-1.5 [&[data-state=selected]]:border-inprogress"
+                    className="flex border-spacing-2 rounded-full dark:bg-darkSprint-20 border-2 border-transparent bg-white p-0.5 transition-all duration-75 hover:-mt-1.5 [&[data-state=selected]]:border-inprogress"
                   >
                     {member.avatar ? (
                       <Avatar src={member.avatar} alt={`${member.name}`} />
@@ -124,7 +124,7 @@ const Members = () => {
         <UserModal refetch={refetch}>
           <button>
             <AddPeopleIcon
-              className="ml-3 rounded-full bg-gray-200 p-1 text-gray-500"
+              className="ml-3 rounded-full dark:bg-darkSprint-20 dark:text-dark-50 bg-gray-200 p-1 text-gray-500"
               size={35}
             />
           </button>

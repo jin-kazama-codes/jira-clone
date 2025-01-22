@@ -30,7 +30,7 @@ const IssueTypeFilter: React.FC = () => {
   }
   return (
     <Dropdown>
-      <DropdownTrigger className="rounded-xl border-2 transition-all duration-200 hover:bg-gray-200 border-gray-300 bg-gray-50 px-2 [&[data-state=open]]:bg-gray-700 [&[data-state=open]]:text-white">
+      <DropdownTrigger className="rounded-xl dark:bg-darkSprint-20 dark:border-darkSprint-30 dark:text-dark-50 border-2 transition-all duration-200 hover:bg-gray-200 border-gray-300 bg-gray-50 px-2 [&[data-state=open]]:bg-gray-700 [&[data-state=open]]:text-white">
         <Button
           customColors
           className="flex items-center  gap-x-4 "
@@ -48,13 +48,13 @@ const IssueTypeFilter: React.FC = () => {
         <DropdownContent
           side="bottom"
           align="start"
-          className="z-10 mt-2 w-52 rounded-[3px] border-[0.3px] bg-white py-4 shadow-md"
+          className="z-10 mt-2 w-52 rounded-[3px] border-[0.3px] dark:bg-darkSprint-20 dark:border-darkSprint-30  bg-white py-4 shadow-md"
         >
           {ISSUE_TYPES.map((type) => (
             <DropdownItem
               onSelect={(e) => e.preventDefault()}
               key={type}
-              className="px-3 py-1.5 text-sm hover:bg-gray-100"
+              className="px-3 py-1.5 text-sm dark:hover:bg-darkSprint-30 hover:bg-gray-100"
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 onSelectChange(e, type)
               }
@@ -66,13 +66,13 @@ const IssueTypeFilter: React.FC = () => {
                 <input
                   type="checkbox"
                   id="issue-type-filter"
-                  className="form-checkbox h-3 w-3 rounded-sm text-inprogress"
+                  className="form-checkbox h-3 w-3  rounded-sm text-inprogress"
                   checked={issueTypes.includes(type)}
                 />
 
                 <IssueIcon issueType={type} />
                 <TooltipWrapper text={capitalize(type)}>
-                  <span className="text-sm text-gray-700">
+                  <span className="text-sm dark:text-dark-50  text-gray-700">
                     {capitalize(type)}
                   </span>
                 </TooltipWrapper>

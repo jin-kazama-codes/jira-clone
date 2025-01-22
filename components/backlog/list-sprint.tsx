@@ -32,17 +32,23 @@ const user = useCookie("user");
 const SprintList: React.FC<{
   sprint: Sprint;
   issues: IssueType[];
-}> = ({ sprint, issues }) => {
-  const [openAccordion, setOpenAccordion] = useState("");
-  useEffect(() => {
-    setOpenAccordion(sprint.id); // Open accordion on mount in order for DND to work.
-  }, [sprint.id]);
+  openAccordion: string,
+  setOpenAccordion: (sprintId: string) => void;
+}> = ({ sprint, issues, openAccordion, setOpenAccordion }) => {
+  
+  const handleAccordionChange = (sprintId: string) => {
+    setOpenAccordion((prev) =>
+      prev.includes(sprintId)
+        ? prev.filter((id) => id !== sprintId)
+        : [...prev, sprintId]
+    );
+  };
 
   return (
     <Accordion
-      onValueChange={setOpenAccordion}
-      value={openAccordion}
-      className="overflow-hidden rounded-xl border-2 bg-slate-100 p-4"
+    onValueChange={() => handleAccordionChange(sprint.id)}
+    value={openAccordion.includes(sprint.id) ? sprint.id : undefined}
+      className="overflow-hidden rounded-xl dark:bg-darkSprint-10 dark:border-darkSprint-30 border-2 bg-slate-100 p-4"
       type="single"
       collapsible
     >
@@ -110,6 +116,7 @@ const SprintListHeader: React.FC<{ issues: IssueType[]; sprint: Sprint }> = ({
   const { convertedOriginalEstimate, convertedTotalTime } =
     getTimeEstimates(issues);
 
+    
 
   return (
     <Fragment>
@@ -127,27 +134,27 @@ const SprintListHeader: React.FC<{ issues: IssueType[]; sprint: Sprint }> = ({
         onAction={handleDeleteSprint}
       />
       <div className="flex w-full min-w-max items-center justify-between pl-2 text-sm">
-        <AccordionTrigger className="flex w-full items-center font-medium [&[data-state=open]>svg]:rotate-90">
+        <AccordionTrigger className="flex w-full  items-center font-medium [&[data-state=open]>svg]:rotate-90">
           <Fragment>
             <FaChevronRight
-              className="mr-2 text-xs text-black transition-transform"
+              className="mr-2 text-xs text-black dark:text-dark-50 transition-transform"
               aria-hidden
             />
-            <div className="flex items-center gap-x-2">
-              <div className="text-semibold whitespace-nowrap text-xl">
+            <div className="flex items-center  gap-x-2">
+              <div className="text-semibold whitespace-nowrap dark:text-dark-50 text-xl">
                 {sprint.name}
               </div>
-              <div className="flex items-center gap-x-3 whitespace-nowrap font-normal text-gray-800">
+              <div className="flex items-center gap-x-3 whitespace-nowrap font-normal dark:text-darkSprint-50  text-gray-800">
                 <span>
                   {getFormattedDateRange(sprint.startDate, sprint.endDate)}
                 </span>
-                <span>
+                <span className="dark:text-dark-50">
                   ({issues.length} issue{getPluralEnd(issues)})
                 </span>
                 {convertedOriginalEstimate ? (
-                  <span>
+                  <span className="dark:text-darkSprint-50">
                     Estimate:{" "}
-                    <span className="text-md font-bold">
+                    <span className="text-md dark:text-dark-50  font-bold">
                       {convertedOriginalEstimate}
                     </span>
                   </span>
@@ -169,7 +176,7 @@ const SprintListHeader: React.FC<{ issues: IssueType[]; sprint: Sprint }> = ({
                 asChild
                 className="flex items-center gap-x-1 px-1.5 py-0.5 text-xs font-semibold focus:ring-2"
               >
-                <div className="rounded-full px-1.5 py-1.5 text-black hover:cursor-pointer hover:bg-gray-300 [&[data-state=open]]:bg-gray-300 ">
+                <div className="rounded-full px-1.5 py-1.5 text-black dark:text-dark-50 dark:hover:bg-darkSprint-40 hover:cursor-pointer hover:bg-gray-300 [&[data-state=open]]:bg-gray-300 ">
                   <BsThreeDots className="sm:text-xl " />
                 </div>
               </DropdownTrigger>
@@ -177,7 +184,7 @@ const SprintListHeader: React.FC<{ issues: IssueType[]; sprint: Sprint }> = ({
           )}
         </div>
       </div>
-      <div className="text-gray-800 pl-7 font-medium text-sm">
+      <div className="text-gray-800 dark:text-darkSprint-50  pl-7 font-medium text-sm">
         {sprint.description}
       </div>
 
@@ -195,7 +202,7 @@ const SprintActionButton: React.FC<{ sprint: Sprint; issues: IssueType[] }> = ({
   ) {
     return (
       <CompleteSprintModal issues={issues} sprint={sprint}>
-        <Button className="rounded-xl px-4 !bg-button hover:!bg-buttonHover">
+        <Button className="rounded-xl px-4 dark:!bg-dark-0  !bg-button hover:!bg-buttonHover">
           <span className="whitespace-nowrap text-white">Complete sprint</span>
         </Button>
       </CompleteSprintModal>
@@ -209,7 +216,7 @@ const SprintActionButton: React.FC<{ sprint: Sprint; issues: IssueType[] }> = ({
     return (
       <StartSprintModal issueCount={issues.length} sprint={sprint}>
         <Button
-          className="rounded-xl !bg-button hover:!bg-buttonHover  px-4 ">
+          className="rounded-xl !bg-button dark:!bg-dark-0 hover:!bg-buttonHover  px-4 ">
           <span className="whitespace-nowrap text-white">Start sprint</span>
         </Button>
       </StartSprintModal>

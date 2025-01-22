@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useCookie } from "@/hooks/use-cookie";
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import ThemeToggle from "./theme-button";
 "public/images/karya-io-logo.png"
 
 const TopNavbar: React.FC = () => {
@@ -76,7 +77,7 @@ const TopNavbar: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex bg-indigo-50  h-12 w-full items-center justify-between border-b  px-4">
+    <div className="flex bg-indigo-50 dark:bg-darkSprint-10 h-12 w-full items-center justify-between border-b dark:border-b-darkSprint-30  px-4">
       <button
         onClick={handleNavigation}
         className="flex items-center gap-x-1">
@@ -86,10 +87,13 @@ const TopNavbar: React.FC = () => {
           width={30}
           height={30}
         />
-        <span className="text-xl font-medium text-gray-700">Karya.io</span>
+        <span className="text-xl font-medium text-gray-700 dark:text-dark-50">Karya.io</span>
       </button>
 
       <div className="relative flex items-center gap-x-5">
+        <div className="m-2">
+        <ThemeToggle />
+        </div>
         <div
           className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-300"
           style={{

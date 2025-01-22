@@ -1,10 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/server/db";
-import {
-  IssueType,
-  type Issue,
-  type DefaultUser,
-} from "@prisma/client";
+import { IssueType, type Issue, type DefaultUser } from "@prisma/client";
 import { z } from "zod";
 import {
   calculateInsertPosition,
@@ -58,10 +54,19 @@ export type GetIssuesResponse = {
 
 export async function GET(req: NextRequest) {
   const { id: projectId } = parseCookies(req, "project");
+  const { searchParams } = new URL(req.url);
+
+  let sprintId = searchParams.get("sprintId");
+  if(sprintId === "undefined") {
+    sprintId = null;
+  }
+
+  // Fetch active issues
   const activeIssues = await prisma.issue.findMany({
     where: {
       projectId: projectId,
       isDeleted: false,
+      sprintId: sprintId ? sprintId : null,
     },
   });
 
@@ -69,19 +74,20 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ issues: [] });
   }
 
-  // add projectId to sprint table
-  const activeSprints = await prisma.sprint.findMany({
+  // Fetch all child issues related to active issues
+  const childIssues = await prisma.issue.findMany({
     where: {
-      projectId: projectId,
-      status: "ACTIVE",
+      parentId: {
+        in: activeIssues.map((issue) => issue.id),
+      },
     },
   });
 
+  // Fetch user data
   const userIds = activeIssues
     .flatMap((issue) => [issue.assigneeId, issue.reporterId] as string[])
     .filter(Boolean);
 
-  // USE THIS IF RUNNING LOCALLY -----------------------
   const users = await prisma.defaultUser.findMany({
     where: {
       id: {
@@ -89,17 +95,20 @@ export async function GET(req: NextRequest) {
       },
     },
   });
-  // --------------------------------------------------
 
-  const issuesForClient = generateIssuesForClient(
-    activeIssues,
-    users,
-    activeSprints.map((sprint) => sprint.id)
-  );
+  // Generate client-ready issues (without children for now)
+  const issuesForClient = generateIssuesForClient(activeIssues, users);
 
-  // const issuesForClient = await getIssuesFromServer();
-  return NextResponse.json({ issues: issuesForClient });
+  // Attach child issues to their respective parent issues AFTER issuesForClient is generated
+  const issuesWithChildren = issuesForClient.map((issue) => ({
+    ...issue,
+    children: childIssues.filter((child) => child.parentId === issue.id),
+  }));
+
+  return NextResponse.json({ issues: issuesWithChildren });
 }
+
+
 
 const createChildIssues = async (
   KEY,
@@ -116,7 +125,7 @@ const createChildIssues = async (
       projectId: projectId,
       isDeleted: false,
       parentId: {
-        not: null, 
+        not: null,
       },
     },
   });

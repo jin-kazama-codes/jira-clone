@@ -73,9 +73,12 @@ export async function POST(req: Request) {
       }
     })
 
-    if(existingWorkflow){
-      return;
-    }
+    if (existingWorkflow) {
+  return NextResponse.json(
+    { message: "Workflow already exists" },
+    { status: 400 }
+  );
+}
 
     // Create resource in the database
     const workflow = await prisma.workflow.create({

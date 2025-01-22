@@ -14,6 +14,7 @@ const Project: React.FC = async () => {
     where: isAdminOrManager ? {} : { members: { some: { id: user.id } } },
     include: { members: true }
   });
+  
 
   return (
     <>

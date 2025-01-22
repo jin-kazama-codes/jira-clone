@@ -1,4 +1,4 @@
-import { MdClose, MdOutlineShare, MdRemoveRedEye } from "react-icons/md";
+import { MdClose } from "react-icons/md";
 import { AiOutlineLike } from "react-icons/ai";
 import { IssueDropdownMenu } from "../issue-menu";
 import { DropdownTrigger } from "../../ui/dropdown-menu";
@@ -20,7 +20,7 @@ const IssueDetailsHeader: React.FC<{
   return (
     <div
       data-state={isInViewport ? "inViewport" : "notInViewport"}
-      className="sticky top-0 z-10 flex h-fit w-full items-center justify-between   border-transparent bg-white p-0.5 [&[data-state=notInViewport]]:border-b border-b-black"
+      className="sticky top-0 z-10 flex h-fit w-full items-center justify-between dark:text-dark-50 dark:bg-darkSprint-10 dark:border-darkSprint-30 border-transparent bg-white p-0.5 [&[data-state=notInViewport]]:border-b border-b-black"
     >
       <IssuePath issue={issue} setIssueKey={setIssueKey} />
       <div className="relative flex items-center gap-x-0.5">
@@ -54,7 +54,7 @@ const IssueDetailsHeader: React.FC<{
         {!detailPage && (
           <Button
             customColors
-            className="rounded-full  bg-transparent hover:bg-gray-200"
+            className="rounded-full dark:hover:bg-darkSprint-30 bg-transparent hover:bg-gray-200"
             onClick={() => setIssueKey(null)}
           >
             <MdClose className="text-2xl" />

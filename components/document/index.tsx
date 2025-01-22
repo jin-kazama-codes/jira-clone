@@ -24,16 +24,15 @@ interface FileItem {
 
 const Document: React.FC = () => {
   const userId = useCookie('user').id;
-  console.log(typeof userId)
   const FileIcon = ({ extensions }: { extensions: FileItem["extensions"] }) => {
     switch (extensions) {
       case "pdf":
         return (
-          <VscFilePdf className="text-red-700 h-5 w-5" />
+          <VscFilePdf className="text-red-700 h-5 w-5 dark:text-dark-0" />
         )
       case "image":
         return (
-          <CiImageOn />
+          <CiImageOn className="dark:text-dark-0"/>
         )
       default:
         return (
@@ -57,7 +56,6 @@ const Document: React.FC = () => {
 
   useEffect(() => {
     if (allFiles) {
-      console.log('allfiles', allFiles);
       const sortedFiles = allFiles.slice().sort((a, b) => {
         const createdAtDiff = new Date(b.createdAt) - new Date(a.createdAt);
         return createdAtDiff !== 0 ? createdAtDiff : a.name.localeCompare(b.name);
@@ -113,17 +111,17 @@ const Document: React.FC = () => {
       <button
         onClick={handlePreviousPage}
         disabled={currentPage === 1}
-        className="mb-4 px-4 py-2 bg-button text-white rounded hover:bg-buttonHover"
+        className="mb-4 px-4 py-2 bg-button text-white rounded-xl hover:bg-buttonHover hover:cursor-pointer dark:bg-dark-0 dark:hover:bg-darkSprint-20"
       >
         Previous
       </button>
-      <span>
+      <span className="dark:text-dark-50">
         Page {currentPage} of {totalPages}
       </span>
       <button
         onClick={handleNextPage}
         disabled={currentPage === totalPages}
-        className="mb-4 px-4 py-2 bg-button text-white rounded hover:bg-buttonHover"
+        className="mb-4 px-4 py-2 bg-button text-white rounded-xl hover:bg-buttonHover hover:cursor-pointer dark:bg-dark-0 dark:hover:bg-darkSprint-20"
       >
         Next
       </button>
@@ -135,7 +133,7 @@ const Document: React.FC = () => {
 
   const renderBreadcrumb = () => {
     return (
-      <div className="flex items-center text-sm mb-4">
+      <div className="flex items-center text-sm mb-4 dark:text-dark-50">
         <button
           onClick={() => {
             setSelectedFolder(null)
@@ -144,7 +142,7 @@ const Document: React.FC = () => {
           }}
           className="hover:underline"
         >
-          documents
+          Documents
         </button>
         {pathStack.map((folder, index) => (
           <span key={folder.id} className="flex items-center">
@@ -183,15 +181,15 @@ const Document: React.FC = () => {
             {displayedFolder.map((folder) => (
               <div
                 key={folder.id}
-                className={`group flex justify-between p-2 rounded-lg border cursor-pointer 
+                className={`group dark:border-darkButton-0 dark:bg-darkButton-30 flex justify-between p-2 rounded-lg border cursor-pointer  
                   ${selectedFolder?.id === folder.id ? "bg-blue-50" : "bg-white"}
-                  hover:bg-gray-50 transition-colors`}
+                  hover:bg-gray-50 transition-colors `}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleFolderClick(folder);
                 }}
               >
-                <div className="flex items-center">
+                <div className="flex items-center ">
                   <FaFolder className={`mr-2 ${selectedFolder?.id === folder.id ? "text-blue-500" : "text-body"}`} />
                   <span className="font-medium">{folder.name}</span>
                 </div>
@@ -200,7 +198,7 @@ const Document: React.FC = () => {
                     e.stopPropagation();
                   }}>
                     <DeleteDocument Id={folder.id} folder={true}>
-                      <button className="rounded-full p-2 text-red-400 opacity-0 transition-opacity hover:bg-red-100 hover:text-red-600 group-hover:opacity-100"
+                      <button className="rounded-full p-2 text-red-400 opacity-0 transition-opacity dark:hover:bg-red-400 dark:text-dark-50 hover:bg-red-100 hover:text-red-600 group-hover:opacity-100"
                         onClick={(e) => {
                           e.stopPropagation();
                         }}>
@@ -214,12 +212,12 @@ const Document: React.FC = () => {
           </div>
 
           <div className="flex justify-between items-center mt-2">
-            <h2 className="text-lg font-bold px-4 py-2"> Files</h2>
+            <h2 className="text-lg font-bold px-4 py-2 dark:text-dark-50"> Files</h2>
             <DocumentUpload
               onUploadComplete={refetch}
               selectedFolderId={selectedFolder.id}
             >
-              <button className="mb-4 px-4 py-2 bg-button text-white rounded hover:bg-buttonHover">
+              <button className="mb-4 px-4 py-2 bg-button text-white rounded-xl hover:bg-buttonHover">
                 Add File
               </button>
             </DocumentUpload>
@@ -309,7 +307,7 @@ const Document: React.FC = () => {
         {/* Folders Section */}
         <div>
           <div className="flex justify-between items-center">
-            <h2 className="text-lg font-bold px-4 py-2">Folders</h2>
+            <h2 className="text-lg font-bold px-4 py-2 dark:text-dark-50">Folders</h2>
             <CreateFolderButton onFolderCreated={refetch} />
           </div>
 
@@ -317,7 +315,7 @@ const Document: React.FC = () => {
             {displayedFolder.map((folder) => (
               <div
                 key={folder.id}
-                className={`group flex justify-between p-2 rounded-lg border cursor-pointer 
+                className={`group flex dark:border-darkButton-0 dark:bg-darkButton-30 justify-between p-2 rounded-lg border cursor-pointer 
                   ${selectedFolder?.id === folder.id ? "bg-blue-50" : "bg-white"}
                   hover:bg-gray-50 transition-colors`}
                 onClick={(e) => {
@@ -326,8 +324,8 @@ const Document: React.FC = () => {
                 }}
               >
                 <div className="flex items-center">
-                  <FaFolder className={`mr-2 ${selectedFolder?.id === folder.id ? "text-blue-500" : "text-body"}`} />
-                  <span className="font-medium">{folder.name}</span>
+                  <FaFolder className={`mr-2 dark:text-dark-0 ${selectedFolder?.id === folder.id ? "text-blue-500" : "text-body"}`} />
+                  <span className="font-medium dark:text-dark-50">{folder.name}</span>
                 </div>
                 {Number(userId) === Number(folder.ownerId) && (
                   <DeleteDocument Id={folder.id}
@@ -351,9 +349,9 @@ const Document: React.FC = () => {
         {/* Root Files Section */}
         < div className="mt-2" >
           <div className="flex justify-between items-center">
-            <h2 className="text-lg font-bold px-4 py-2"> Files</h2>
+            <h2 className="text-lg font-bold px-4 py-2 dark:text-dark-50"> Files</h2>
             <DocumentUpload onUploadComplete={refetch}>
-              <button className="px-4 py-2 bg-button text-white rounded hover:bg-buttonHover">
+              <button className="px-4 py-2 bg-button text-white rounded-xl hover:bg-buttonHover dark:bg-dark-0 dark:hover:bg-darkSprint-20">
                 Add File
               </button>
             </DocumentUpload>
@@ -367,10 +365,10 @@ const Document: React.FC = () => {
             ) : (
               // eslint-disable-next-line react/jsx-key
               <div>
-                <div className="w-full mt-1  rounded-lg border bg-white shadow h-80 ">
+                <div className="w-full mt-1  rounded-lg border bg-white shadow h-80  dark:border-darkButton-0 dark:bg-darkButton-30">
                   <table className="w-full text-left text-sm">
-                    <thead className="bg-gray-50 text-xs uppercase text-gray-700">
-                      <tr>
+                    <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-darkSprint-20 ">
+                      <tr className="dark:text-dark-50">
                         <th
                           scope="col"
                           className="cursor-pointer px-6 py-3"
@@ -398,10 +396,10 @@ const Document: React.FC = () => {
                       {paginatedFiles.map((file => (
                         <tr
                           key={file.id}
-                          className="border-b hover:bg-gray-50"
+                          className="border-b hover:bg-gray-50 dark:text-darkSprint-0 dark:hover:bg-darkButton-20"
                         >
                           <td className="flex items-center gap-2 px-6 py-4">
-                            <FileIcon extensions={file.extensions} />
+                            <FileIcon extensions={file.extensions}/>
                             <button
                               onClick={() => window.open(file.link, "_blank")}
                               className="text-black hover:underline "
@@ -446,7 +444,7 @@ const Document: React.FC = () => {
 
     <div className=" ">
       <div className="flex justify-between pb-2">
-        <h1 className="text-2xl font-bold ">Documents</h1>
+        <h1 className="text-2xl font-bold dark:text-dark-50">Documents</h1>
       </div>
       {renderContent()}
     </div>

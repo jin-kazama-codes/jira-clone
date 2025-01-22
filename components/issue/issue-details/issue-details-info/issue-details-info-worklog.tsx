@@ -58,18 +58,19 @@ const Worklog: React.FC<WorklogProps> = ({ issue }) => {
   }, []);
 
   return (
-    <div className='mt-2'>
+    <div className='mt-2 flex flex-col gap-y-2'>
+      <h2 className="dark:text-dark-50">Worklogs</h2>
       {loading ? (
         <p>Loading...</p>
       ) : work.length > 0 ? (
         work.map((wrk, index) => (
-          <>
+          <div className='dark:bg-darkSprint-50 rounded-xl p-3'>
             <div className='flex space-x-1.5 items-center' key={index + 1}>
               <p className="font-bold text-xm text-black "> {wrk.userName}</p>
-              <p className='text-sm font-medium text-gray-800'>Logged <span className="font-bold text-black"> {wrk.timeLogged}</span> </p>
-              <p className='text-sm font-medium pl-2 text-gray-800'>{calculateTimeLogged(wrk.createdAt)} Ago</p>
+              <p className='text-sm font-medium text-gray-800 dark:text-darkSprint-0'>Logged <span className="font-bold text-black"> {wrk.timeLogged}</span> </p>
+              <p className='text-sm font-medium pl-2 text-gray-800 dark:text-darkSprint-0'>{calculateTimeLogged(wrk.createdAt)} Ago</p>
             </div>
-            <div className='text-base p-3'> {wrk.workDescription} </div>
+            <div className='text-base p-3 dark:text-darkSprint-0'> {wrk.workDescription} </div>
             {wrk.userName === Username && (<div className='flex space-x-2 items-center font-bold'>
               <EditWorklog
                 issue={issue}
@@ -85,8 +86,7 @@ const Worklog: React.FC<WorklogProps> = ({ issue }) => {
                 >Delete</button>
               </WorklogDlt>
             </div>)}
-            <hr className='mb-4' />
-          </>
+          </div>
         ))
       ) : (
         <p className='mb-4'>No worklog entries found.</p>

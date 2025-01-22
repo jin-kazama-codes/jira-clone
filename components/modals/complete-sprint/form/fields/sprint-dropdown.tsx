@@ -21,8 +21,11 @@ const SprintDropdownField: React.FC<{
   control: Control<FormValues, "duration">;
   errors: FieldErrors<FormValues>;
 }> = ({ control, errors }) => {
-  const { sprints } = useSprints();
+  const { sprints: sprintData } = useSprints();
   const backlog = { id: "backlog", name: "Backlog", status: "PENDING" };
+  console.log("sprint data", sprintData)
+  const sprints = sprintData?.pages.flatMap((page) => page.sprints)
+
 
   return (
     <div className="my-5">
@@ -33,7 +36,7 @@ const SprintDropdownField: React.FC<{
         render={({ field }) => {
           return (
             <Select onValueChange={field.onChange} defaultValue={field.value}>
-              <SelectTrigger className="flex h-10 w-full max-w-full items-center justify-between overflow-hidden whitespace-nowrap rounded-[3px] bg-gray-100 px-2 text-xs font-semibold transition-all duration-200 hover:bg-gray-200 focus:ring-2">
+              <SelectTrigger className="flex h-10 w-full max-w-full items-center justify-between overflow-hidden whitespace-nowrap rounded-[3px] dark:bg-darkSprint-30 dark:border-darkSprint-20 dark:placeholder:text-darkSprint-50 dark:text-white bg-gray-100 px-2 text-xs font-semibold transition-all duration-200 hover:bg-gray-200 focus:ring-2">
                 <SelectValue />
                 <SelectIcon>
                   <FaChevronDown className="text-gray-500" />
@@ -41,7 +44,7 @@ const SprintDropdownField: React.FC<{
               </SelectTrigger>
               <SelectPortal className="z-50">
                 <SelectContent position="popper">
-                  <SelectViewport className="w-96 min-w-fit rounded-md border border-gray-300 bg-white py-2 shadow-md">
+                  <SelectViewport className="w-96 min-w-fit dark:bg-darkSprint-20 dark:border-darkSprint-30 dark:text-white rounded-md border border-gray-300 bg-white py-2 shadow-md">
                     <SelectGroup>
                       {sprints &&
                         [...sprints, backlog]
@@ -51,7 +54,7 @@ const SprintDropdownField: React.FC<{
                               key={sprint.id}
                               value={sprint.id}
                               className={clsx(
-                                "border-l-2 border-transparent py-2 pl-3 text-sm hover:cursor-default hover:border-inprogress hover:bg-gray-100 [&[data-state=checked]]:border-inprogress [&[data-state=checked]]:bg-blue-100 [&[data-state=checked]]:text-blue-600"
+                                "border-l-2 border-transparent py-2 pl-3 text-sm hover:cursor-default hover:border-inprogress dark:hover:bg-darkSprint-10 hover:bg-gray-100 dark:[&[data-state=checked]]:bg-darkSprint-0 [&[data-state=checked]]:border-inprogress [&[data-state=checked]]:bg-blue-100 [&[data-state=checked]]:text-blue-600"
                               )}
                             >
                               <span className={clsx("px-2 text-xs")}>

@@ -1,4 +1,4 @@
-import { FaChevronUp } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp, FaRegCalendarAlt, FaRegClock } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { type IssueType } from "@/utils/types";
@@ -17,13 +17,16 @@ import { useCookie } from "@/hooks/use-cookie";
 import TimeTrackingModal from "@/components/modals/time-track";
 import ProgressBar from "@/components/time-progress";
 import { OriginalEstimate } from "@/components/original-estimate";
+import { MdPersonOutline, MdReportGmailerrorred, MdTrackChanges, MdUpdate } from "react-icons/md";
+import { IoMdTimer } from "react-icons/io"
+import { dateToLongString } from "@/utils/helpers";
 
 const IssueDetailsInfoAccordion: React.FC<{ issue: IssueType }> = ({
   issue,
 }) => {
   const { updateIssue } = useIssues();
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
-  const { sprints } = useSprints();
+  // const { sprints } = useSprints();
 
   const user = useCookie("user");
   const [openAccordion, setOpenAccordion] = useState("details");
@@ -53,19 +56,19 @@ const IssueDetailsInfoAccordion: React.FC<{ issue: IssueType }> = ({
       <Accordion
         onValueChange={setOpenAccordion}
         value={openAccordion}
-        className="my-3 w-min min-w-full rounded-xl  "
+        className="my-3 w-min min-w-full rounded-xl dark:border-darkButton-0 dark:bg-darkButton-30  border-2 "
         type="single"
         collapsible
       >
         <AccordionItem value={"details"}>
-          <AccordionTrigger className="flex w-full items-center justify-between p-2 hover:rounded-t-xl font-medium hover:bg-gray-100 [&[data-state=open]>svg]:rotate-180 [&[data-state=open]]:border-b border-b-black">
+          <AccordionTrigger className="flex w-full items-center justify-between p-2 rounded-t-xl font-medium hover:bg-gray-100 dark:hover:bg-darkSprint-20 dark:bg-darkSprint-30 [&[data-state=open]>svg]:rotate-180 [&[data-state=open]]:border-b border-b-black">
             <div className="flex items-center gap-x-1">
               <span className="text-sm">Details</span>
-              <span className="text-xs text-gray-600">
+              <span className="text-xs text-gray-600 dark:text-darkSprint-0">
                 (Assignee, Sprint, Reporter)
               </span>
             </div>
-            <FaChevronUp
+            <FaChevronDown
               className="mr-2 text-xs text-black transition-transform"
               aria-hidden
             />
@@ -73,11 +76,14 @@ const IssueDetailsInfoAccordion: React.FC<{ issue: IssueType }> = ({
           <AccordionContent className="flex flex-col bg-transparent px-3 [&[data-state=open]]:py-2">
             <div
               data-state={issue.assignee ? "assigned" : "unassigned"}
-              className="my-2 grid grid-cols-3 [&[data-state=assigned]]:items-center"
+              className="my-2 grid grid-cols-2 [&[data-state=assigned]]:items-center"
             >
-              <span className="text-sm font-semibold text-gray-800">
+              <div className="flex justify-start gap-x-2 items-center">
+              <MdPersonOutline size={20}/>
+              <span className="text-sm font-semibold text-gray-800 dark:text-darkSprint-0">
                 Assignee
               </span>
+              </div>
               <div className="flex flex-col">
                 <IssueAssigneeSelect issue={issue} />
                 <Button
@@ -91,21 +97,26 @@ const IssueDetailsInfoAccordion: React.FC<{ issue: IssueType }> = ({
                 </Button>
               </div>
             </div>
-            <div className="my-4 grid grid-cols-3 items-center">
-              <span className="text-sm font-semibold text-gray-800">
+            <div className="my-4 grid grid-cols-2 items-center">
+            <div className="flex justify-start gap-x-2 items-center">
+            <MdTrackChanges size={20}/>
+              <span className="text-sm font-semibold text-gray-800 dark:text-darkSprint-0">
                 Sprint
               </span>
+              </div>
               <div className="flex items-center">
-                <span className="text-sm text-gray-900">
-                  {sprints?.find((sprint) => sprint?.id == issue.sprintId)
-                    ?.name ?? "None"}
+                <span className="text-sm text-gray-900 dark:text-darkSprint-0">
+                  {issue?.sprint?.name ?? "None"}
                 </span>
               </div>
             </div>
-            <div className="my-2 grid grid-cols-3 items-center">
-              <span className="text-sm font-semibold text-gray-800">
+            <div className="my-2 grid grid-cols-2 items-center">
+            <div className="flex justify-start gap-x-2 items-center">
+            <MdReportGmailerrorred size={20}/>
+              <span className="text-sm font-semibold text-gray-800 dark:text-darkSprint-0">
                 Reporter
               </span>
+              </div>
               <div className="flex items-center gap-x-3 ">
                 <Avatar
                   src={issue.reporter?.avatar}
@@ -116,23 +127,29 @@ const IssueDetailsInfoAccordion: React.FC<{ issue: IssueType }> = ({
                 </span>
               </div>
             </div>
-            <div className="my-6 grid grid-cols-3 items-center">
-              <span className="text-sm font-semibold text-gray-800">
+            <div className="my-6 grid grid-cols-2 items-center">
+              <div className="flex justify-start gap-x-2 items-center">
+            <FaRegClock size={17}/>
+              <span className="text-sm font-semibold text-gray-800 dark:text-darkSprint-0">
                 Original Estimate
               </span>
+              </div>
               <div className="flex items-center">
                 <OriginalEstimate
                   isEditing={isEditing}
                   setIsEditing={setisEditing}
                   issue={issue}
-                  className="text-sm bg-slate-200 p-2 rounded-xl "
+                  className="text-sm bg-slate-200 dark:bg-darkSprint-20 dark:text-dark-50 p-2 rounded-xl "
                 />
               </div>
             </div>
-            <div className="my-6 grid grid-cols-3 items-center">
-              <span className="text-sm font-semibold text-gray-800">
+            <div className="my-6 grid grid-cols-2 items-center">
+            <div className="flex justify-start gap-x-2 items-center">
+            <IoMdTimer size={20}/>
+              <span className="text-sm font-semibold text-gray-800 dark:text-darkSprint-0">
                 Time Tracking
               </span>
+              </div>
               <div
                 className="flex items-center"
                 onClick={handleProgressBarClick}
@@ -141,6 +158,32 @@ const IssueDetailsInfoAccordion: React.FC<{ issue: IssueType }> = ({
                   timeSpent={issue.timeSpent}
                   estimateTime={issue.estimateTime}
                 />
+              </div>
+            </div>
+            <div className="my-4 grid grid-cols-2 items-center">
+            <div className="flex justify-start gap-x-2 items-center">
+            <FaRegCalendarAlt size={18}/>
+              <span className="text-sm font-semibold text-gray-800 dark:text-darkSprint-0">
+                Created
+              </span>
+              </div>
+              <div className="flex items-center">
+                <span className="text-sm text-gray-900">
+                  {dateToLongString(issue.createdAt)}
+                </span>
+              </div>
+            </div>
+            <div className="my-4 grid grid-cols-2 items-center">
+            <div className="flex justify-start gap-x-2 items-center">
+            <MdUpdate size={20}/>
+              <span className="text-sm font-semibold text-gray-800 dark:text-darkSprint-0">
+                Updated
+              </span>
+              </div>
+              <div className="flex items-center">
+                <span className="text-sm text-gray-900">
+                {dateToLongString(issue.updatedAt)}
+                </span>
               </div>
             </div>
           </AccordionContent>

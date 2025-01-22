@@ -14,7 +14,7 @@ const ProjectLayout = ({ children }: { children: React.ReactNode }) => {
         <Fragment>
             <FiltersProvider>
                 <TopNavbar />
-                <main className="flex h-auto w-full relative">
+                <main className="flex h-full w-full relative dark:bg-darkSprint-0">
                     {!hideSidebar && <Sidebar />}
                     <div
                         className={`w-full h-screen ${

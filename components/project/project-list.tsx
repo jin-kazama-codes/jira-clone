@@ -76,10 +76,10 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, admin }) => {
 
   return (
     <div
-      className="rounded-xl border bg-white pb-5">
+      className="rounded-xl border bg-white pb-5 dark:bg-darkSprint-20 dark:border-darkSprint-30">
       <div
-        className="p-4 bg-header rounded-t-xl ">
-        <h2 className="text-center text-2xl font-semibold text-white">Projects List</h2>
+        className="p-4 bg-header rounded-t-xl dark:bg-darkSprint-10">
+        <h2 className="text-center text-2xl font-semibold text-white dark:text-dark-50">Project List</h2>
       </div>
       <div className="h-[27rem] overflow-y-scroll">
         <div className="p-4">
@@ -88,10 +88,10 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, admin }) => {
               <div
                 key={project.id}
                 onClick={() => handleProjectClick(project)}
-                className={`group flex cursor-pointer items-center ${admin ? "justify-between" : "justify-center"
+                className={`group flex cursor-pointer items-center dark:bg-darkButton-30 dark:border-darkButton-0  ${admin ? "justify-between" : "justify-center"
                   }  rounded-xl bg-gray-200 p-3 shadow-sm transition-shadow hover:shadow-md`}
               >
-                <div className={`text-sm  text-gray-700 font-medium`}>{project.name}</div>
+                <div className={`text-sm  text-gray-700 font-medium dark:text-dark-50`}>{project.name}</div>
                 {admin && (
                   <button
                     className="rounded-full p-2 text-red-400 opacity-0 transition-opacity hover:bg-red-100 hover:text-red-600 group-hover:opacity-100"

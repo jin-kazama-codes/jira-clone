@@ -28,7 +28,7 @@ const BacklogList: React.FC<{
 
   return (
     <Accordion
-      className="rounded-xl bg-slate-100 border-2 p-4 pb-20 "
+      className="rounded-xl bg-slate-100 border-2 p-4 pb-20 dark:bg-darkSprint-10 dark:border-darkSprint-30"
       type="single"
       value={openAccordion}
       onValueChange={setOpenAccordion}
@@ -63,21 +63,21 @@ const BacklogListHeader: React.FC<{ issues: IssueType[] }> = ({ issues }) => {
       <AccordionTrigger className="flex w-full items-center p-2  font-medium [&[data-state=open]>svg]:rotate-90">
         <Fragment>
           <FaChevronRight
-            className="mr-2 text-xs text-black transition-transform"
+            className="mr-2 text-xs text-black transition-transform dark:text-dark-50"
             aria-hidden
           />
           <div className="flex items-center gap-x-3">
-            <div className="text-semibold text-xl">Backlog</div>
-            <div className="ml-3 font-normal text-gray-800">
+            <div className="text-semibold text-xl dark:text-dark-50">Backlog</div>
+            <div className="ml-3 font-normal text-gray-800 dark:text-darkSprint-50">
               ({issues.length} issues)
             </div>
-            <div className="font-normal text-gray-800">
+            {/* <div className="font-normal text-gray-800 dark:text-dark-50">
               {convertedOriginalEstimate
                 ? convertedOriginalEstimate
                 : ""}
 
 
-            </div>
+            </div> */}
           </div>
         </Fragment>
       </AccordionTrigger>
@@ -86,10 +86,10 @@ const BacklogListHeader: React.FC<{ issues: IssueType[] }> = ({ issues }) => {
         {(user?.role === "admin" || user?.role === "manager") && (
           <Button
             onClick={handleCreateSprint}
-            className="rounded-xl  px-4 !text-white !bg-button  hover:!bg-buttonHover"
+            className="rounded-xl  px-4 !text-white dark:!bg-dark-0 !bg-button  hover:!bg-buttonHover"
 
           >
-            <span className="whitespace-nowrap text-white">Create Sprint</span>
+            <span className="whitespace-nowrap text-white ">Create Sprint</span>
           </Button>
         )}
       </div>

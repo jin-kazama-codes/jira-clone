@@ -1,83 +1,92 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
-import { useIssues } from "@/hooks/query-hooks/use-issues";
 import { useIsInViewport } from "@/hooks/use-is-in-viewport";
 import { IssueDetailsHeader } from "./issue-details-header";
 import { IssueDetailsInfo } from "./issue-details-info";
 import { useSelectedIssueContext } from "@/context/use-selected-issue-context";
 import { useCookie } from "@/hooks/use-cookie";
 import { getProjectKeyFromUrl, setCookie } from "@/utils/helpers";
+import { issuesRoutes } from "@/utils/api/issues";
 
 const IssueDetails: React.FC<{
   issueKey: string | null;
   detailPage?: boolean;
 }> = ({ issueKey, detailPage }) => {
-  const { issues } = useIssues();
+  const { getIssueDetails } = issuesRoutes;
   const { setIssueKey } = useSelectedIssueContext();
   const renderContainerRef = React.useRef<HTMLDivElement>(null);
   const [isInViewport, viewportRef] = useIsInViewport({ threshold: 1 });
   const project = useCookie("project");
-  const [loading, setLoading] = useState(true); // Initial loading state
+  const [loading, setLoading] = useState(true);
+  const [issue, setIssue] = useState<any>(null);
   const projectKey = getProjectKeyFromUrl();
 
+  // Fetch project data if not in cookies
   useEffect(() => {
-    // Only execute if project cookie is not found
     if (!project) {
-      async function fetchProjectByKey(projectKey) {
+      async function fetchProjectByKey(projectKey: string | null) {
         try {
           const response = await fetch(`/api/project/${projectKey}`);
           if (!response.ok) {
             throw new Error("Failed to fetch project");
           }
           const data = await response.json();
-          // Optionally, set cookie here
           setCookie("project", data.project);
         } catch (error) {
           console.error("Error fetching project:", error);
         } finally {
-          setLoading(false); // Set loading to false once data is fetched
+          setLoading(false);
         }
       }
-
       fetchProjectByKey(projectKey);
     } else {
-      setLoading(false); // Skip fetch if project already exists in cookie
+      setLoading(false);
     }
   }, [project]);
 
-  const getIssue = useCallback(
-    (issueKey: string | null) => {
-      return issues?.find((issue) => issue.key === issueKey);
-    },
-    [issues]
-  );
+  // Fetch issue details directly from the API
+  const fetchIssueDetails = useCallback(async (issueKey: string | null) => {
+    if (!issueKey) return;
 
-  const [issueInfo, setIssueInfo] = useState(() => getIssue(issueKey));
+    try {
+      setLoading(true)
+      const issueInfo = await getIssueDetails(issueKey);
+      setIssue(issueInfo);
+      setLoading(false)
+    } catch (error) {
+      console.error("Failed to fetch issue details:", error);
+    }
+    setLoading(false)
+  }, [getIssueDetails]);
 
+  // Fetch issue when issueKey changes
   useEffect(() => {
-    setIssueInfo(() => getIssue(issueKey));
+    fetchIssueDetails(issueKey);
+
     if (renderContainerRef.current) {
       renderContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
     }
-  }, [issueKey, getIssue]);
+  }, [issueKey, fetchIssueDetails]);
 
-  if (!issueInfo || !issues) return <div />;
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div
       ref={renderContainerRef}
       data-state={issueKey ? "open" : "closed"}
-      className="relative z-10 flex rounded-xl bg-white w-full flex-col overflow-y-scroll pl-4 pr-2 [&[data-state=closed]]:hidden"
+      className="relative z-10 flex rounded-xl dark:bg-darkSprint-10 bg-white w-full flex-col overflow-y-scroll pl-4 pr-2 [&[data-state=closed]]:hidden"
     >
       <IssueDetailsHeader
         detailPage={detailPage}
-        issue={issueInfo}
+        issue={issue}
         setIssueKey={setIssueKey}
         isInViewport={isInViewport}
       />
       <IssueDetailsInfo
         detailPage={detailPage}
-        issue={issueInfo}
+        issue={issue}
         ref={viewportRef}
       />
     </div>

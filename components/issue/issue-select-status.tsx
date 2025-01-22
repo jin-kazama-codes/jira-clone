@@ -66,10 +66,10 @@ const IssueSelectStatus: React.FC<{
           onClick={(e) => e.stopPropagation()}
           disabled={isUpdating}
           className={clsx(
-            variant == "sm" && "bg-opacity-20 px-1.5 py-0.5 border-1 border-buttonHover text-xs font-bold",
-            variant == "lg" && "my-1 px-3 py-1.5 text-[16px] border-1 border-buttonHover font-semibold",
+            variant == "sm" && "bg-opacity-20 px-1.5 py-0.5 border border-buttonHover dark:border-darkSprint-30 dark:text-dark-50 dark:bg-darkSprint-20 text-xs font-bold",
+            variant == "lg" && "my-1 px-3 py-1.5 text-[16px] border-2 border-buttonHover dark:border-darkSprint-30 dark:text-dark-50 dark:bg-darkSprint-20 font-semibold",
             isUpdating && "cursor-no1-allowed",
-            "flex items-center gap-x-2 whitespace-nowrap rounded-xl px-2 py-1 focus:ring-2"
+            "flex items-center gap-x-2 whitespace-nowrap rounded-xl px-2 py-1"
           )}
         >
           <SelectValue className="w-full whitespace-nowrap bg-transparent text-white">
@@ -83,26 +83,26 @@ const IssueSelectStatus: React.FC<{
         </SelectTrigger>
         <SelectPortal className="z-50">
           <SelectContent position="popper">
-            <SelectViewport className="w-60 rounded-md border border-gray-300 bg-white pt-2 shadow-md">
+            <SelectViewport className="w-60 rounded-md border dark:bg-darkSprint-20 dark:border-darkSprint-30 border-buttonHover bg-white pt-2 shadow-md">
               <SelectGroup>
                 {Statuses.map((status) => (
                   <SelectItem
                     key={status}
                     value={status}
                     className={clsx(
-                      "border-l-[3px] border-transparent py-1 pl-2 text-sm hover:cursor-default hover:border-blue-600 hover:bg-gray-100"
+                      "border-l-[3px] border-transparent py-1 pl-2 text-sm hover:cursor-default dark:hover:text-white hover:border-blue-600 dark:hover:bg-darkSprint-30 hover:bg-gray-100 "
                     )}
                   >
-                    <span className="rounded-md px-2 text-xs font-semibold">
+                    <span className="rounded-md px-2 dark:text-dark-50  text-xs font-semibold">
                       {status}
                     </span>
                   </SelectItem>
                 ))}
               </SelectGroup>
-              <SelectSeparator className="mt-2 h-[1px] bg-gray-300" />
+              <SelectSeparator className="mt-2 h-[1px] bg-gray-300 dark:bg-darkSprint-30" />
                 <button onClick={(e) => {
                   e.stopPropagation()
-                  router.push('/workflow')}} className="w-full border py-4 pl-5 text-left text-sm font-medium hover:cursor-default hover:bg-gray-100">
+                  router.push('/workflow')}} className="w-full dark:text-dark-50 dark:hover:bg-darkSprint-30 dark:bg-darkSprint-20 dark:border-darkSprint-30 border py-4 pl-5 text-left text-sm font-medium hover:cursor-default hover:bg-gray-100">
                   View Workflow
                 </button>
             </SelectViewport>

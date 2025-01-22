@@ -35,7 +35,7 @@ export const useSprints = () => {
 
         // Otherwise, we are generically updating the sprint
         queryClient.setQueryData(["sprints"], (old?: Sprint[]) => {
-          const newSprints = (old ?? []).map((sprint) => {
+          const newSprints = (old?.pages.flatMap((page) => page.sprints) ?? []).map((sprint) => {
             const { sprintId, ...updatedProps } = newSprint;
             if (sprint.id === sprintId) {
               // Assign the new prop values to the sprint

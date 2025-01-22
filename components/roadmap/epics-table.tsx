@@ -86,20 +86,20 @@ const EpicsTable: React.FC = () => {
 
   return (
     <div
-      className="w-full overflow-y-auto rounded-xl border-2"
+      className="w-full overflow-y-auto rounded-xl dark:bg-darkSprint-10 dark:border-darkSprint-30 border-2"
       ref={renderContainerRef}
     >
-      <div className="sticky top-0 z-10 h-10 bg-gray-100" />
+      <div className="sticky top-0 z-10 h-10 dark:bg-darkSprint-10 bg-gray-100" />
       <EpicsAccordion handleCreateIssue={handleCreateIssue} />
-      <div className="sticky bottom-0 h-12  bg-white">
+      <div className="sticky bottom-0 h-12 dark:bg-darkSprint-10 dark:border-darkSprint-30 bg-white">
         <Button
           onClick={() => setIsCreatingEpic(true)}
           data-state={isCreatingEpic ? "closed" : "open"}
           customColors
-          className="flex w-full rounded-xl items-center gap-x-1.5 hover:bg-gray-100 [&[data-state=closed]]:hidden"
+          className="flex w-full rounded-xl items-center  dark:hover:bg-darkSprint-40 gap-x-1.5 hover:bg-gray-100 [&[data-state=closed]]:hidden"
         >
           <AiOutlinePlus />
-          <span className="text-[14px] font-medium">Create Epic</span>
+          <span className="text-[14px] font-medium dark:hover:text-darkSprint-0 dark:text-dark-50 ">Create Epic</span>
         </Button>
         <EmtpyIssue
           data-state={isCreatingEpic ? "open" : "closed"}

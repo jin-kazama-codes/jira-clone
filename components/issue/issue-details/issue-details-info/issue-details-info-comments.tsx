@@ -19,20 +19,32 @@ import { DefaultUser } from "@prisma/client";
 import { useCookie } from "@/hooks/use-cookie";
 import { CgAttachment } from "react-icons/cg";
 import { MdDelete } from "react-icons/md";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/utils/api";
 dayjs.extend(relativeTime);
 
 const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
   const scrollRef = useRef(null);
   const [isWritingComment, setIsWritingComment] = useState(false);
   const [isInViewport, ref] = useIsInViewport();
-  const { comments, addComment } = useIssueDetails();
+  const { addComment } = useIssueDetails();
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
   const user = useCookie("user");
-
   const [image, setImage] = useState<File[] | null>([]);
   const [uploading, setUploading] = useState(false);
   const [imageUrl, setImageUrl] = useState<String[] | null>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const issueId = issue?.id
+
+    const { data: comments, isLoading: commentsLoading, refetch } = useQuery(
+      ["issues", "comments", issueId],
+      () => api.issues.getIssueComments({ issueId: issueId ?? "" }),
+      {
+        enabled: !!issueId,
+        refetchOnMount: false,
+      }
+    );
+  
 
   const handleButtonClick = () => {
     if (fileInputRef.current) {
@@ -122,6 +134,7 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
     setImage(null);
     setImageUrl([]);
     setIsWritingComment(false);
+    refetch();
   }
 
   function handleDelete(index: number) {
@@ -138,10 +151,15 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
   function handleCancel() {
     setIsWritingComment(false);
   }
+  if(commentsLoading){
+    return(
+      <div>Loading...</div>
+    )
+  }
   return (
     <Fragment>
-      <h2>Comments</h2>
-      <div className="sticky bottom-0 mb-5 w-full bg-white">
+      <h2 className="dark:text-dark-50">Comments</h2>
+      <div className="sticky bottom-0 mb-5 w-full bg-white dark:bg-transparent">
         <div ref={scrollRef} id="dummy-scroll-div" />
         {isWritingComment ? (
           <Editor
@@ -180,18 +198,18 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
                   <Button
                     type="button"
                     customColors
-                    className="flex gap-2 whitespace-nowrap rounded-lg  hover:bg-gray-100"
+                    className="flex gap-2 whitespace-nowrap rounded-lg  hover:bg-gray-100 dark:hover:bg-darkSprint-20"
                     onClick={handleButtonClick} // Handle button click
                   >
-                    <CgAttachment className="rotate-45 text-xl" />
-                    <span className="">Attach</span>
+                    <CgAttachment className="rotate-45 text-xl dark:text-dark-50" />
+                    <span className=" dark:text-white">Attach</span>
                   </Button>
                 )}
                 {image && (
                   <div className="flex items-center flex-wrap mt-2 gap-2">
                     {image.map((img, index) => (
                       <div key={index} className="flex items-center gap-2 ">
-                        <div className="whitespace-nowrap font-mono text-sm">
+                        <div className="whitespace-nowrap font-mono text-sm dark:text-dark-50">
                           {img?.name}{" "}
                         </div>
                         <span
@@ -253,7 +271,7 @@ const CommentPreview: React.FC<{
   }
 
   return (
-    <div className="flex bg-transparent w-full gap-x-2">
+    <div className="flex bg-transparent dark:bg-darkSprint-50  rounded-xl px-2 pt-2 w-full gap-x-2">
       <Avatar
         src={comment.author?.avatar ?? ""}
         alt={`${comment.author?.name ?? "Guest"}`}
@@ -263,7 +281,7 @@ const CommentPreview: React.FC<{
           <span className="font-bold text-black ">
             {comment.author?.name}
           </span>
-          <span className="text-gray-800">
+          <span className="text-gray-800 dark:text-darkSprint-0">
             {dayjs(comment.createdAt).fromNow()}
           </span>
 
@@ -298,7 +316,7 @@ const CommentPreview: React.FC<{
           />
         )}
         {comment.authorId == user?.id ? (
-          <div className="mb-1">
+          <div className="">
             <Button
               onClick={() => setIsEditing(true)}
               customColors

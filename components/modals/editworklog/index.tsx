@@ -102,7 +102,7 @@ const EditWorklog: React.FC<EditWorklogProps> = ({
       <ModalPortal>
         <ModalOverlay />
         <ModalContent className="flex items-center justify-center ">
-          <div className="w-full max-w-sm rounded-xl bg-header  overflow-y-scroll h-96">
+          <div className="w-full max-w-sm rounded-xl bg-header dark:bg-darkSprint-10 overflow-y-scroll h-96">
             <div className="mb-3 flex items-center align-middle p-5  justify-between">
               <ModalTitle className="text-2xl font-bold text-white">
                 Edit Worklog
@@ -116,7 +116,7 @@ const EditWorklog: React.FC<EditWorklogProps> = ({
               </button>
             </div>
 
-            <div className="rounded-xl p-5 bg-white">
+            <div className="rounded-xl p-5 dark:bg-darkSprint-20 bg-white">
               <div className="space-y-4">
                 {/* Progress bar */}
                 <div className="h-2 w-full cursor-pointer rounded-lg bg-gray-200">
@@ -130,7 +130,7 @@ const EditWorklog: React.FC<EditWorklogProps> = ({
                 </div>
 
                 {/* Time logging information */}
-                <div className="flex justify-between text-sm text-gray-600">
+                <div className="flex justify-between text-sm text-gray-600 dark:text-dark-50">
                   {timeSpent ? (
                     <span>{timeSpent} logged</span>
                   ) : (
@@ -143,9 +143,9 @@ const EditWorklog: React.FC<EditWorklogProps> = ({
                   </span>
                 </div>
 
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-gray-600 dark:text-dark-50">
                   The original estimate for this issue was{" "}
-                  <span className="rounded-xl bg-slate-100 px-2 font-medium ">
+                  <span className="rounded-xl bg-slate-100 px-2 dark:text-darkSprint-0 font-medium ">
                     {issue.estimateTime}
                   </span>
                   .
@@ -156,7 +156,7 @@ const EditWorklog: React.FC<EditWorklogProps> = ({
                   <div className="space-y-2">
                     <label
                       htmlFor="currentTime"
-                      className="block text-sm font-medium text-gray-700"
+                      className="block text-sm font-medium text-gray-700 dark:text-dark-50"
                     >
                       Current Logged Time
                     </label>
@@ -165,14 +165,14 @@ const EditWorklog: React.FC<EditWorklogProps> = ({
                       id="currentTime"
                       value={newTimeSpent}
                       onChange={(e) => setNewTimeSpent(e.target.value)} // Handle input change
-                      className="w-full rounded-md bg-gray-200 border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full rounded-md bg-gray-200 border dark:bg-darkSprint-30 dark:border-darkSprint-20 dark:placeholder:text-darkSprint-50 dark:text-white border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
 
                   <div className="space-y-2">
                     <label
                       htmlFor="timeRemaining"
-                      className="block text-sm font-medium text-gray-700"
+                      className="block text-sm font-medium text-gray-700 dark:text-dark-50"
                     >
                       Time remaining
                     </label>
@@ -181,7 +181,7 @@ const EditWorklog: React.FC<EditWorklogProps> = ({
                         type="text"
                         id="timeRemaining"
                         value={remainingTime}
-                        className="w-full rounded-md bg-gray-200 border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full rounded-md bg-gray-200 border dark:bg-darkSprint-30 dark:border-darkSprint-20 dark:placeholder:text-darkSprint-50 dark:text-white border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         readOnly
                       />
                     </div>
@@ -190,7 +190,7 @@ const EditWorklog: React.FC<EditWorklogProps> = ({
               </div>
 
               {/* Time format help */}
-              <div className="rounded-lg bg-gray-50 p-3 text-sm text-gray-600">
+              <div className="rounded-lg bg-gray-50 mt-2 p-3 text-sm text-gray-600 dark:bg-darkSprint-30 dark:border-darkSprint-20 dark:placeholder:text-darkSprint-50 dark:text-white">
                 <p className="mb-1 font-medium">Use the format: 2w 4d 6h 45m</p>
                 <ul className="list-inside list-disc space-y-1">
                   <li>w = weeks</li>
@@ -204,7 +204,7 @@ const EditWorklog: React.FC<EditWorklogProps> = ({
               <div>
                 <label
                   htmlFor="message"
-                  className="mb-2 mt-2 block text-sm font-medium text-gray-900"
+                  className="mb-2 mt-2 block text-sm font-medium text-gray-900 dark:text-dark-50"
                 >
                   Edit  Description
                 </label>
@@ -213,7 +213,7 @@ const EditWorklog: React.FC<EditWorklogProps> = ({
                   rows="4"
                   value={workDescription}
                   onChange={(e) => setWorkDescription(e.target.value)}
-                  className="block w-full rounded-lg border border-gray-300 bg-gray-200 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+                  className="block w-full rounded-lg border border-gray-300 dark:bg-darkSprint-30 dark:border-darkSprint-20 dark:placeholder:text-darkSprint-50 dark:text-white bg-gray-200 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
                   placeholder="Write your description here..."
                 ></textarea>
               </div>
@@ -221,14 +221,14 @@ const EditWorklog: React.FC<EditWorklogProps> = ({
               {/* Modal buttons */}
               <div className="mt-6 flex justify-end space-x-3">
                 <Button
-                  className="rounded-2xl border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="rounded-2xl border border-gray-300 dark:bg-dark-50 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                   onClick={() => setIsOpen(false)}
                 >
                   Cancel
                 </Button>
                 <Button
                   onClick={() => onSave(worklog.id)}
-                  className="rounded-2xl !bg-button px-4 py-2 text-sm font-medium text-white hover:bg-buttonHover focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="rounded-2xl !bg-button dark:!bg-dark-0 px-4 py-2 text-sm font-medium text-white hover:bg-buttonHover focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
                   Save
                 </Button>

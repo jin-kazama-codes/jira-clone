@@ -19,10 +19,10 @@ const UpdateSprintModal: React.FC<{
       <ModalPortal>
         <ModalOverlay />
         <ModalContent>
-          <div className="p-5 text-white">
+          <div className="p-5 text-white dark:text-dark-50">
             <ModalTitle>Edit Sprint: {sprint.name}</ModalTitle>
           </div>
-          <div className="bg-white rounded-xl p-6">
+          <div className="bg-white dark:bg-darkSprint-20 rounded-xl p-6">
             <UpdateSprintForm sprint={sprint} setModalIsOpen={setIsOpen} />
           </div>
         </ModalContent>

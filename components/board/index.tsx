@@ -47,19 +47,19 @@ import { useWorkflow } from "@/hooks/query-hooks/use-workflow";
 const Board: React.FC = () => {
   const renderContainerRef = useRef<HTMLDivElement>(null);
 
-  
-  const { issues } = useIssues();
-  const { sprints } = useSprints();
-  const { data: workflow, isLoading, isError } = useWorkflow()
-  const [STATUSES, setStatuses] = useState([])
-  
+  // const { issues } = useIssues();
+  const { sprints, refetch } = useSprints();
+  const { data: workflow, isLoading, isError } = useWorkflow();
+  const [STATUSES, setStatuses] = useState([]);
+  const [issues, setIssues] = useState<IssueType[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
   useEffect(() => {
-    if(workflow){
-      const labels = workflow.nodes.map(node => node.data.label);
-      setStatuses(labels)
+    if (workflow) {
+      const labels = workflow.nodes.map((node) => node.data.label);
+      setStatuses(labels);
     }
-  }, [workflow])
-  
+  }, [workflow]);
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const project = useCookie("project");
@@ -72,8 +72,12 @@ const Board: React.FC = () => {
   } = useFiltersContext();
 
   const activeSprint = sprints.find((sprint) => sprint.status === "ACTIVE");
+  const fliteredSprint = sprints?.find(
+    (sprint) => sprint.id === filterSprints[0]
+  );
 
-  const activeSprintId = activeSprint ? activeSprint.id : null;
+
+  const activeSprintId = filterSprints[0] ? filterSprints[0] : activeSprint.id;
 
   const filterIssues = useCallback(
     (issues: IssueType[] | undefined, status: string | null = null) => {
@@ -101,9 +105,30 @@ const Board: React.FC = () => {
     [search, assignees, epics, issueTypes, filterSprints]
   );
 
-  const { updateIssue } = useIssues();
+  const { updateIssue, getIssuesBySprintId } = useIssues();
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
   const [showChild, setShowChild] = useState(false);
+
+  async function fetchAllIssues() {
+    if (!sprints.length) return;
+    try {
+      setLoading(true); // Start loading
+
+      // Fetch sprint issues
+      const allIssues = await getIssuesBySprintId(activeSprintId);
+
+      setIssues(allIssues);
+    } catch (error) {
+      console.error("Error fetching issues:", error);
+    } finally {
+      setLoading(false); // Stop loading
+    }
+  }
+
+  useEffect(() => {
+    fetchAllIssues();
+  }, [activeSprintId]);
+
   useLayoutEffect(() => {
     if (!renderContainerRef.current) return;
     const calculatedHeight = renderContainerRef.current.offsetTop + 20;
@@ -115,8 +140,9 @@ const Board: React.FC = () => {
   }
 
   if (isLoading) return <div>Loading...</div>;
-  if (isError){
-    return (<div>Error: {error?.message || "Failed to load data"}</div>)}
+  if (isError) {
+    return <div>Error: {error?.message || "Failed to load data"}</div>;
+  }
 
   const onDragEnd = (result: DropResult, childIssues = []) => {
     if (!isAuthenticated) {
@@ -125,6 +151,8 @@ const Board: React.FC = () => {
     }
     const { destination, source } = result;
     if (isNullish(destination) || isNullish(source)) return;
+
+    console.log("updating issue")
     updateIssue({
       issueId: result.draggableId,
       status: destination.droppableId as string,
@@ -137,14 +165,17 @@ const Board: React.FC = () => {
         droppedIssueId: result.draggableId,
       }),
     });
+    fetchAllIssues();
   };
 
   const { setIssueKey } = useSelectedIssueContext();
 
   const child = issues
-    .filter((issue) => issue.sprintIsActive && issue.children && issue.children.length > 0)
-    .flatMap((issue) => issue.children)
-
+    .filter(
+      (issue) =>
+        issue.sprintIsActive && issue.children && issue.children.length > 0
+    )
+    .flatMap((issue) => issue.children);
 
   return (
     <Fragment>
@@ -153,7 +184,7 @@ const Board: React.FC = () => {
         showChild={showChild}
         setChild={setShowChild}
         project={project}
-        activeSprint={activeSprint}
+        activeSprint={fliteredSprint ? fliteredSprint : activeSprint}
       />
 
       {/* CHILD ISSUE VIEW  */}
@@ -164,27 +195,33 @@ const Board: React.FC = () => {
             {STATUSES.map((status) => {
               return (
                 <>
-
                   <div
                     className={clsx(
-                      " h-max min-h-fit w-[350px] rounded-xl  border-x-2  px-1.5  ",
-                      status === "To Do" ? "bg-gray-300" : status === "In Progress" ? "bg-blue-300" : "bg-green-300"
+                      " h-max min-h-fit w-[350px]  rounded-xl  border-x-2  px-1.5  ",
+                      status === "To Do"
+                        ? "bg-gray-300 "
+                        : status === "In Progress"
+                        ? "bg-blue-300"
+                        : "bg-green-300"
                     )}
                   >
-
-                    <h2 className={`text-md sticky top-[0.5px] -mx-1.5 -mt-1.5 mb-0  rounded-b-md border-b-2  px-2 py-3 font-semibold text-black`}>
+                    <h2
+                      className={`text-md sticky top-[0.5px] -mx-1.5 -mt-1.5 mb-0  rounded-b-md border-b-2  px-2 py-3 font-semibold text-black`}
+                    >
                       {status}{" "}
-                      {showChild ?
-                        child.filter((childIssue) => childIssue.status === status).length
+                      {showChild
+                        ? child.filter(
+                            (childIssue) => childIssue.status === status
+                          ).length
                         : issues.filter(
-                          (issue) =>
-                            issue.sprintIsActive && issue.status === status
-                        ).length}
+                            (issue) =>
+                              issue.sprintIsActive && issue.status === status
+                          ).length}
                       {` ISSUE${getPluralEnd(issues).toUpperCase()}`}
                     </h2>
                   </div>
                 </>
-              )
+              );
             })}
           </div>
           {/* ISSUES - REPEAT */}
@@ -198,10 +235,10 @@ const Board: React.FC = () => {
                 <>
                   <div
                     onClick={() => setIssueKey(issue.key)}
-                    className="flex cursor-pointer items-center   gap-x-4 border-x-2 border-y bg-slate-50 px-2 py-2"
+                    className="flex cursor-pointer items-center dark:bg-darkSprint-30 dark:border-darkSprint-20  gap-x-4 border-x-2 border-y bg-slate-50 px-2 py-2"
                   >
                     <IssueIcon issueType={issue.type} />
-                    <span className="text-xs font-medium text-gray-600">
+                    <span className="text-xs font-medium text-gray-600 dark:text-dark-50">
                       {issue.key}
                     </span>
                     <span>{issue.name}</span>
@@ -218,13 +255,17 @@ const Board: React.FC = () => {
                   >
                     <div
                       ref={renderContainerRef}
-                      className="relative flex w-full max-w-full gap-x-4 overflow-y-auto"
+                      className="relative flex w-full  max-w-full gap-x-4 overflow-y-auto"
                     >
                       {STATUSES.map((status) => (
                         <div
                           className={clsx(
-                            " h-max min-h-fit w-[350px] rounded-xl border-x-2 border-b-2 px-1.5 pb-3",
-                            status === "To Do" ? "bg-gray-100" : status === "In Progress" ? "bg-blue-100" : "bg-green-100"
+                            " h-max min-h-fit w-[350px] rounded-xl border-x-2 dark:border-darkSprint-30 border-b-2 px-1.5 pb-3",
+                            status === "To Do"
+                              ? "bg-gray-100 dark:bg-darkSprint-20"
+                              : status === "In Progress"
+                              ? "bg-blue-100 dark:bg-darkSprint-20"
+                              : "bg-green-100 dark:bg-darkSprint-20"
                           )}
                           key={status}
                         >
@@ -253,7 +294,7 @@ const Board: React.FC = () => {
         <DragDropContext onDragEnd={onDragEnd}>
           <div
             ref={renderContainerRef}
-            className="relative flex  max-w-full gap-x-4"
+            className="h-90vh relative flex max-w-full gap-x-4 "
           >
             {STATUSES.map((status) => (
               <IssueList
@@ -315,15 +356,15 @@ function getAfterDropPrevNextIssue(props: IssueListPositionProps) {
 
   const afterDropDestinationIssues = isSameList
     ? moveItemWithinArray(
-      beforeDropDestinationIssues,
-      droppedIssue,
-      destination.index
-    )
+        beforeDropDestinationIssues,
+        droppedIssue,
+        destination.index
+      )
     : insertItemIntoArray(
-      beforeDropDestinationIssues,
-      droppedIssue,
-      destination.index
-    );
+        beforeDropDestinationIssues,
+        droppedIssue,
+        destination.index
+      );
 
   return {
     prevIssue: afterDropDestinationIssues[destination.index - 1],

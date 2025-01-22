@@ -80,12 +80,12 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
           </div>
           <form
             onSubmit={handleSubmit}
-            className="mt-5 space-y-4 rounded-xl bg-white p-6"
+            className="mt-5 space-y-4 rounded-xl dark:bg-darkSprint-20 bg-white p-6"
           >
             <div>
               <label
                 htmlFor="name"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-gray-700 dark:text-dark-50"
               >
                 Name
               </label>
@@ -94,14 +94,14 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="mt-1 rounded-md bg-slate-100 px-2 py-1"
+                className="mt-1 rounded-md dark:bg-darkSprint-30 dark:border-darkSprint-20 dark:placeholder:text-darkSprint-50 dark:text-white bg-slate-100 px-2 py-1"
                 autoComplete="off"
               />
             </div>
             {error && <p className="mt-2 text-red-500">{error}</p>}
             <Button
               type="submit"
-              className="flex w-full justify-center rounded-xl !bg-black text-white"
+              className="flex w-full justify-center rounded-xl !bg-black dark:!bg-dark-0 text-white"
             >
               Update
             </Button>

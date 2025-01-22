@@ -1,6 +1,7 @@
 import { type Config } from "tailwindcss";
 
 export default {
+  darkMode: 'class',
   content: ["./app/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
@@ -18,6 +19,31 @@ export default {
         body: "#5EDFFF",
         sidebar: "#ECFCFF",
         sprint: "#B2FCFF",
+         // Dark theme colors
+         dark: {
+          0: "#4379c5",
+          10: "#5d87cc",
+          20: "#7495d2",
+          30: "#89a3d9",
+          40: "#9db2df",
+          50: "#b1c1e6",
+        },
+        darkSprint: {
+          0: "#121420",
+          10: "#282935",
+          20: "#3f404b",
+          30: "#575862",
+          40: "#71727a",
+          50: "#8b8c93",
+        },
+        darkButton: {
+          0: "#171d2e",
+          10: "#2d3242",
+          20: "#444857",
+          30: "#5c5f6d",
+          40: "#757884",
+          50: "#8f919b",
+        },
       },
       backgroundImage: {
         "custom-background": `

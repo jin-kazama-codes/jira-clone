@@ -1,5 +1,5 @@
 "use client";
-import React, { type ReactNode, useMemo } from "react";
+import React, { type ReactNode, useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
 import {
   Dropdown,
@@ -11,10 +11,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { type MenuOptionType } from "@/utils/types";
 import { useSprints } from "@/hooks/query-hooks/use-sprints";
+import { useQueryClient } from "@tanstack/react-query";
 
 type SprintDropdownMenuProps = {
   children: ReactNode;
-  sprint: { id: string; position: number };
+  sprint;
   setUpdateModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setDeleteModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -25,7 +26,21 @@ const SprintDropdownMenu: React.FC<SprintDropdownMenuProps> = ({
   setUpdateModalIsOpen,
   setDeleteModalIsOpen,
 }) => {
-  const { sprints, updateSprint } = useSprints();
+  const [sprints, setSprints] = useState<any[]>([]);
+
+
+  const queryClient = useQueryClient(); 
+
+  const { updateSprint } = useSprints();
+
+  const sprintData = queryClient.getQueryData(["sprints"]) ?? [];
+
+  useEffect(() => {
+    if (sprintData?.pages) {
+      setSprints(sprintData?.pages.flatMap((page) => page.sprints));
+    }
+  }, [sprintData]);
+
 
   const menuOptions = useMemo<MenuOptionType[]>(() => {
     const options = [
@@ -75,6 +90,7 @@ const SprintDropdownMenu: React.FC<SprintDropdownMenuProps> = ({
       setUpdateModalIsOpen(true);
     } else if (id === "up" || id === "down") {
       handlePositionChange(id);
+      console.log("pos")
     }
   };
 
@@ -87,7 +103,7 @@ const SprintDropdownMenu: React.FC<SprintDropdownMenuProps> = ({
             side="top"
             sideOffset={5}
             align="end"
-            className="z-10 w-fit rounded-md border border-gray-300 bg-white shadow-md"
+            className="z-10 w-fit rounded-md border dark:bg-darkSprint-20 dark:text-dark-50  dark:border-darkSprint-30 border-gray-300 bg-white shadow-md"
           >
             <DropdownLabel className="sr-only">ACTIONS</DropdownLabel>
             <DropdownGroup>
@@ -97,7 +113,7 @@ const SprintDropdownMenu: React.FC<SprintDropdownMenuProps> = ({
                   key={action.id}
                   textValue={action.label}
                   className={clsx(
-                    "border-transparent px-4 py-2 text-sm hover:cursor-default hover:bg-gray-100"
+                    "border-transparent px-4 py-2 text-sm hover:cursor-default dark:hover:text-white dark:hover:bg-darkSprint-30 hover:bg-gray-100"
                   )}
                 >
                   <span className="pr-2 text-sm">{action.label}</span>

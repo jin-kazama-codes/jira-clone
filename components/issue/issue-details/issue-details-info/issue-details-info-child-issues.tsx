@@ -66,9 +66,9 @@ const ChildIssueList: React.FC<{
       );
     }
     return (
-      <Fragment>
+      <div className="mt-2">
         <div className="flex items-center justify-between">
-          <h2>Child Issues</h2>
+          <h2 className="dark:text-dark-50">Child Issues</h2>
           <Button
             onClick={() => setIsEditing(true)}
             customColors
@@ -102,7 +102,7 @@ const ChildIssueList: React.FC<{
           isSubtask={!parentIsEpic}
           parentId={parentId}
         />
-      </Fragment>
+      </div>
     );
   };
 
@@ -116,7 +116,7 @@ const ChildIssue: React.FC<{ issue: IssueType }> = ({ issue }) => {
       data-state={issueKey == issue.key ? "selected" : "not-selected"}
       onClick={() => setIssueKey(issue.key)}
       className={clsx(
-        "group flex w-full max-w-full items-center justify-between border-[0.3px] rounded-xl border-gray-300 px-3 py-1.5 text-sm bg-slate-50 hover:bg-slate-100 [&[data-state=selected]]:bg-blue-100"
+        "group flex w-full max-w-full items-center justify-between mt-1 border-[0.3px] rounded-xl dark:border-darkButton-0 dark:bg-darkButton-30 border-gray-300 px-3 py-1.5 text-sm bg-slate-50 hover:bg-slate-100 [&[data-state=selected]]:bg-blue-100"
       )}
     >
       <div
@@ -126,14 +126,14 @@ const ChildIssue: React.FC<{ issue: IssueType }> = ({ issue }) => {
         <IssueIcon issueType={issue.type} />
         <div
           data-state={issue.status}
-          className="whitespace-nowrap text-sm text-gray-500 [&[data-state=DONE]]:line-through"
+          className="whitespace-nowrap text-sm text-gray-500 [&[data-state=DONE]]:line-through dark:text-black"
         >
           {issue.key}
         </div>
 
         <IssueTitle
           key={issue.id + issue.name}
-          className="truncate py-1.5 text-sm hover:cursor-pointer hover:underline"
+          className="truncate py-1.5 text-sm hover:cursor-pointer hover:underline dark:text-white"
           isEditing={isEditing}
           setIsEditing={setIsEditing}
           issue={issue}
@@ -150,7 +150,7 @@ const ChildIssue: React.FC<{ issue: IssueType }> = ({ issue }) => {
               e.stopPropagation();
               setIsEditing(!isEditing);
             }}
-            className="invisible w-0 px-0 group-hover:visible group-hover:w-fit group-hover:bg-transparent group-hover:px-1.5 group-hover:hover:bg-gray-200 "
+            className="invisible w-0 px-0 group-hover:visible group-hover:w-fit group-hover:bg-transparent group-hover:px-1.5 group-hover:hover:bg-gray-200 dark:text-dark-50 dark:group-hover:hover:bg-darkSprint-20 "
           >
             <MdEdit className="text-sm" />
           </Button>

@@ -58,7 +58,7 @@ export const EditorPreview: React.FC<{
             />
           }
           placeholder={
-            <div className="pointer-events-none absolute left-0 top-0 flex h-full select-none items-center px-1 text-sm text-gray-500">
+            <div className="pointer-events-none absolute left-0 top-0 flex h-full select-none items-center px-1 text-sm text-gray-500 dark:text-darkSprint-10">
               Add your {action} here...
             </div>
           }

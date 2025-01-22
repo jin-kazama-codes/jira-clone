@@ -19,10 +19,10 @@ const BurndownIssueList = ({ issues }) => {
 
   return (
     <div className=" w-full h-[58vh] overflow-y-scroll" ref={scrollRef}>
-      <h2 className="mb-1  text-xl font-semibold">All Issues</h2>
-      <div className="overflow-hidden rounded-lg border">
+      <h2 className="mb-1  text-xl font-semibold dark:text-dark-50">All Issues</h2>
+      <div className="overflow-hidden rounded-lg border  ">
         {/* Column Headers */}
-        <div className="grid grid-cols-5 gap-4 border-b bg-slate-300 px-4 py-2 font-medium text-gray-700">
+        <div className="grid grid-cols-5 gap-4 border-b dark:text-dark-50 bg-slate-300 px-4 py-2 font-medium dark:bg-darkSprint-20  text-gray-700">
           <div>Date</div>
           <div>Issue Key</div>
           <div>Title</div>
@@ -31,7 +31,7 @@ const BurndownIssueList = ({ issues }) => {
         </div>
 
         {/* Issue List */}
-        <div className="divide-y">
+        <div className="divide-y ">
           {issues?.map((issue) => (
             <div
               key={issue.id}
@@ -39,12 +39,12 @@ const BurndownIssueList = ({ issues }) => {
                 setIssueKey(issue.key);
                 router.push(`/issue/${issue?.key}`)
               }}
-              className="grid cursor-pointer grid-cols-5 items-center gap-4 bg-slate-100 px-4 py-3 hover:bg-gray-00"
+              className="grid dark:border-darkButton-0 dark:bg-darkButton-30 cursor-pointer grid-cols-5 dark:text-darkSprint-0 dark:hover:bg-darkButton-20 items-center gap-4 bg-slate-100 px-4 py-3 hover:bg-gray-00"
             >
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-gray-600 dark:text-dark-50">
                 {new Date(issue.createdAt).toISOString().split("T")[0]}
               </div>
-              <div className="text-xs font-medium text-gray-600">
+              <div className="text-xs font-medium text-gray-600 dark:text-dark-50">
                 {issue.key}
               </div>
               <div className="truncate text-sm">{issue.name}</div>

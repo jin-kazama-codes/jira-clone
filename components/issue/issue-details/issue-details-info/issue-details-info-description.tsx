@@ -38,8 +38,8 @@ const Description: React.FC<{ issue: IssueType }> = ({ issue }) => {
     setIsEditing(false);
   }
   return (
-    <Fragment>
-      <h2>Description</h2>
+    <div className="bg-slate-100 py-1 px-2 mt-3 rounded-xl dark:bg-darkSprint-50 ">
+      <h2 className="">Description</h2>
       <div>
         {isEditing ? (
           <Editor
@@ -53,12 +53,12 @@ const Description: React.FC<{ issue: IssueType }> = ({ issue }) => {
             <EditorPreview
               action="description"
               content={content}
-              className="transition-all duration-200 hover:bg-gray-100"
+              className="transition-all duration-200 hover:bg-gray-100 dark:hover:bg-darkButton-50 dark:!text-dark-50"
             />
           </div>
         )}
       </div>
-    </Fragment>
+    </div>
   );
 };
 

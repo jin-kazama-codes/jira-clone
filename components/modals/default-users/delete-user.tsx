@@ -67,14 +67,14 @@ const DeleteUserModal: React.FC<DeleteUserModalProps> = ({
               Are you sure you want to remove the member ?
             </ModalDescription>
           </div>
-          <div className="mt-5 rounded-xl p-6 bg-white space-x-4">
+          <div className="mt-5 rounded-xl p-6 dark:bg-darkSprint-20 bg-white space-x-4">
             <Button
               onClick={handleDelete}
-              className="flex  justify-center px-4 py-1 rounded-xl !bg-red-600 text-white"
+              className="flex  justify-center px-4 py-1 rounded-2xl !bg-red-600 text-white"
             >
-              Ok
+              Delete
             </Button>
-            <button onClick={() => setIsOpen(false)}>
+            <button className="dark:bg-dark-50 px-4 py-1 rounded-2xl" onClick={() => setIsOpen(false)}>
               Cancel
             </button>
           </div>

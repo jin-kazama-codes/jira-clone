@@ -4,6 +4,7 @@ import "@/styles/globals.css";
 import Toaster from "@/components/toast";
 import QueryProvider from "@/utils/provider";
 import { AuthModalProvider } from "@/context/use-auth-modal";
+import { ThemeProvider } from "@/context/theme-context";
 
 export const metadata: Metadata = {
   title: {
@@ -44,6 +45,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
       <body className="">
         <QueryProvider>
           <AuthModalProvider>
+          <ThemeProvider>
             <Toaster
               position="bottom-left"
               reverseOrder={false}
@@ -53,6 +55,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
               }}
             />
             {children}
+            </ThemeProvider>
           </AuthModalProvider>
         </QueryProvider>
       </body>

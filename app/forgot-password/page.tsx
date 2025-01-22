@@ -39,15 +39,15 @@ const ForgotPassword = () => {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen   p-4">
+    <div className="flex items-center justify-center min-h-screen dark:bg-darkSprint-0  p-4">
       <div style={{
-        boxShadow: '0px 0px 24px rgb(92, 86, 150)'
+        boxShadow: '0px 0px 35px 0px rgba(113,114,122,1)'
       }}
-        className=" max-w-md bg-header rounded-2xl   overflow-hidden">
+        className=" max-w-md bg-header rounded-2xl dark:bg-darkSprint-20  overflow-hidden">
         {/* Content */}
         <div className="relative z-10">
           {/* Header */}
-          <div className="text-center  text-white p-8">
+          <div className="text-center  text-white p-8 dark:bg-darkSprint-10">
             <div className="relative z-10">
               <h1 className="text-3xl font-bold tracking-tight">
                 Forgot Your Password?
@@ -60,10 +60,10 @@ const ForgotPassword = () => {
 
           {/* Form */}
           <form onSubmit={handleSubmit}
-            className=" rounded-t-3xl bg-body  px-8 pt-10 pb-8 space-y-6">
+            className=" rounded-t-3xl bg-white dark:bg-darkSprint-20 px-8 pt-10 pb-8 space-y-6">
             {/* Email Field */}
             <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium text-gray-800">
+              <label htmlFor="email" className="text-sm font-medium dark:text-dark-50 text-gray-800">
                 Email
               </label>
               <input
@@ -75,7 +75,7 @@ const ForgotPassword = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
 
-                className="w-full px-4 py-3 rounded-xl border border-blue-300 border-opacity-50  text-black placeholder-gray-600 focus:outline-none  focus:ring-blue-300 focus:border-transparent transition duration-200 ease-in-out"
+                className="w-full px-4 py-3 rounded-xl border dark:bg-darkSprint-30 dark:border-darkSprint-20 dark:placeholder:text-darkSprint-50 dark:text-white border-blue-300 border-opacity-50  text-black placeholder-gray-600 focus:outline-none  focus:ring-blue-300 focus:border-transparent transition duration-200 ease-in-out"
               />
             </div>
 
@@ -100,7 +100,7 @@ const ForgotPassword = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3 border border-transparent rounded-xl shadow-sm text-lg  font-medium text-white bg-button hover:bg-buttonHover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition duration-200 ease-in-out"
+                  className="w-full py-3 border border-transparent rounded-xl shadow-sm text-lg  font-medium text-white bg-button hover:bg-buttonHover dark:bg-dark-0 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition duration-200 ease-in-out"
                 >
                   Send Reset Link
                 </button>

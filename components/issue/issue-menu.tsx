@@ -106,9 +106,9 @@ const IssueDropdownMenu: React.FC<{
           side="top"
           sideOffset={5}
           align="end"
-          className="z-50 w-fit min-w-[100px] rounded-md border border-gray-300 bg-white pt-2 shadow-md"
+          className="z-50 w-fit min-w-[100px] rounded-md border dark:bg-darkSprint-20 dark:border-darkSprint-30 border-gray-300 bg-white pt-2 shadow-md"
         >
-          <DropdownLabel className="p-2 text-xs font-normal text-gray-400">
+          <DropdownLabel className="p-2 text-xs font-normal dark:text-darkButton-50 text-gray-400">
             ACTIONS
           </DropdownLabel>
           <DropdownGroup>
@@ -118,10 +118,10 @@ const IssueDropdownMenu: React.FC<{
                 key={action.id}
                 textValue={action.label}
                 className={clsx(
-                  "border-transparent p-2 text-sm hover:cursor-default hover:bg-gray-100"
+                  "border-transparent p-2 text-sm hover:cursor-default dark:hover:bg-darkSprint-30 dark:hover:text-white hover:bg-gray-100"
                 )}
               >
-                <span className={clsx("pr-2 text-sm")}>{action.label}</span>
+                <span className={clsx("pr-2 text-sm dark:text-dark-50 ")}>{action.label}</span>
               </DropdownItem>
             ))}
           </DropdownGroup>

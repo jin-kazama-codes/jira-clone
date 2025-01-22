@@ -27,6 +27,12 @@ export const issuesRoutes = {
     );
     return data?.issues;
   },
+  getIssuesBySprintId: async ( sprintId?: string | null) => {
+    const { data } = await axios.get<GetIssuesResponse>(
+      `${baseUrl}/api/issues?sprintId=${sprintId}`
+    );
+    return data?.issues;
+  },
   updateBatchIssues: async (body: PatchIssuesBody) => {
     const { data } = await axios.patch<GetIssuesResponse>(
       `${baseUrl}/api/issues`,
@@ -35,7 +41,7 @@ export const issuesRoutes = {
     );
     return data?.issues;
   },
-  getIssueDetails: async ({ issueId }: { issueId: string }) => {
+  getIssueDetails: async ( issueId: string ) => {
     const { data } = await axios.get<GetIssueDetailsResponse>(
       `${baseUrl}/api/issues/${issueId}`
     );

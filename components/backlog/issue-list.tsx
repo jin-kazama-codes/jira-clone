@@ -12,7 +12,7 @@ import clsx from "clsx";
 import { useStrictModeDroppable } from "@/hooks/use-strictmode-droppable";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
 
-const IssueList: React.FC<{ sprintId: string | null; issues: IssueType[] }> = ({
+const IssueList: React.FC<{ sprintId: string | null; issues: IssueType[]; }> = ({
   sprintId,
   issues,
 }) => {
@@ -130,7 +130,7 @@ const IssueList: React.FC<{ sprintId: string | null; issues: IssueType[] }> = ({
         onClick={() => setIsEditing(true)}
         data-state={isEditing ? "closed" : "open"}
         customColors
-        className="my-1 flex w-full rounded-xl bg-transparent hover:bg-gray-200 [&[data-state=closed]]:hidden"
+        className="my-1 flex w-full rounded-xl bg-transparent dark:text-dark-50 dark:hover:bg-darkSprint-40 dark:hover:text-white hover:bg-gray-200 [&[data-state=closed]]:hidden"
       >
         <AiOutlinePlus className="text-sm" />
         <span className="text-md ml-1">Create Issue</span>

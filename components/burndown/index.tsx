@@ -14,7 +14,23 @@ const Burndown: React.FC = () => {
   const renderContainerRef = React.useRef<HTMLDivElement>(null);
   const [sprintId, setSprintId] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const { issues } = useIssues();
+  const [issues, setIssues] = useState([])
+  const { getIssuesBySprintId } = useIssues();
+
+  async function fetchAllIssues() {
+    if (!sprintId.length) return;
+    try {
+
+      // Fetch sprint issues
+      const allIssues = await getIssuesBySprintId(sprintId);
+
+      console.log("all Issue", allIssues)
+
+      setIssues(allIssues);
+    } catch (error) {
+      console.error("Error fetching issues:", error);
+    }
+  }
 
   // useLayoutEffect(() => {
   //   if (!renderContainerRef.current) return;
@@ -40,6 +56,7 @@ const Burndown: React.FC = () => {
   };
 
   useEffect(() => {
+    fetchAllIssues()
     setCurrentPage(1);
   }, [sprintId]);
 
@@ -59,9 +76,9 @@ const Burndown: React.FC = () => {
 
             {/* Pagination Controls */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-between border-t bg-white px-4 py-3 w-full">
+              <div className="flex items-center justify-between dark:bg-darkSprint-20  border-t bg-white px-4 py-3 w-full">
                 <div className="flex items-center gap-2">
-                  <p className="text-sm text-gray-700">
+                  <p className="text-sm text-gray-700 dark:text-dark-50">
                     Showing {startIndex + 1} to{" "}
                     {Math.min(endIndex, allIssues.length)} of {allIssues.length}{" "}
                     issues

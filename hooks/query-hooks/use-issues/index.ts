@@ -1,10 +1,11 @@
 "use client";
 import { api } from "@/utils/api";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useUpdateIssue } from "./use-update-issue";
 import { useUpdateIssuesBatch } from "./use-update-batch";
 import { usePostIssue } from "./use-post-issue";
 import { useDeleteIssue } from "./use-delete-issue";
+import { type IssueType } from "@/utils/types";
 
 export const TOO_MANY_REQUESTS = {
   message: `You have exceeded the number of requests allowed per minute.`,
@@ -23,6 +24,12 @@ export const useIssues = () => {
     }
   );
 
+  const getIssuesBySprintId = async (sprintId?: string | null) => {
+    const res = await api.issues.getIssuesBySprintId(sprintId ?? sprintId);
+    return res;
+    // return queryClient.getQueryData<IssueType[]>(["issues", sprintId]);
+  };
+
   const { updateIssuesBatch, batchUpdating } = useUpdateIssuesBatch();
   const { updateIssue, isUpdating } = useUpdateIssue();
   const { createIssue, isCreating } = usePostIssue();
@@ -39,5 +46,6 @@ export const useIssues = () => {
     isCreating,
     deleteIssue,
     isDeleting,
+    getIssuesBySprintId,
   };
 };

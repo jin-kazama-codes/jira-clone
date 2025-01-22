@@ -11,8 +11,8 @@ const Container: React.FC<{
     <div
       className={clsx(
         screen
-          ? "item flex h-screen w-screen items-center justify-center"
-          : `${board ? 'max-w-7xl': 'max-w-9xl'} mx-auto px-4 sm:px-6 sm:py-4 lg:px-8`,
+          ? "item flex h-screen  w-screen items-center justify-center"
+          : `${board ? 'max-w-7xl overflow-y-scroll': 'max-w-9xl'} mx-auto px-4  sm:px-6 sm:py-4 lg:px-8`,
         className
       )}
     >
