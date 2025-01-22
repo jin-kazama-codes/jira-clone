@@ -13,7 +13,6 @@ const CreateProject: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const router = useRouter();
-  const { createWorkflow } = useWorkflow()
 
   // Handle input changes
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -50,7 +49,6 @@ const CreateProject: React.FC = () => {
         });
         setError(null);
         setSuccess("Project Created Successfully");
-        createWorkflow()
         router.refresh();
       } else {
         setError('Failed to create project');

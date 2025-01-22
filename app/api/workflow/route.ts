@@ -36,68 +36,6 @@ export async function GET(req: Request) {
   }
 }
 
-export async function POST(req: Request) {
-  try {
-    const { id: projectId } = parseCookies(req, "project");
-
-    const workflowData = {
-      nodes: [
-        {
-          id: "1",
-          data: { label: "To Do" },
-          position: { x: 50, y: 50 },
-          priority: 1,
-        },
-        {
-          id: "2",
-          data: { label: "In Progress" },
-          position: { x: 250, y: 50 },
-          priority: 2,
-        },
-        {
-          id: "3",
-          data: { label: "Done" },
-          position: { x: 450, y: 50 },
-          priority: 3,
-        },
-      ],
-      edges: [
-        { id: "e1-2", source: "1", target: "2" },
-        { id: "e2-3", source: "2", target: "3" },
-      ],
-    };
-
-    const existingWorkflow = await prisma.workflow.findUnique({
-      where: {
-        projectId,
-      }
-    })
-
-    if (existingWorkflow) {
-  return NextResponse.json(
-    { message: "Workflow already exists" },
-    { status: 400 }
-  );
-}
-
-    // Create resource in the database
-    const workflow = await prisma.workflow.create({
-      data: {
-        projectId,
-        workflow: workflowData,
-      },
-    });
-
-    return NextResponse.json({ Workflow: workflow }, { status: 201 });
-  } catch (error) {
-    console.error("Error creating resource:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
-  }
-}
-
 export async function PATCH(req: Request) {
   try {
     const { id: projectId } = parseCookies(req, "project");

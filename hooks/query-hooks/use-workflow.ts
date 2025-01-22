@@ -6,19 +6,6 @@ import toast from "react-hot-toast";
 export const useWorkflow = () => {
   const queryClient = useQueryClient();
 
-  // Mutation for creating a workflow
-  const createWorkflowMutation = useMutation({
-    mutationFn: () => api.workflow.createWorkflow(),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: ["workflow"],
-      });
-    },
-    onError: (error: any) => {
-      toast.error(`Failed to create workflow: ${error.message}`);
-    },
-  });
-
   // Mutation for updating the workflow
   const updateWorkflowMutation = useMutation({
     mutationFn: (updatedWorkflow: any) => api.workflow.updateWorkflow(updatedWorkflow),
@@ -56,7 +43,6 @@ export const useWorkflow = () => {
     isError,
     error,
     refetch,
-    createWorkflow: createWorkflowMutation.mutate,
     updateWorkflow: updateWorkflowMutation.mutate, // Expose update mutation
   };
 };
