@@ -33,7 +33,53 @@ export async function POST(request: Request) {
         defaultAssignee: String(userId),
       },
     });
-    return NextResponse.json({ project: newProject });
+
+    const workflowData = {
+      nodes: [
+        {
+          id: "1",
+          data: { label: "To Do" },
+          position: { x: 50, y: 50 },
+          priority: 1,
+        },
+        {
+          id: "2",
+          data: { label: "In Progress" },
+          position: { x: 250, y: 50 },
+          priority: 2,
+        },
+        {
+          id: "3",
+          data: { label: "Done" },
+          position: { x: 450, y: 50 },
+          priority: 3,
+        },
+      ],
+      edges: [
+        { id: "e1-2", source: "1", target: "2" },
+        { id: "e2-3", source: "2", target: "3" },
+      ],
+    };
+
+    const existingWorkflow = await prisma.workflow.findUnique({
+      where: {
+        projectId: newProject?.id,
+      }
+    })
+
+    if(existingWorkflow){
+      return;
+    }
+
+    // Create resource in the database
+    const workflow = await prisma.workflow.create({
+      data: {
+        projectId: newProject?.id,
+        workflow: workflowData,
+      },
+    });
+
+    return NextResponse.json({ Project: newProject, Workflow: workflow });
   } catch (error) {
     return NextResponse.json({ error: 'Error creating project' }, { status: 500 });
   }
