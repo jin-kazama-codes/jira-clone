@@ -11,23 +11,17 @@ import {
   ModalTrigger,
 } from "@/components/ui/modal";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
-
-
-
+import { useWorklog } from "@/hooks/query-hooks/use-worklog";
 
 interface WorklogDltProps {
   worklog;
   children: ReactNode;
-
 }
 
-const WorklogDlt: React.FC<WorklogDltProps> = ({
-  worklog,
-  children,
-}) => {
+const WorklogDlt: React.FC<WorklogDltProps> = ({ worklog, children }) => {
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
   const [isOpen, setIsOpen] = useState(false);
-
+  const { deleteWorklog } = useWorklog();
 
   // Delete worklog
   async function handleDelete(worklogId: string) {
@@ -37,27 +31,12 @@ const WorklogDlt: React.FC<WorklogDltProps> = ({
     }
 
     try {
-      const response = await fetch(`/api/worklog/${worklogId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          worklogId,
-        })
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to delete worklog entry');
-      }
-      setIsOpen(false)
+      deleteWorklog(worklog?.id)
+      setIsOpen(false);
     } catch (error) {
-      console.error('Error updating worklog:', error)
-
+      console.error("Error updating worklog:", error);
     }
   }
-
 
   return (
     <Modal open={isOpen} onOpenChange={setIsOpen}>
@@ -65,22 +44,22 @@ const WorklogDlt: React.FC<WorklogDltProps> = ({
       <ModalPortal>
         <ModalOverlay />
         <ModalContent className="flex items-center  justify-center">
-          <div className="w-full max-w-sm rounded-xl  h-70">
-            <div className="mb-4   p-5 text-white flex items-center gap-3">
-              <CgDanger className="text-red-600 text-3xl" />
+          <div className="h-70 w-full max-w-sm  rounded-xl">
+            <div className="mb-4   flex items-center gap-3 p-5 text-white">
+              <CgDanger className="text-3xl text-red-600" />
               <ModalTitle className="text-2xl font-bold text-white">
                 Delete worklog entry?
               </ModalTitle>
             </div>
-            <div className=" pb-3 rounded-xl p-6 dark:bg-darkSprint-20 bg-white">
-              <div className="mb-5 flex items-center">
+            <div className=" rounded-xl bg-white p-6 pb-3 dark:bg-darkSprint-20">
+              <div className="mb-5 flex items-center dark:text-white">
                 <p> Once you delete, it's gone for good </p>
               </div>
 
               <div>
-                <div className="flex gap-4   p-6  pt-10 justify-end ">
+                <div className="flex justify-end   gap-4  p-6 pt-10 ">
                   <button
-                    className="bg-red-500 text-white text-sm font-medium py-2 px-3 rounded-xl hover:bg-red-600 transition-colors duration-200"
+                    className="rounded-xl bg-red-500 px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-red-600"
                     // eslint-disable-next-line @typescript-eslint/no-misused-promises
                     onClick={() => handleDelete(worklog.id)}
                   >
@@ -88,7 +67,7 @@ const WorklogDlt: React.FC<WorklogDltProps> = ({
                   </button>
 
                   <button
-                    className=" text-black  text-sm font-medium dark:bg-dark-50 py-2 px-3 rounded-xl hover:bg-gray-200 transition-colors duration-200"
+                    className=" rounded-xl  px-3 py-2 text-sm font-medium text-black transition-colors duration-200 hover:bg-gray-200 dark:bg-dark-50"
                     onClick={() => setIsOpen(false)}
                   >
                     Cancel

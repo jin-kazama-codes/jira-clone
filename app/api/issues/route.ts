@@ -57,7 +57,7 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
 
   let sprintId = searchParams.get("sprintId");
-  if(sprintId === "undefined") {
+  if(sprintId === "undefined" || sprintId === "backlog") {
     sprintId = null;
   }
 
@@ -66,6 +66,7 @@ export async function GET(req: NextRequest) {
     where: {
       projectId: projectId,
       isDeleted: false,
+      type: "TASK",
       sprintId: sprintId ? sprintId : null,
     },
   });

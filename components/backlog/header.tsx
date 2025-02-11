@@ -9,6 +9,7 @@ import { ClearFilters } from "../filter-issue-clear";
 
 const BacklogHeader: React.FC<{ project: Project }> = ({ project }) => {
   const { search, setSearch } = useFiltersContext();
+  console.log("blg header rendered")
   return (
     <div className="flex h-fit flex-col">
       <div className="text-sm text-gray-500 dark:text-dark-0">Projects / {project.name}</div>

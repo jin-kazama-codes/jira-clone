@@ -1,5 +1,5 @@
 import { MdClose } from "react-icons/md";
-import { AiOutlineLike } from "react-icons/ai";
+
 import { IssueDropdownMenu } from "../issue-menu";
 import { DropdownTrigger } from "../../ui/dropdown-menu";
 import { IssuePath } from "../issue-path";

@@ -9,7 +9,7 @@ datasource db {
 }
 
 model Project {
-  key             String    @unique
+  key             String    
   name            String
   defaultAssignee String?
   imageUrl        String?
@@ -19,7 +19,27 @@ model Project {
   id              Int       @id @default(autoincrement())
   cloneChild      Boolean?  @default(false)
   workingDays     Int?      @default(5)
+  companyId       Int?
   members         Member[]
+}
+
+model Company {
+  id               Int   @id @default(autoincrement()) 
+  name             String
+  website          String?  
+  email            String
+  phone            String
+  alternateNumber  String?  
+  billingAddress   String
+  gst              String
+  subscriptionType String
+  trialDuration    String?  
+  date             String
+  status           String
+  logo              String? 
+  bio             String? 
+  proMember       Boolean?  @default(false)
+  users            DefaultUser[] 
 }
 
 model Member {
@@ -49,7 +69,7 @@ model Document {
   type       String
 
   DefaultUser DefaultUser @relation(fields: [ownerId], references: [id])
-
+  
   @@index([ownerId])
 }
 
@@ -125,6 +145,10 @@ model DefaultUser {
   status    Boolean    @default(false)
   id        Int        @id @default(autoincrement())
   documents Document[]
+  companyId Int
+  Company   Company? @relation(fields: [companyId], references: [id])
+  
+  @@index([companyId])
 }
 
 model Account {
@@ -176,4 +200,5 @@ enum role {
   admin
   manager
   member
+  superAdmin
 }

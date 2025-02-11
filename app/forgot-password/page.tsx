@@ -1,4 +1,5 @@
 "use client"
+import Link from 'next/link'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 
@@ -105,6 +106,11 @@ const ForgotPassword = () => {
                   Send Reset Link
                 </button>
               )}
+            </div>
+            <div className="mt-4 flex justify-center">
+            <Link className='text-dark-0 hover:underline' href={'/login'}>
+              Go Back To Login
+            </Link>
             </div>
           </form>
         </div>

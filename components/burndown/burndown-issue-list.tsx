@@ -20,7 +20,7 @@ const BurndownIssueList = ({ issues }) => {
   return (
     <div className=" w-full h-[58vh] overflow-y-scroll" ref={scrollRef}>
       <h2 className="mb-1  text-xl font-semibold dark:text-dark-50">All Issues</h2>
-      <div className="overflow-hidden rounded-lg border  ">
+      <div className="overflow-hidden rounded-lg border  dark:border-darkSprint-30">
         {/* Column Headers */}
         <div className="grid grid-cols-5 gap-4 border-b dark:text-dark-50 bg-slate-300 px-4 py-2 font-medium dark:bg-darkSprint-20  text-gray-700">
           <div>Date</div>

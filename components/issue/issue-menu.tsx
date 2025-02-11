@@ -41,11 +41,13 @@ const IssueDropdownMenu: React.FC<{
   children: ReactNode;
   issue: IssueType;
 }> = ({ children, issue }) => {
-  const { deleteIssue, updateIssue } = useIssues();
-  const { sprints } = useSprints();
+  const { deleteIssue, updateIssue } = useIssues(issue?.sprintId);
+  const { sprints: sprintData } = useSprints();
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
   const [currentPath, setCurrentPath] = useState<string | undefined>(undefined);
   let backlogObj;
+
+  const sprints = sprintData?.pages?.flatMap((page) => page?.sprints)
 
   if (issue.sprintId) {
     backlogObj = {
@@ -57,7 +59,10 @@ const IssueDropdownMenu: React.FC<{
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setCurrentPath(window.location.pathname);
+      const location = window.location.pathname.split('/', 3);
+      const path = `/${location[2]}`
+      console.log("path", path)
+      setCurrentPath(path)
     }
   }, []);
 
@@ -98,6 +103,7 @@ const IssueDropdownMenu: React.FC<{
     }
   };
 
+
   return (
     <Dropdown>
       {children}
@@ -128,7 +134,7 @@ const IssueDropdownMenu: React.FC<{
           {/* TODO: Implement "move to" actions */}
           {isBacklogPage && (
             <>
-              <DropdownLabel className="p-2 text-xs font-normal text-gray-400">
+              <DropdownLabel className="p-2 text-xs font-normal text-gray-400 ">
                 MOVE TO
               </DropdownLabel>
               <DropdownGroup>
@@ -149,7 +155,7 @@ const IssueDropdownMenu: React.FC<{
                         key={sprint.id}
                         textValue={sprint.name}
                         className={clsx(
-                          "border-transparent p-2 text-sm hover:cursor-default hover:bg-gray-100"
+                          "border-transparent p-2 text-sm hover:cursor-default dark:text-dark-50 hover:bg-gray-100 dark:hover:bg-darkSprint-30"
                         )}
                       >
                         <span className={clsx("pr-2 text-sm")}>

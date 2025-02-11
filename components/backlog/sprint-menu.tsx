@@ -28,8 +28,7 @@ const SprintDropdownMenu: React.FC<SprintDropdownMenuProps> = ({
 }) => {
   const [sprints, setSprints] = useState<any[]>([]);
 
-
-  const queryClient = useQueryClient(); 
+  const queryClient = useQueryClient();
 
   const { updateSprint } = useSprints();
 
@@ -37,17 +36,18 @@ const SprintDropdownMenu: React.FC<SprintDropdownMenuProps> = ({
 
   useEffect(() => {
     if (sprintData?.pages) {
-      setSprints(sprintData?.pages.flatMap((page) => page.sprints));
+      const fetchedSprints = sprintData?.pages.flatMap((page) => page.sprints);
+      console.log("sprintsData", fetchedSprints);
+      setSprints(fetchedSprints);
     }
   }, [sprintData]);
-
 
   const menuOptions = useMemo<MenuOptionType[]>(() => {
     const options = [
       { id: "edit", label: "Edit Sprint" },
       { id: "delete", label: "Delete Sprint" },
     ];
-    const currentSprintIndex = sprints?.findIndex(s => s.id === sprint.id);
+    const currentSprintIndex = sprints?.findIndex((s) => s.id === sprint.id);
 
     // Determine menu options based on sprint's position in the sorted array
     if (currentSprintIndex === 0) {
@@ -59,7 +59,7 @@ const SprintDropdownMenu: React.FC<SprintDropdownMenuProps> = ({
       options.push({ id: "up", label: "Move Sprint Up" });
       options.push({ id: "down", label: "Move Sprint Down" });
     }
-  
+
     return options;
   }, [sprint.id, sprints]);
 
@@ -67,17 +67,23 @@ const SprintDropdownMenu: React.FC<SprintDropdownMenuProps> = ({
     const currentIndex = sprints.findIndex(
       (s) => s.position === sprint.position
     );
+    console.log("poscurrentindex", currentIndex);
     const targetIndex =
       placement === "up" ? currentIndex - 1 : currentIndex + 1;
 
+    console.log("postargetindex", targetIndex);
+
     if (targetIndex >= 0 && targetIndex < sprints.length) {
       const targetSprint = sprints[targetIndex];
+      console.log("postargetsprint", targetSprint);
 
       // Swap positions between current sprint and target sprint
       updateSprint({ sprintId: sprint.id, position: targetSprint.position });
       updateSprint({ sprintId: targetSprint.id, position: sprint.position });
     }
   };
+
+  console.log("sprints", sprints);
 
   const handleSprintAction = (
     id: MenuOptionType["id"],
@@ -90,7 +96,7 @@ const SprintDropdownMenu: React.FC<SprintDropdownMenuProps> = ({
       setUpdateModalIsOpen(true);
     } else if (id === "up" || id === "down") {
       handlePositionChange(id);
-      console.log("pos")
+      console.log("pos");
     }
   };
 
@@ -103,7 +109,7 @@ const SprintDropdownMenu: React.FC<SprintDropdownMenuProps> = ({
             side="top"
             sideOffset={5}
             align="end"
-            className="z-10 w-fit rounded-md border dark:bg-darkSprint-20 dark:text-dark-50  dark:border-darkSprint-30 border-gray-300 bg-white shadow-md"
+            className="z-10 w-fit rounded-md border border-gray-300 bg-white  shadow-md dark:border-darkSprint-30 dark:bg-darkSprint-20 dark:text-dark-50"
           >
             <DropdownLabel className="sr-only">ACTIONS</DropdownLabel>
             <DropdownGroup>
@@ -113,7 +119,7 @@ const SprintDropdownMenu: React.FC<SprintDropdownMenuProps> = ({
                   key={action.id}
                   textValue={action.label}
                   className={clsx(
-                    "border-transparent px-4 py-2 text-sm hover:cursor-default dark:hover:text-white dark:hover:bg-darkSprint-30 hover:bg-gray-100"
+                    "border-transparent px-4 py-2 text-sm hover:cursor-default hover:bg-gray-100 dark:hover:bg-darkSprint-30 dark:hover:text-white"
                   )}
                 >
                   <span className="pr-2 text-sm">{action.label}</span>

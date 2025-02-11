@@ -23,7 +23,7 @@ const IssueTitle = React.forwardRef<HTMLInputElement, IssueTitleProps>(
       }
     }, [isEditing, ref]);
 
-    const { updateIssue } = useIssues();
+    const { updateIssue } = useIssues(issue?.sprintId);
     const [isAuthenticated, openAuthModal] = useIsAuthenticated();
 
     function handleNameChange(e: React.SyntheticEvent) {

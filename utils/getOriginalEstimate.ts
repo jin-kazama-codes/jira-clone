@@ -2,12 +2,13 @@ import { useWorkflow } from "@/hooks/query-hooks/use-workflow";
 import { useEffect, useState } from "react";
 import { minutesToTimeString, timeStringToMinutes } from "./helpers";
 
-export const getTimeEstimates = (issues, page = "sprint") => {
-  const [STATUSES, setStatuses] = useState([]);
+export const useTimeEstimates = (issues, page = "sprint") => {
+  const [statuses, setStatuses] = useState([]);
   const [estimates, setEstimates] = useState({
     convertedOriginalEstimate: "0m",
     convertedTotalTime: {},
   });
+
   const { data: workflow, isLoading, isError } = useWorkflow();
 
   useEffect(() => {
@@ -18,9 +19,9 @@ export const getTimeEstimates = (issues, page = "sprint") => {
   }, [workflow]);
 
   useEffect(() => {
-    if (!isLoading && !isError && STATUSES.length > 0) {
-      // Create a status object dynamically from STATUSES
-      const statusObject = STATUSES.reduce((acc, status) => {
+    if (!isLoading && !isError && statuses.length > 0) {
+      // Create a status object dynamically from statuses
+      const statusObject = statuses.reduce((acc, status) => {
         const key = status.toUpperCase().replace(/\s+/g, "_");
         acc[key] = 0;
         return acc;
@@ -29,7 +30,6 @@ export const getTimeEstimates = (issues, page = "sprint") => {
       let totalOriginalEstimate = 0;
       let totalTime = page !== "sprint" ? 0 : { ...statusObject };
 
-      // Loop over issues to calculate estimates
       issues.forEach((issue) => {
         if (issue.estimateTime) {
           const convertedTime = timeStringToMinutes(issue.estimateTime);
@@ -71,7 +71,8 @@ export const getTimeEstimates = (issues, page = "sprint") => {
         convertedTotalTime,
       });
     }
-  }, [isLoading, isError, STATUSES, issues, page]);
+  }, [isLoading, isError, statuses, issues, page]);
 
   return estimates;
 };
+

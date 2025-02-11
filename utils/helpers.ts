@@ -54,7 +54,7 @@ export function isSubtask(issue: IssueType | null) {
 
 export function hasChildren(issue: IssueType | IssueType["parent"] | null) {
   if (!issue) return false;
-  return issue.children.length > 0;
+  return issue.children?.length > 0;
 }
 
 export function sprintId(id: string | null | undefined) {
@@ -400,3 +400,9 @@ export const recalculateEdges = (updatedNodes, setEdges) => {
 
   setEdges(newEdges);
 };
+
+export const generatePastelColor = () => {
+  const hue = Math.floor(Math.random() * 360);
+  return `hsl(${hue}, 70%, 85%)`;
+};
+

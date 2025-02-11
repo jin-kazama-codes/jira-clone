@@ -20,11 +20,10 @@ import { useSprints } from "@/hooks/query-hooks/use-sprints";
 const SprintDropdownField: React.FC<{
   control: Control<FormValues, "duration">;
   errors: FieldErrors<FormValues>;
-}> = ({ control, errors }) => {
+}> = ({ control, errors, sprint }) => {
   const { sprints: sprintData } = useSprints();
   const backlog = { id: "backlog", name: "Backlog", status: "PENDING" };
-  console.log("sprint data", sprintData)
-  const sprints = sprintData?.pages.flatMap((page) => page.sprints)
+  const sprints = sprintData?.pages?.flatMap((page) => page?.sprints)
 
 
   return (
@@ -48,7 +47,7 @@ const SprintDropdownField: React.FC<{
                     <SelectGroup>
                       {sprints &&
                         [...sprints, backlog]
-                          ?.filter((sprint) => sprint.status === "PENDING")
+                        ?.filter((s) => s.id !== sprint.id)
                           ?.map((sprint) => (
                             <SelectItem
                               key={sprint.id}

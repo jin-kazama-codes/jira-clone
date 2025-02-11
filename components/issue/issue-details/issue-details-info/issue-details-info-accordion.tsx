@@ -24,9 +24,8 @@ import { dateToLongString } from "@/utils/helpers";
 const IssueDetailsInfoAccordion: React.FC<{ issue: IssueType }> = ({
   issue,
 }) => {
-  const { updateIssue } = useIssues();
+  const { updateIssue } = useIssues(issue.sprintId);
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
-  // const { sprints } = useSprints();
 
   const user = useCookie("user");
   const [openAccordion, setOpenAccordion] = useState("details");

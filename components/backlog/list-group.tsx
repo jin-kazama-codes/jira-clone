@@ -10,42 +10,32 @@ import {
   type DropResult,
 } from "react-beautiful-dnd";
 import { type IssueType } from "@/utils/types";
-import { useCallback, useEffect, useState } from "react";
-import { useFiltersContext } from "@/context/use-filters-context";
-import {
-  assigneeNotInFilters,
-  epicNotInFilters,
-  insertItemIntoArray,
-  isEpic,
-  isNullish,
-  isSubtask,
-  issueNotInSearch,
-  issueTypeNotInFilters,
-  sprintId,
-} from "@/utils/helpers";
+import { insertItemIntoArray, isNullish, sprintId } from "@/utils/helpers";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
 import { type Sprint } from "@prisma/client";
 import { Button } from "../ui/button";
+import IssueListSkeleton from "../ui/issue-list-skeleton";
+import { useQueryClient } from "@tanstack/react-query";
 
 const ListGroup: React.FC<{
   className?: string;
   sprints: Sprint[];
-  hasNextPage;
-  fetchNextPage;
-  isFetchingNextPage;
+  hasNextPage: any;
+  fetchNextPage: any;
+  isFetchingNextPage: any;
+  isLoading: boolean 
 }> = ({
   className,
   hasNextPage,
   fetchNextPage,
   isFetchingNextPage,
   sprints,
+  isLoading,
 }) => {
-  const { updateIssue, getIssuesBySprintId } = useIssues();
+  const { updateIssue } = useIssues();
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
-  const { search, assignees, issueTypes, epics } = useFiltersContext();
-  const [openAccordion, setOpenAccordion] = useState<[]>([]);
-  const [issues, setIssues] = useState<IssueType[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const queryClient = useQueryClient();
+
 
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -53,79 +43,7 @@ const ListGroup: React.FC<{
     }
   };
 
-  async function fetchAllIssues() {
-    if (!sprints.length) return;
-
-    try {
-      setLoading(true); // Start loading
-
-      setOpenAccordion(sprints[0]?.id);
-
-      // Fetch sprint issues
-      const sprintIssuesPromises = sprints.map((sprint) =>
-        getIssuesBySprintId(sprint.id)
-      );
-
-      // Fetch backlog issues (explicitly passing null)
-      const backlogIssuesPromise = getIssuesBySprintId();
-
-      // Wait for all issues to be fetched
-      const allIssues = await Promise.all([
-        ...sprintIssuesPromises,
-        backlogIssuesPromise,
-      ]);
-
-      // Combine all issues
-      const combinedIssues = allIssues.flat();
-
-      setIssues(combinedIssues);
-    } catch (error) {
-      console.error("Error fetching issues:", error);
-    } finally {
-      setLoading(false); // Stop loading
-    }
-  }
-
-  useEffect(() => {
-    fetchAllIssues();
-  }, [sprints]);
-
-  // Refetch issues when the accordion changes
-  // useEffect(() => {
-  //   async function fetchIssues() {
-  //     if (openAccordion) {
-  //       setLoading(true);
-  //       const issueData = await getIssuesBySprintId(openAccordion);
-  //       setIssues(issueData);
-  //       setLoading(false);
-  //     }
-  //   }
-
-  //   fetchIssues();
-  // }, [openAccordion]);
-
-  const filterIssues = useCallback(
-    (issues: IssueType[] | undefined, sprintId: string | null) => {
-      if (!issues) return [];
-      return issues.filter((issue) => {
-        if (
-          issue.sprintId === sprintId &&
-          !isEpic(issue) &&
-          !isSubtask(issue)
-        ) {
-          if (issueNotInSearch({ issue, search })) return false;
-          if (assigneeNotInFilters({ issue, assignees })) return false;
-          if (epicNotInFilters({ issue, epics })) return false;
-          if (issueTypeNotInFilters({ issue, issueTypes })) return false;
-          return true;
-        }
-        return false;
-      });
-    },
-    [search, assignees, epics, issueTypes]
-  );
-
-  const onDragEnd = (result: DropResult) => {
+  const onDragEnd = async (result: DropResult) => {
     if (!isAuthenticated) {
       openAuthModal();
       return;
@@ -134,25 +52,37 @@ const ListGroup: React.FC<{
     const { destination, source } = result;
     if (isNullish(destination) || isNullish(source)) return;
 
-    updateIssue({
-      issueId: result.draggableId,
-      sprintId: sprintId(destination.droppableId),
-      sprintPosition: calculateIssueSprintPosition({
-        activeIssues: issues ?? [],
-        destination,
-        source,
-        droppedIssueId: result.draggableId,
-      }),
-    });
+    //todo calculatesprint position active issues need issues
+    const activeIssues = queryClient.getQueryData<IssueType[]>([
+      "issues",
+      destination.droppableId,
+    ]);
+
+    updateIssue(
+      {
+        issueId: result.draggableId,
+        sprintId: sprintId(destination.droppableId),
+        sprintPosition: calculateIssueSprintPosition({
+          activeIssues: activeIssues ?? [],
+          destination,
+          source,
+          droppedIssueId: result.draggableId,
+        }),
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries(["issues", destination.droppableId]);
+          queryClient.invalidateQueries(["issues", source.droppableId]);
+        },
+      }
+    );
   };
 
-  if (loading) {
-    return <div className="py-10 text-center">Loading...</div>;
+  if (isLoading) {
+    return <IssueListSkeleton />;
   }
 
-  if (!sprints || !sprints.length) {
-    return <div className="py-10 text-center">No sprints available</div>;
-  }
+  if (!sprints) return <div />;
 
   return (
     <div
@@ -162,36 +92,31 @@ const ListGroup: React.FC<{
       )}
     >
       <DragDropContext onDragEnd={onDragEnd}>
-        {sprints.map((sprint) => (
+        {sprints.map((sprint, index) => (
           <div key={sprint.id} className="my-3">
-            <SprintList
-              sprint={sprint}
-              issues={
-                // openAccordion === sprint.id
-                filterIssues(issues, sprint.id)
-                // : []
-              }
-              openAccordion={openAccordion}
-              setOpenAccordion={setOpenAccordion}
-            />
-            
+            <SprintList sprint={sprint} index={index} />
           </div>
         ))}
         {hasNextPage && (
-              <div className="py-4 text-center">
-                <button
-                  onClick={handleLoadMore}
-                  className="btn btn-primary"
-                  disabled={isFetchingNextPage}
-                >
-                
-                  {isFetchingNextPage ? (<div className="h-10 w-10 animate-spin rounded-full border-4 border-t-4 border-gray-200 dark:bg-darkSprint-30 border-t-black dark:border-t-dark-0" />) : (<Button className="rounded-xl px-4 dark:!bg-dark-0  !bg-button hover:!bg-buttonHover">
-          <span className="whitespace-nowrap text-white">Load More</span>
-        </Button>)}
-                </button>
-              </div>
-            )}
-        <BacklogList id="backlog" issues={filterIssues(issues, null)} />
+          <div className="py-4 text-center">
+            <button
+              onClick={handleLoadMore}
+              className="btn btn-primary"
+              disabled={isFetchingNextPage}
+            >
+              {isFetchingNextPage ? (
+                <div className="h-10 w-10 animate-spin rounded-full border-4 border-t-4 border-gray-200 border-t-black dark:border-t-dark-0 dark:bg-darkSprint-30" />
+              ) : (
+                <Button className="rounded-xl !bg-button px-4  hover:!bg-buttonHover dark:!bg-dark-0">
+                  <span className="whitespace-nowrap text-white">
+                    Load More
+                  </span>
+                </Button>
+              )}
+            </button>
+          </div>
+        )}
+        <BacklogList id="backlog" />
       </DragDropContext>
     </div>
   );
@@ -226,9 +151,9 @@ type IssueListPositionProps = {
 
 function getAfterDropPrevNextIssue(props: IssueListPositionProps) {
   const { activeIssues, destination, droppedIssueId } = props;
-  const sortedIssues = activeIssues
-    .filter((issue) => issue.sprintId === destination.droppableId)
-    .sort((a, b) => a.sprintPosition - b.sprintPosition);
+  const sortedIssues = activeIssues.sort(
+    (a, b) => a.sprintPosition - b.sprintPosition
+  );
 
   const droppedIssue = activeIssues.find(
     (issue) => issue.id === droppedIssueId

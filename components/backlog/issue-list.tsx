@@ -12,11 +12,11 @@ import clsx from "clsx";
 import { useStrictModeDroppable } from "@/hooks/use-strictmode-droppable";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
 
-const IssueList: React.FC<{ sprintId: string | null; issues: IssueType[]; }> = ({
+const IssueList: React.FC<{ sprintId: string | null; issues: IssueType[] }> = ({
   sprintId,
   issues,
 }) => {
-  const { createIssue, isCreating } = useIssues();
+  const { createIssue, isCreating } = useIssues(sprintId);
   const [isEditing, setIsEditing] = useState(false);
   const [droppableEnabled] = useStrictModeDroppable();
   const [checkedIssue, setCheckedIssue] = useState<string[]>([]);
@@ -107,7 +107,7 @@ const IssueList: React.FC<{ sprintId: string | null; issues: IssueType[]; }> = (
             <div
               className={clsx(
                 issues.length &&
-                "flex flex-col gap-1 divide-y text-gray-800 rounded-xl bg-transparent"
+                  "flex flex-col gap-1 divide-y rounded-xl bg-transparent text-gray-800"
               )}
             >
               {issues
@@ -130,7 +130,7 @@ const IssueList: React.FC<{ sprintId: string | null; issues: IssueType[]; }> = (
         onClick={() => setIsEditing(true)}
         data-state={isEditing ? "closed" : "open"}
         customColors
-        className="my-1 flex w-full rounded-xl bg-transparent dark:text-dark-50 dark:hover:bg-darkSprint-40 dark:hover:text-white hover:bg-gray-200 [&[data-state=closed]]:hidden"
+        className="my-1 flex w-full rounded-xl bg-transparent hover:bg-gray-200 dark:text-dark-50 dark:hover:bg-darkSprint-40 dark:hover:text-white [&[data-state=closed]]:hidden"
       >
         <AiOutlinePlus className="text-sm" />
         <span className="text-md ml-1">Create Issue</span>

@@ -13,6 +13,7 @@ export const EditorComposer: React.FC<{
   jsonState: SerializedEditorState | undefined;
   children: ReactNode;
 }> = ({ jsonState, readonly, children }) => {
+  console.log("commenteditorcomposer",jsonState)
   return (
     <LexicalComposer
       initialConfig={{

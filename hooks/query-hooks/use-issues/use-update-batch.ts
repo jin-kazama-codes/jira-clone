@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { type AxiosError } from "axios";
 import { TOO_MANY_REQUESTS } from ".";
 
-const useUpdateIssuesBatch = () => {
+const useUpdateIssuesBatch = (sprintId?: string) => {
   const queryClient = useQueryClient();
 
   const { mutate: updateIssuesBatch, isLoading: batchUpdating } = useMutation(
@@ -15,14 +15,15 @@ const useUpdateIssuesBatch = () => {
       // OPTIMISTIC UPDATE
       onMutate: async (newIssue) => {
         // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-        await queryClient.cancelQueries(["issues"]);
+        await queryClient.cancelQueries(["issues", sprintId]);
         // Snapshot the previous value
         const previousIssues = queryClient.getQueryData<IssueType[]>([
           "issues",
+          sprintId,
         ]);
 
         // Optimistically updating the issues
-        queryClient.setQueryData(["issues"], (old?: IssueType[]) => {
+        queryClient.setQueryData(["issues", sprintId], (old?: IssueType[]) => {
           const newIssues = (old ?? []).map((issue) => {
             const { ids, ...updatedProps } = newIssue;
             if (ids.includes(issue.id)) {
@@ -39,7 +40,7 @@ const useUpdateIssuesBatch = () => {
       },
       onError: (err: AxiosError, newIssue, context) => {
         // If the mutation fails, use the context returned from onMutate to roll back
-        queryClient.setQueryData(["issues"], context?.previousIssues);
+        queryClient.setQueryData(["issues", sprintId], context?.previousIssues);
 
         if (err?.response?.data == "Too many requests") {
           toast.error(TOO_MANY_REQUESTS);
@@ -53,7 +54,7 @@ const useUpdateIssuesBatch = () => {
       onSettled: () => {
         // Always refetch after error or success
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        queryClient.invalidateQueries(["issues"]);
+        queryClient.invalidateQueries(["issues", sprintId]);
       },
     }
   );

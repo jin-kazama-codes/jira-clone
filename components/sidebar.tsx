@@ -123,12 +123,11 @@ const Sidebar: React.FC = () => {
 
   return (
     <div
-      className={`relative flex h-screen ${sidebarWidth} z-20 flex-col gap-y-3 bg-indigo-50 p-3 shadow-inner transition-all duration-300 dark:bg-darkSprint-10`}
+      className={`relative flex min-h-screen ${sidebarWidth} z-20 flex-col gap-y-3 bg-indigo-50 p-3 shadow-inner transition-all duration-300 dark:bg-darkSprint-10`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{
         position: isCollapsed ? "absolute" : "relative",
-        height: "100vh",
       }}
     >
       <div

@@ -7,7 +7,7 @@ import { useIssues } from "@/hooks/query-hooks/use-issues";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
 const Description: React.FC<{ issue: IssueType }> = ({ issue }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const { updateIssue } = useIssues();
+  const { updateIssue } = useIssues(issue.sprintId);
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
 
   const [content, setContent] = useState<SerializedEditorState | undefined>(

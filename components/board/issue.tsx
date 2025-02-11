@@ -34,7 +34,7 @@ const Issue: React.FC<{ issue: IssueType; index: number }> = ({
           )}
         >
           <div className="flex items-start justify-between">
-            <span className="mb-2">{issue.name}</span>
+            <span className="mb-2 dark:text-dark-50" >{issue.name}</span>
             {(user?.role === "admin" ||
               user?.role === "manager") &&
               <IssueDropdownMenu issue={issue}>

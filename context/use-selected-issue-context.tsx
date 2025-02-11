@@ -40,11 +40,12 @@ export const SelectedIssueProvider = ({
   );
 
   useEffect(() => {
-    setIssueKey(searchParams.get("selectedIssue"));
+    if (searchParams.get("selectedIssue"))
+      setIssueKey(searchParams.get("selectedIssue"));
   }, [searchParams]);
 
   useEffect(() => {
-    setSelectedIssueUrl(issueKey);
+    if (searchParams.get("selectedIssue")) setSelectedIssueUrl(issueKey);
   }, [issueKey, setSelectedIssueUrl]);
 
   return (

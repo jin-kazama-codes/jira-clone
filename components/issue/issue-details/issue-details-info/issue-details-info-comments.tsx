@@ -27,23 +27,22 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
   const scrollRef = useRef(null);
   const [isWritingComment, setIsWritingComment] = useState(false);
   const [isInViewport, ref] = useIsInViewport();
-  const { addComment } = useIssueDetails();
+  const { comments, commentsLoading, addComment } = useIssueDetails(issue?.id);
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
   const user = useCookie("user");
   const [image, setImage] = useState<File[] | null>([]);
   const [uploading, setUploading] = useState(false);
   const [imageUrl, setImageUrl] = useState<String[] | null>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const issueId = issue?.id
 
-    const { data: comments, isLoading: commentsLoading, refetch } = useQuery(
-      ["issues", "comments", issueId],
-      () => api.issues.getIssueComments({ issueId: issueId ?? "" }),
-      {
-        enabled: !!issueId,
-        refetchOnMount: false,
-      }
-    );
+    // const { data: comments, isLoading: commentsLoading } = useQuery(
+    //   ["comments", issueId],
+    //   () => api.issues.getIssueComments({ issueId: issueId ?? "" }),
+    //   {
+    //     enabled: !!issueId,
+    //     refetchOnMount: false,
+    //   }
+    // );
   
 
   const handleButtonClick = () => {
@@ -134,7 +133,6 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
     setImage(null);
     setImageUrl([]);
     setIsWritingComment(false);
-    refetch();
   }
 
   function handleDelete(index: number) {
@@ -153,7 +151,7 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
   }
   if(commentsLoading){
     return(
-      <div>Loading...</div>
+      <div className="flex items-center justify-center mt-5"><div className="h-10 w-10 animate-spin rounded-full border-4 border-t-4 border-gray-200 border-t-black dark:border-t-dark-0 dark:bg-darkSprint-30" /></div>
     )
   }
   return (
@@ -242,7 +240,9 @@ const CommentPreview: React.FC<{
 }> = ({ comment, user }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
-  const { updateComment, deleteComment } = useIssueDetails();
+  const { updateComment, deleteComment } = useIssueDetails(comment.issueId);
+
+
 
   function handleSave(state: SerializedEditorState | undefined) {
     if (!isAuthenticated) {
@@ -269,6 +269,8 @@ const CommentPreview: React.FC<{
       commentId: comment.id,
     });
   }
+
+
 
   return (
     <div className="flex bg-transparent dark:bg-darkSprint-50  rounded-xl px-2 pt-2 w-full gap-x-2">
@@ -306,6 +308,7 @@ const CommentPreview: React.FC<{
           />
         ) : (
           <EditorPreview
+          className="!text-dark-50"
             action="comment"
             content={
               comment.content

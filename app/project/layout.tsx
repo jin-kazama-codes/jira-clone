@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 
 const ProjectLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
-  const hideSidebar = pathname === "/project/create" || pathname === "/project";
+  const hideSidebar = pathname === "/project/create" || pathname === "/project" || pathname === '/admin';
 
   return (
     <Fragment>

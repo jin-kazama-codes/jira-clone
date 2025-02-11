@@ -19,6 +19,7 @@ import { useIsAuthenticated } from "@/hooks/use-is-authed";
 import { type DefaultUser } from "@prisma/client";
 import { TooltipWrapper } from "../ui/tooltip";
 import { AssignIssueEmailTemplate } from "../email-template";
+import { useCookie } from "@/hooks/use-cookie";
 
 const IssueAssigneeSelect: React.FC<{
   issue: IssueType;
@@ -26,7 +27,9 @@ const IssueAssigneeSelect: React.FC<{
   avatarOnly?: boolean;
 }> = ({ issue, avatarSize, avatarOnly = false }) => {
   const { members } = useMembers();
-  const { updateIssue, isUpdating } = useIssues();
+  const { updateIssue, isUpdating } = useIssues(
+    issue?.sprintId ?? issue?.parentId
+  );
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
   const unassigned = {
     id: "unassigned",
@@ -43,10 +46,12 @@ const IssueAssigneeSelect: React.FC<{
     const initials = nameParts.map((part) => part.charAt(0)).join("");
     return initials.toUpperCase();
   }
+
   function getColorFromLocalStorage(memberId: string | number) {
     const savedColorMap = JSON.parse(localStorage.getItem("colorMap")) || {};
     return savedColorMap[memberId] || "#ccc";
   }
+
   function handleSelectChange(value: DefaultUser["id"]) {
     if (!isAuthenticated) {
       openAuthModal();
@@ -93,7 +98,11 @@ const IssueAssigneeSelect: React.FC<{
     );
   }
 
-  return (
+  const user = useCookie("user");
+  const isAdminOrManager =
+    user && (user.role === "admin" || user.role === "manager");
+
+  return isAdminOrManager ? (
     <Select onValueChange={handleSelectChange}>
       <SelectTrigger
         onClick={(e) => e.stopPropagation()}
@@ -132,7 +141,7 @@ const IssueAssigneeSelect: React.FC<{
       </SelectTrigger>
       <SelectPortal className="z-50 w-full">
         <SelectContent position="popper">
-          <SelectViewport className="w-full rounded-md border border-gray-300 dark:bg-darkSprint-20 dark:border-darkSprint-30 dark:text-dark-50 bg-white pt-2 shadow-md">
+          <SelectViewport className="w-full rounded-md border border-gray-300 bg-white pt-2 shadow-md dark:border-darkSprint-30 dark:bg-darkSprint-20 dark:text-dark-50">
             <SelectGroup>
               {members &&
                 [...members, unassigned].map((member) => {
@@ -145,7 +154,7 @@ const IssueAssigneeSelect: React.FC<{
                         member.id == selected ? "checked" : "unchecked"
                       }
                       className={clsx(
-                        "border-l-[3px] border-transparent py-2 pl-2 pr-8 text-sm hover:cursor-default hover:border-blue-600 hover:bg-gray-100 dark:hover:bg-darkSprint-30 dark:hover:text-white focus:outline-none [&[data-state=checked]]:border-blue-600 dark:[&[data-state=checked]]:bg-darkSprint-30 dark:[&[data-state=checked]]:text-white"
+                        "border-l-[3px] border-transparent py-2 pl-2 pr-8 text-sm hover:cursor-default hover:border-blue-600 hover:bg-gray-100 focus:outline-none dark:hover:bg-darkSprint-30 dark:hover:text-white [&[data-state=checked]]:border-blue-600 dark:[&[data-state=checked]]:bg-darkSprint-30 dark:[&[data-state=checked]]:text-white"
                       )}
                     >
                       <div className="flex items-center">
@@ -182,6 +191,27 @@ const IssueAssigneeSelect: React.FC<{
         </SelectContent>
       </SelectPortal>
     </Select>
+  ) : (
+    <Fragment>
+      <TooltipWrapper
+        text={issue.assignee?.name ? issue.assignee?.name : unassigned.name}
+      >
+        <div
+          className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-300"
+          style={{
+            backgroundColor: issue.assignee?.id
+              ? getColorFromLocalStorage(issue.assignee.id)
+              : getColorFromLocalStorage(unassigned.id),
+          }}
+        >
+          <span className="font-bold text-white">
+            {issue.assignee?.name
+              ? getInitials(issue.assignee?.name)
+              : getInitials(unassigned.name)}
+          </span>
+        </div>
+      </TooltipWrapper>
+    </Fragment>
   );
 };
 

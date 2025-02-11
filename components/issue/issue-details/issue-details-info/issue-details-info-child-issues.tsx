@@ -78,7 +78,7 @@ const ChildIssueList: React.FC<{
             <AiOutlinePlus />
           </Button>
         </div>
-        {issues.length ? <ProgressBar issues={issues} /> : null}
+        {/* {issues.length ? <ProgressBar issues={issues} /> : null} */}
         <div className="mt-3" />
         {issues
           .sort(

@@ -21,12 +21,14 @@ interface DeleteUserModalProps {
     role?: string;
   };
   onClose?: () => void;
+  onDeleteSuccess: any
 }
 
 const DeleteUserModal: React.FC<DeleteUserModalProps> = ({
   children,
   user,
   onClose,
+  onDeleteSuccess
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -47,6 +49,7 @@ const DeleteUserModal: React.FC<DeleteUserModalProps> = ({
       if (response.ok) {
         const result = await response.json();
         setIsOpen(false);
+        onDeleteSuccess()
       } else {
         const result = await response.json();
       }
@@ -63,7 +66,7 @@ const DeleteUserModal: React.FC<DeleteUserModalProps> = ({
         <ModalContent>
           <div className="p-5 text-white">
             <ModalTitle>Remove member</ModalTitle>
-            <ModalDescription className="mt-1">
+            <ModalDescription className="mt-1 !text-white">
               Are you sure you want to remove the member ?
             </ModalDescription>
           </div>

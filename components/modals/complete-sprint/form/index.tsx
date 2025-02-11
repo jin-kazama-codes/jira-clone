@@ -7,7 +7,7 @@ import { isDone } from "@/utils/helpers";
 import { useSprints } from "@/hooks/query-hooks/use-sprints";
 import { FormSubmit } from "@/components/form/submit";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
-import { getTimeEstimates } from "@/utils/getOriginalEstimate";
+import { useTimeEstimates } from "@/utils/getOriginalEstimate";
 import { useEffect } from "react";
 
 export type FormValues = {
@@ -30,7 +30,7 @@ const CompleteSprintForm: React.FC<{
     },
   });
 
-  const { convertedOriginalEstimate, convertedTotalTime } = getTimeEstimates(
+  const { convertedOriginalEstimate, convertedTotalTime } = useTimeEstimates(
     issues,
     "velocity"
   );
@@ -76,7 +76,7 @@ const CompleteSprintForm: React.FC<{
       onSubmit={handleSubmit(handleCompleteSprint)}
       className="relative h-full"
     >
-      <SprintDropdownField control={control} errors={errors} />
+      <SprintDropdownField sprint={sprint} control={control} errors={errors} />
       <FormSubmit
         submitText="Complete"
         ariaLabel="Complete sprint"

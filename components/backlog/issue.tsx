@@ -49,6 +49,8 @@ const Issue: React.FC<{
   const { setIssueKey, issueKey } = useSelectedIssueContext();
   const issueKeyColorClass = getIssueKeyColorClass(issue.type);
   const user = useCookie("user");
+  const isAdminOrManager =
+    user && (user.role === "admin" || user.role === "manager");
 
   return (
     <Draggable draggableId={issue.id} index={index}>
@@ -74,7 +76,7 @@ const Issue: React.FC<{
               : "border-b-slate-200 dark:border-b-darkButton-0"
           )}
         >
-          <input
+          {isAdminOrManager && (<input
             type="checkbox"
             checked={onChecked}
             onClick={(e) => e.stopPropagation()} // Prevent parent click event from triggering
@@ -83,7 +85,7 @@ const Issue: React.FC<{
               onHandleCheck();
             }}
             className="form-checkbox mr-3 h-3 w-3 rounded-sm"
-          />
+          />)}
           <div
             data-state={isEditing ? "editing" : "not-editing"}
             className="flex w-fit items-center gap-x-2 rounded-xl [&[data-state=editing]]:w-full [&[data-state=not-editing]]:overflow-x-hidden"

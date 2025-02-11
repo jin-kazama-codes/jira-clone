@@ -28,7 +28,7 @@ const IssueSelectStatus: React.FC<{
 }> = ({ currentStatus, issueId, variant = "sm", page = "backlog" }) => {
 
   const [selectedStatus, setSelectedStatus] = useState(currentStatus);
-  const { data: workflow, isLoading, isError } = useWorkflow()
+  const { data: workflow, isLoading, isError, error } = useWorkflow()
     const [Statuses, setStatuses] = useState([])
     const router = useRouter()
     

@@ -61,7 +61,7 @@ const SmallIssueDetailsInfo = React.forwardRef<
           role="button"
           onClick={() => setIsEditing(true)}
           data-state={isEditing ? "editing" : "notEditing"}
-          className="w-full rounded-xl transition-all dark:[&[data-state=notEditing]]:hover:bg-darkSprint-30 dark:text-dark-50 [&[data-state=notEditing]]:hover:bg-gray-100"
+          className="w-full rounded-xl transition-all dark:text-dark-50 [&[data-state=notEditing]]:hover:bg-gray-100 dark:[&[data-state=notEditing]]:hover:bg-darkSprint-30"
         >
           <IssueTitle
             className="mr-1 py-1"
@@ -111,33 +111,41 @@ const SmallIssueDetailsInfo = React.forwardRef<
         <h2 className="pr-2 dark:text-dark-50">Activity :</h2>
         <div
           className={`${
-            activity === "comments" ? "border-2 bg-button text-white dark:bg-darkButton-0 " : "bg-slate-100 dark:bg-darkButton-20"
-          } rounded-md rounded-r-none  border-2 border-buttonHover px-2 py-1 dark:text-dark-50 dark:hover:bg-darkSprint-20 dark:border-darkButton-30 hover:cursor-pointer `}
+            activity === "comments"
+              ? "border-2 bg-button text-white dark:bg-darkButton-0 "
+              : "bg-slate-100 dark:bg-darkButton-20"
+          } rounded-md rounded-r-none  border-2 border-buttonHover px-2 py-1 hover:cursor-pointer dark:border-darkButton-30 dark:text-dark-50 dark:hover:bg-darkSprint-20 `}
           onClick={() => setActivity("comments")}
         >
           <div className="flex items-center justify-center gap-x-2">
-          <span><HiOutlineChat /></span>
-          <span>Comments</span>
+            <span>
+              <HiOutlineChat />
+            </span>
+            <span>Comments</span>
           </div>
         </div>
         <div
           className={`${
-            activity === "worklog" ? "border-2 bg-button text-white dark:bg-darkButton-0" : "bg-slate-100 dark:bg-darkButton-20"
-          } rounded-md rounded-l-none  border-2 px-2 py-1 border-buttonHover dark:text-dark-50 dark:hover:bg-darkSprint-20 dark:border-darkButton-30  hover:cursor-pointer `}
+            activity === "worklog"
+              ? "border-2 bg-button text-white dark:bg-darkButton-0"
+              : "bg-slate-100 dark:bg-darkButton-20"
+          } rounded-md rounded-l-none  border-2 border-buttonHover px-2 py-1 hover:cursor-pointer dark:border-darkButton-30 dark:text-dark-50  dark:hover:bg-darkSprint-20 `}
           onClick={() => setActivity("worklog")}
         >
           <div className="flex items-center justify-center gap-x-2">
-          <span><MdOutlineWorkHistory/></span>
-          <span>Worklog</span>
+            <span>
+              <MdOutlineWorkHistory />
+            </span>
+            <span>Worklog</span>
           </div>
         </div>
       </div>
       <div className="mt-5">
-      {activity === "comments" ? (
-        <Comments issue={issue} />
-      ) : (
-        <Worklog issue={issue} />
-      )}
+        {activity === "comments" ? (
+          <Comments issue={issue} />
+        ) : (
+          <Worklog issue={issue} />
+        )}
       </div>
     </Fragment>
   );
@@ -172,7 +180,7 @@ const LargeIssueDetails = React.forwardRef<
             role="button"
             onClick={() => setIsEditing(true)}
             data-state={isEditing ? "editing" : "notEditing"}
-            className="w-full transition-all dark:[&[data-state=notEditing]]:hover:bg-darkSprint-30 dark:text-dark-50 [&[data-state=notEditing]]:hover:bg-gray-100"
+            className="w-full transition-all dark:text-dark-50 [&[data-state=notEditing]]:hover:bg-gray-100 dark:[&[data-state=notEditing]]:hover:bg-darkSprint-30"
           >
             <IssueTitle
               className="mr-1 py-1"
@@ -201,27 +209,35 @@ const LargeIssueDetails = React.forwardRef<
         <div className="row mt-6  flex">
           <h2 className="pr-2 dark:text-dark-50">Activity :</h2>
           <div
-          className={`${
-            activity === "comments" ? "border-2 bg-button text-white dark:bg-darkButton-0" : "bg-slate-100"
-          } rounded-md rounded-r-none  border-2 border-buttonHover px-2 py-1 dark:text-dark-50 dark:hover:bg-darkSprint-20 dark:border-darkButton-30 hover:cursor-pointer dark:bg-transparent`}
-          onClick={() => setActivity("comments")}
-        >
-          <div className="flex items-center justify-center gap-x-2">
-          <span><HiOutlineChat /></span>
-          <span>Comments</span>
+            className={`${
+              activity === "comments"
+                ? "border-2 bg-button text-white dark:bg-darkButton-0 "
+                : "bg-slate-100 dark:bg-darkButton-20"
+            } rounded-md rounded-r-none  border-2 border-buttonHover px-2 py-1 hover:cursor-pointer dark:border-darkButton-30 dark:text-dark-50 dark:hover:bg-darkSprint-20 `}
+            onClick={() => setActivity("comments")}
+          >
+            <div className="flex items-center justify-center gap-x-2">
+              <span>
+                <HiOutlineChat />
+              </span>
+              <span>Comments</span>
+            </div>
           </div>
-        </div>
-        <div
-          className={`${
-            activity === "worklog" ? "border-2 bg-button text-white dark:bg-darkButton-0" : "bg-slate-100"
-          } rounded-md rounded-l-none  border-2 px-2 py-1 border-buttonHover dark:text-dark-50 dark:hover:bg-darkSprint-20 dark:border-darkButton-30 hover:cursor-pointer dark:bg-transparent`}
-          onClick={() => setActivity("worklog")}
-        >
-          <div className="flex items-center justify-center gap-x-2">
-          <span><MdOutlineWorkHistory/></span>
-          <span>Worklog</span>
+          <div
+            className={`${
+              activity === "worklog"
+                ? "border-2 bg-button text-white dark:bg-darkButton-0"
+                : "bg-slate-100 dark:bg-darkButton-20"
+            } rounded-md rounded-l-none  border-2 border-buttonHover px-2 py-1 hover:cursor-pointer dark:border-darkButton-30 dark:text-dark-50  dark:hover:bg-darkSprint-20 `}
+            onClick={() => setActivity("worklog")}
+          >
+            <div className="flex items-center justify-center gap-x-2">
+              <span>
+                <MdOutlineWorkHistory />
+              </span>
+              <span>Worklog</span>
+            </div>
           </div>
-        </div>
         </div>
         <div className="mt-4">
           {activity === "comments" ? (

@@ -30,7 +30,7 @@ const OriginalEstimate = React.forwardRef<
     }
   }, [isEditing, inputRef]);
 
-  const { updateIssue } = useIssues();
+  const { updateIssue } = useIssues(issue.sprintId);
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
 
   function handleEstimateChange(e: React.SyntheticEvent) {
@@ -60,7 +60,7 @@ const OriginalEstimate = React.forwardRef<
             id="issue-estimate"
             value={currentEstimate}
             onChange={(e) => setCurrentEstimate(e.target.value)}
-            className={`${page === 'backlog' ? 'w-20' : 'w-full min-w-max'} whitespace-pre-wrap rounded-xl border-2 px-1 py-1.5 outline-2 outline-blue-400`}
+            className={`${page === 'backlog' ? 'w-16' : 'w-32'} whitespace-pre-wrap rounded-xl border-2 px-1 py-1.5 outline-2 outline-blue-400`}
             placeholder="e.g., 2w 4d 6h 45m"
             onKeyDown={(e) => {
               if (e.key === "Enter") {

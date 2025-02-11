@@ -6,20 +6,20 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { type AxiosError } from "axios";
 import { TOO_MANY_REQUESTS } from "./use-issues";
 
-export const useSprints = () => {
+export const useSprints = (sprintId?: string) => {
   const queryClient = useQueryClient();
 
   // GET
-  const { data: sprints, isLoading: sprintsLoading, refetch } = useQuery(
-    ["sprints"],
-    api.sprints.getSprints,
-    {
-      enabled: true, // Only fetch if project ID is present
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      cacheTime: 10 * 60 * 1000, // Cache for 10 minutes
-      retry: 1, // Retry only once if the query fails
-    }
-  );
+  const {
+    data: sprints,
+    isLoading: sprintsLoading,
+    refetch,
+  } = useQuery(["sprints"], api.sprints.getSprints, {
+    enabled: true, // Only fetch if project ID is present
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    cacheTime: 10 * 60 * 1000, // Cache for 10 minutes
+    retry: 1, // Retry only once if the query fails
+  });
 
   // UPDATE
   const { mutate: updateSprint, isLoading: isUpdating } = useMutation(
@@ -35,7 +35,9 @@ export const useSprints = () => {
 
         // Otherwise, we are generically updating the sprint
         queryClient.setQueryData(["sprints"], (old?: Sprint[]) => {
-          const newSprints = (old?.pages.flatMap((page) => page.sprints) ?? []).map((sprint) => {
+          const newSprints = (
+            old?.pages.flatMap((page) => page.sprints) ?? []
+          ).map((sprint) => {
             const { sprintId, ...updatedProps } = newSprint;
             if (sprint.id === sprintId) {
               // Assign the new prop values to the sprint
@@ -123,7 +125,11 @@ export const useSprints = () => {
         });
         queryClient.setQueryData(["sprints"], context?.previousSprints);
       },
-      onSettled: () => {
+      onSettled: (sprint) => {
+        toast.success({
+          message: `Deleted sprint ${sprint.name}`,
+          description: "Sprint deleted",
+        });
         // Always refetch after error or success
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         queryClient.invalidateQueries(["sprints"]);

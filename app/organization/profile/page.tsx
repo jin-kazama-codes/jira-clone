@@ -5,7 +5,9 @@ import "cropperjs/dist/cropper.css";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-"public/images/karya-io-logo.png"
+import { useCookie } from "@/hooks/use-cookie";
+import { useCompany } from "@/hooks/query-hooks/use-company";
+("public/images/karya-io-logo.png");
 
 const ProfilePage = () => {
   const [name, setName] = useState("");
@@ -19,30 +21,20 @@ const ProfilePage = () => {
   const [croppedImage, setCroppedImage] = useState<string | null>(null);
   const [profileLoading, setProfileLoading] = useState(false);
   const cropperRef = useRef(null);
+  const companyId = useCookie("user")?.companyId;
+  const { company, companyLoading, updateCompany, companyUpdating } =
+    useCompany(companyId);
 
   useEffect(() => {
-    const fetchAccountData = async () => {
-      try {
-        const response = await fetch("/api/account");
-        if (response.ok) {
-          const result = await response.json();
-          const account = result.account;
-          setName(account?.name);
-          setContact(account?.contact);
-          setLogo(account?.logo);
-          setEmail(account?.email);
-          setBio(account?.bio);
-          setUrl(account?.url);
-        } else {
-          console.error("Failed to fetch account data");
-        }
-      } catch (err) {
-        console.error("Error fetching account data:", err);
-      }
-    };
-
-    fetchAccountData();
-  }, []);
+    if (company) {
+      setName(company?.name);
+      setContact(company?.phone);
+      setLogo(company?.logo);
+      setEmail(company?.email);
+      setBio(company?.bio);
+      setUrl(company?.website);
+    }
+  }, [company]);
 
   const uploadFileToS3 = async (file: Blob) => {
     const formData = new FormData();
@@ -104,7 +96,7 @@ const ProfilePage = () => {
         email,
       };
 
-      await axios.post("/api/account", accountData);
+      updateCompany(accountData);
       setLogo(croppedImage || logo);
       setSelectedFile(null);
     } catch (error) {
@@ -120,136 +112,139 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="min-h-screen p-6 text-white">
-
+    <div className="min-h-screen p-6 text-white dark:bg-darkSprint-0">
       <form
         onSubmit={(e) => e.preventDefault()}
         className="mx-auto max-w-full space-y-8"
       >
         <div className="flex items-center justify-between">
-          <Link href="/backlog">
-            <button className="rounded bg-button px-4 py-2 text-white transition hover:bg-buttonHover">
+          <Link href="/project">
+            <button className="rounded bg-button px-4 py-2 text-white transition hover:bg-buttonHover dark:bg-dark-0">
               Back
             </button>
           </Link>
 
-          <h1 className="text-3xl font-bold text-gray-700">
+          <h1 className="text-3xl font-bold text-gray-700 dark:text-dark-50">
             Organization Profile
           </h1>
           <button
             type="button"
-            disabled={isLoading}
+            disabled={companyUpdating}
             onClick={handleSave}
-            className="rounded bg-button px-4 py-2 text-white transition hover:bg-buttonHover disabled:bg-gray-500"
+            className="rounded bg-button px-4 py-2 text-white transition hover:bg-buttonHover disabled:bg-gray-500 dark:bg-dark-0"
           >
-            {isLoading ? "Saving..." : "Save Changes"}
+            {companyUpdating ? "Updating..." : "Update"}
           </button>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-[2fr,1fr]">
-          <div className="space-y-2 rounded-lg bg-header">
+        <div className="grid gap-8 md:grid-cols-[2fr,1fr] ">
+          <div className="space-y-2 rounded-lg bg-header dark:bg-darkSprint-10">
             <h2 className=" p-6 text-center text-xl font-semibold">
               Information
             </h2>
 
             {/* Organization Information Fields */}
-            <div className="space-y-2 rounded-lg bg-white p-6">
-              <div className="space-y-2">
-                <label
-                  htmlFor="name"
-                  className="block text-sm  font-medium text-gray-700"
-                >
-                  Name
-                </label>
-                <input
-                  type="text"
-                  placeholder="Name"
-                  id="name"
-                  value={name}
-                  required
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full rounded border-gray-300 bg-gray-200 px-3 py-2 text-black placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+            {companyLoading ? (
+              <div className="h-10 w-10 animate-spin rounded-full border-4 border-t-4 border-gray-200 border-t-black" />
+            ) : (
+              <div className="space-y-2 rounded-lg bg-white p-6  dark:bg-darkSprint-20">
+                <div className="space-y-2">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm  font-medium text-gray-700 dark:text-dark-50"
+                  >
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Name"
+                    id="name"
+                    value={name}
+                    required
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full rounded border border-gray-300 bg-gray-200 px-3 py-2 text-black placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-darkSprint-20 dark:bg-darkSprint-30 dark:text-white dark:placeholder:text-darkSprint-50"
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Email
-                </label>
-                <input
-                  type="email"
-                  placeholder="Email address"
-                  id="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full rounded border-gray-300 bg-gray-200 px-3 py-2 text-black placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+                <div className="space-y-2">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700 dark:text-dark-50"
+                  >
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    placeholder="Email address"
+                    id="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full rounded border border-gray-300 bg-gray-200 px-3 py-2 text-black placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-darkSprint-20 dark:bg-darkSprint-30 dark:text-white dark:placeholder:text-darkSprint-50"
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <label
-                  htmlFor="contact"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Number
-                </label>
-                <input
-                  type="number"
-                  placeholder="Phone number"
-                  id="contact"
-                  required
-                  value={contact}
-                  onChange={(e) => setContact(e.target.value)}
-                  className="w-full rounded border-gray-300 bg-gray-200 px-3 py-2 text-black placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+                <div className="space-y-2">
+                  <label
+                    htmlFor="contact"
+                    className="block text-sm font-medium text-gray-700 dark:text-dark-50"
+                  >
+                    Number
+                  </label>
+                  <input
+                    type="number"
+                    placeholder="Phone number"
+                    id="contact"
+                    required
+                    value={contact}
+                    onChange={(e) => setContact(e.target.value)}
+                    className="w-full rounded border border-gray-300 bg-gray-200 px-3 py-2 text-black placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-darkSprint-20 dark:bg-darkSprint-30 dark:text-white dark:placeholder:text-darkSprint-50"
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <label
-                  htmlFor="bio"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Bio
-                </label>
-                <textarea
-                  id="bio"
-                  value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                  rows={4}
-                  placeholder="Tell us a little bit about yourself"
-                  className="w-full rounded border-gray-300 bg-gray-200 px-3 py-2 text-black placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                ></textarea>
-              </div>
+                <div className="space-y-2">
+                  <label
+                    htmlFor="bio"
+                    className="block text-sm font-medium text-gray-700 dark:text-dark-50"
+                  >
+                    Bio
+                  </label>
+                  <textarea
+                    id="bio"
+                    value={bio}
+                    onChange={(e) => setBio(e.target.value)}
+                    rows={4}
+                    placeholder="Tell us a little bit about yourself"
+                    className="w-full rounded border border-gray-300 bg-gray-200 px-3 py-2 text-black placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-darkSprint-20 dark:bg-darkSprint-30 dark:text-white dark:placeholder:text-darkSprint-50"
+                  ></textarea>
+                </div>
 
-              <div className="space-y-2">
-                <label
-                  htmlFor="url"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Website
-                </label>
-                <input
-                  type="url"
-                  placeholder="www.example.com"
-                  id="url"
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                  className="w-full rounded border-gray-300 bg-gray-200 px-3 py-2 text-black placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+                <div className="space-y-2">
+                  <label
+                    htmlFor="url"
+                    className="block text-sm font-medium text-gray-700 dark:text-dark-50"
+                  >
+                    Website
+                  </label>
+                  <input
+                    type="url"
+                    placeholder="www.example.com"
+                    id="url"
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                    className="w-full rounded border border-gray-300 bg-gray-200 px-3 py-2 text-black placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-darkSprint-20 dark:bg-darkSprint-30 dark:text-white dark:placeholder:text-darkSprint-50"
+                  />
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
-          <div className="h-1/2 space-y-2 rounded-lg bg-header">
+          <div className="h-1/2 space-y-2 rounded-lg bg-header dark:bg-darkSprint-10">
             <h2 className="p-6 text-center text-xl  font-semibold">
               Profile Picture
             </h2>
-            <div className="rounded-lg bg-white p-6">
-              <div className="relative mx-auto flex h-48 w-48 items-center justify-center rounded-full !bg-white">
+            <div className="rounded-lg bg-white p-6  dark:bg-darkSprint-20">
+              <div className="relative mx-auto flex h-48 w-48 items-center justify-center rounded-full !bg-white dark:bg-darkSprint-10">
                 {/* Show the cropped image if available, otherwise show the default image */}
                 {croppedImage ? (
                   <img
@@ -260,11 +255,7 @@ const ProfilePage = () => {
                 ) : (
                   !selectedFile && (
                     <Image
-                      src={
-                        logo
-                          ? logo
-                          : "/images/karya-io-logo.png"
-                      }
+                      src={logo ? logo : "/images/karya-io-logo.png"}
                       alt="Profile picture"
                       width={150}
                       height={150}
@@ -295,7 +286,9 @@ const ProfilePage = () => {
                     onChange={handleFileChange}
                     className="hidden"
                   />
-                  <span className="rounded-full bg-button p-2">✏️</span>
+                  <span className="rounded-full bg-button p-2 dark:bg-darkSprint-10">
+                    ✏️
+                  </span>
                 </label>
               </div>
 

@@ -20,6 +20,7 @@ import { type IssueType } from "@/utils/types";
 import {
   assigneeNotInFilters,
   epicNotInFilters,
+  generatePastelColor,
   getPluralEnd,
   hasChildren,
   insertItemIntoArray,
@@ -41,18 +42,17 @@ import clsx from "clsx";
 import { IssueIcon } from "../issue/issue-icon";
 import { useSelectedIssueContext } from "@/context/use-selected-issue-context";
 import { useWorkflow } from "@/hooks/query-hooks/use-workflow";
+import { Container } from "../ui/container";
 
 // const STATUSES: IssueStatus[] = ["TODO", "IN_PROGRESS", "DONE"];
 
 const Board: React.FC = () => {
   const renderContainerRef = useRef<HTMLDivElement>(null);
 
-  // const { issues } = useIssues();
-  const { sprints, refetch } = useSprints();
+  const { sprints, sprintsLoading } = useSprints();
   const { data: workflow, isLoading, isError } = useWorkflow();
   const [STATUSES, setStatuses] = useState([]);
-  const [issues, setIssues] = useState<IssueType[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [statusColors, setStatusColors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (workflow) {
@@ -63,6 +63,44 @@ const Board: React.FC = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const project = useCookie("project");
+
+  useEffect(() => {
+  
+    const projectId = project.id; // Adjust based on your project object structure
+    const storageKey = `statusColors-${projectId}`;
+    const savedColors = localStorage.getItem(storageKey);
+    const colorMap: Record<string, string> = savedColors ? JSON.parse(savedColors) : {};
+  
+    let needsUpdate = false;
+    workflow?.nodes.forEach((node) => {
+      const statusLabel = node.data.label;
+      if (["To Do", "In Progress", "Done"].includes(statusLabel)) return;
+      if (!colorMap[statusLabel]) {
+        colorMap[statusLabel] = generatePastelColor();
+        needsUpdate = true;
+      }
+    });
+  
+    if (needsUpdate) {
+      localStorage.setItem(storageKey, JSON.stringify(colorMap));
+    }
+  
+    setStatusColors(colorMap);
+  }, [workflow]);
+
+  const getStatusBackgroundColor = (status: string): string => {
+    switch (status) {
+      case "To Do":
+        return "#d1d5db"; 
+      case "In Progress":
+        return "#93c5fd"; 
+      case "Done":
+        return "#86efac"; 
+      default:
+        return statusColors[status] || "#e5e7eb"; 
+    }
+  };
+
   const {
     search,
     assignees,
@@ -71,11 +109,17 @@ const Board: React.FC = () => {
     sprints: filterSprints,
   } = useFiltersContext();
 
-  const activeSprint = sprints.find((sprint) => sprint.status === "ACTIVE");
+  const activeSprint = sprints?.find((sprint) => sprint.status === "ACTIVE");
   const fliteredSprint = sprints?.find(
     (sprint) => sprint.id === filterSprints[0]
   );
 
+  if (activeSprint === undefined || null)
+    return (
+      <Container className="flex h-full w-full items-center justify-center font-mono text-2xl dark:text-white">
+        <div>Start a sprint to access board</div>
+      </Container>
+    );
 
   const activeSprintId = filterSprints[0] ? filterSprints[0] : activeSprint.id;
 
@@ -105,29 +149,10 @@ const Board: React.FC = () => {
     [search, assignees, epics, issueTypes, filterSprints]
   );
 
-  const { updateIssue, getIssuesBySprintId } = useIssues();
+  const { updateIssue } = useIssues(activeSprintId);
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
   const [showChild, setShowChild] = useState(false);
-
-  async function fetchAllIssues() {
-    if (!sprints.length) return;
-    try {
-      setLoading(true); // Start loading
-
-      // Fetch sprint issues
-      const allIssues = await getIssuesBySprintId(activeSprintId);
-
-      setIssues(allIssues);
-    } catch (error) {
-      console.error("Error fetching issues:", error);
-    } finally {
-      setLoading(false); // Stop loading
-    }
-  }
-
-  useEffect(() => {
-    fetchAllIssues();
-  }, [activeSprintId]);
+  const { issues, issuesLoading } = useIssues(activeSprintId);
 
   useLayoutEffect(() => {
     if (!renderContainerRef.current) return;
@@ -139,10 +164,23 @@ const Board: React.FC = () => {
     return null;
   }
 
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) {
-    return <div>Error: {error?.message || "Failed to load data"}</div>;
-  }
+  if (issuesLoading)
+    return (
+      <div>
+        {" "}
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-t-4 border-gray-200 border-t-black" />
+      </div>
+    );
+  if (sprintsLoading)
+    return (
+      <div>
+        {" "}
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-t-4 border-gray-200 border-t-black" />
+      </div>
+    );
+  // if (isError) {
+  //   return <div>Error: {error?.message || "Failed to load data"}</div>;
+  // }
 
   const onDragEnd = (result: DropResult, childIssues = []) => {
     if (!isAuthenticated) {
@@ -152,7 +190,6 @@ const Board: React.FC = () => {
     const { destination, source } = result;
     if (isNullish(destination) || isNullish(source)) return;
 
-    console.log("updating issue")
     updateIssue({
       issueId: result.draggableId,
       status: destination.droppableId as string,
@@ -165,7 +202,6 @@ const Board: React.FC = () => {
         droppedIssueId: result.draggableId,
       }),
     });
-    fetchAllIssues();
   };
 
   const { setIssueKey } = useSelectedIssueContext();
@@ -196,17 +232,13 @@ const Board: React.FC = () => {
               return (
                 <>
                   <div
-                    className={clsx(
-                      " h-max min-h-fit w-[350px]  rounded-xl  border-x-2  px-1.5  ",
-                      status === "To Do"
-                        ? "bg-gray-300 "
-                        : status === "In Progress"
-                        ? "bg-blue-300"
-                        : "bg-green-300"
-                    )}
+                    key={status}
+                    className="h-max min-h-fit w-[350px] rounded-xl border-x-2 px-1.5"
+                    style={{ backgroundColor: getStatusBackgroundColor(status) }}
                   >
                     <h2
-                      className={`text-md sticky top-[0.5px] -mx-1.5 -mt-1.5 mb-0  rounded-b-md border-b-2  px-2 py-3 font-semibold text-black`}
+                      className={` text-md sticky top-0 -mx-1.5  mb-1.5 rounded-t-md dark:border-y-darkSprint-30   px-2 py-3 font-semibold text-black z-10`}
+                      style={{ backgroundColor: getStatusBackgroundColor(status) }}
                     >
                       {status}{" "}
                       {showChild
@@ -235,7 +267,7 @@ const Board: React.FC = () => {
                 <>
                   <div
                     onClick={() => setIssueKey(issue.key)}
-                    className="flex cursor-pointer items-center dark:bg-darkSprint-30 dark:border-darkSprint-20  gap-x-4 border-x-2 border-y bg-slate-50 px-2 py-2"
+                    className="flex cursor-pointer items-center gap-x-4 border-x-2  border-y bg-slate-50 px-2 py-2 dark:border-darkSprint-20 dark:bg-darkSprint-30"
                   >
                     <IssueIcon issueType={issue.type} />
                     <span className="text-xs font-medium text-gray-600 dark:text-dark-50">
@@ -260,12 +292,8 @@ const Board: React.FC = () => {
                       {STATUSES.map((status) => (
                         <div
                           className={clsx(
-                            " h-max min-h-fit w-[350px] rounded-xl border-x-2 dark:border-darkSprint-30 border-b-2 px-1.5 pb-3",
-                            status === "To Do"
-                              ? "bg-gray-100 dark:bg-darkSprint-20"
-                              : status === "In Progress"
-                              ? "bg-blue-100 dark:bg-darkSprint-20"
-                              : "bg-green-100 dark:bg-darkSprint-20"
+                            " h-max min-h-fit w-[350px] rounded-xl border-x-2 border-b-2 px-1.5 pb-3 dark:border-darkSprint-30 dark:bg-darkSprint-20",
+                  
                           )}
                           key={status}
                         >
@@ -298,6 +326,7 @@ const Board: React.FC = () => {
           >
             {STATUSES.map((status) => (
               <IssueList
+              statusColors={statusColors}
                 sprintId={activeSprintId}
                 key={status}
                 status={status}

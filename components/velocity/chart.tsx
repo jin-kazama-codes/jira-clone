@@ -125,12 +125,12 @@ const VelocityChart = () => {
           <>
             <div className="flex gap-4 px-4 justify-center mb-4">
               <div className="flex items-center gap-2">
-                <label htmlFor="year" className="font-medium text-sm">Year:</label>
+                <label htmlFor="year" className="font-medium text-sm dark:text-dark-50">Year:</label>
                 <select
                   id="year"
                   value={selectedYear}
                   onChange={(e) => setSelectedYear(e.target.value)}
-                  className="px-3 py-1.5 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="px-3 py-1.5 bg-white border dark:bg-darkSprint-20 dark:border-darkSprint-30 dark:border-2 dark:text-dark-50  border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   {years.map(year => (
                     <option key={year} value={year.toString()}>{year}</option>
@@ -139,12 +139,12 @@ const VelocityChart = () => {
               </div>
 
               <div className="flex items-center gap-2">
-                <label htmlFor="quarter" className="font-medium text-sm">Quarter:</label>
+                <label htmlFor="quarter" className="font-medium text-sm dark:text-dark-50">Quarter:</label>
                 <select
                   id="quarter"
                   value={selectedQuarter}
                   onChange={(e) => setSelectedQuarter(e.target.value)}
-                  className="px-3 py-1.5 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="px-3 py-1.5 bg-white border dark:bg-darkSprint-20 dark:border-darkSprint-30 dark:border-2 dark:text-dark-50  border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   {quarters.map(quarter => (
                     <option key={quarter} value={quarter.toString()}>Q{quarter}</option>

@@ -1,11 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/server/db";
-import {
-  IssueStatus,
-  type Issue,
-  IssueType,
-  type DefaultUser,
-} from "@prisma/client";
+import { type Issue, IssueType, type DefaultUser } from "@prisma/client";
 import { z } from "zod";
 import { type GetIssuesResponse } from "../route";
 import { filterUserForClient, getBaseUrl } from "@/utils/helpers";
@@ -22,6 +17,7 @@ export async function GET(
   req: NextRequest,
   { params }: { params: { issueId: string } }
 ) {
+  const projectId = parseCookies(req, "project").id
   const { issueId } = params;
 
   try {
@@ -29,6 +25,7 @@ export async function GET(
     const issue = await prisma.issue.findFirst({
       where: {
         key: issueId,
+        projectId
       },
     });
 
@@ -43,19 +40,26 @@ export async function GET(
       },
     });
 
-     // Fetch sprint only if sprintId exists
-     const sprint = issue.sprintId
-     ? await prisma.sprint.findUnique({
-         where: { id: issue.sprintId },
-       })
-     : null;
+    // Fetch sprint only if sprintId exists
+    const sprint = issue.sprintId
+      ? await prisma.sprint.findUnique({
+          where: { id: issue.sprintId },
+        })
+      : null;
 
-   // Combine data into a single object
-   const issueWithChildren = {
-     ...issue,
-     children: childIssues,
-     sprint,
-   };
+    const assignee = issue.assigneeId
+      ? await prisma.defaultUser.findUnique({
+          where: { id: issue.assigneeId },
+        })
+      : null;
+
+    // Combine data into a single object
+    const issueWithChildren = {
+      ...issue,
+      children: childIssues,
+      sprint,
+      assignee
+    };
 
     return NextResponse.json({ issue: issueWithChildren }, { status: 200 });
   } catch (error) {

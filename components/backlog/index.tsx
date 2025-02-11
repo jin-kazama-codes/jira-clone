@@ -1,28 +1,34 @@
 "use client";
-import React, { Fragment, useEffect, useLayoutEffect, useState } from "react";
-import Split from "react-split";
+import React, { Fragment, useEffect, useState, useRef } from "react";
 import { ListGroup } from "./list-group";
 import { IssueDetails } from "../issue/issue-details";
 import { useSelectedIssueContext } from "@/context/use-selected-issue-context";
 import clsx from "clsx";
 import { BacklogHeader } from "./header";
-import { useCookie } from "@/hooks/use-cookie";
-import "@/styles/split.css";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getSprintsPaginatedFromServer } from "@/server/helper";
 
 const Backlog: React.FC = ({ state, project }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  // const project = useCookie("project");
-  const { issueKey, setIssueKey } = useSelectedIssueContext();
-  const renderContainerRef = React.useRef<HTMLDivElement>(null);
+  const { issueKey } = useSelectedIssueContext();
+  const headerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [sprints, setSprints] = useState([]);
 
-  
-  useLayoutEffect(() => {
-    if (!renderContainerRef.current) return;
-    const calculatedHeight = renderContainerRef.current.offsetTop;
-    renderContainerRef.current.style.height = `calc(100vh - ${calculatedHeight}px)`;
+  useEffect(() => {
+    const adjustHeight = () => {
+      if (headerRef.current && containerRef.current) {
+        const headerHeight = headerRef.current.offsetHeight;
+        const viewportHeight = window.innerHeight;
+        const availableHeight = viewportHeight - headerHeight;
+        
+        containerRef.current.style.height = `${availableHeight}px`;
+        containerRef.current.style.maxHeight = `${availableHeight}px`;
+      }
+    };
+
+    adjustHeight();
+    window.addEventListener('resize', adjustHeight);
+    return () => window.removeEventListener('resize', adjustHeight);
   }, []);
 
   const {
@@ -30,6 +36,7 @@ const Backlog: React.FC = ({ state, project }) => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isFetching
   } = useInfiniteQuery(
     ["sprints"],
     ({ pageParam = 0 }) => getSprintsPaginatedFromServer(pageParam),
@@ -45,28 +52,38 @@ const Backlog: React.FC = ({ state, project }) => {
     }
   }, [sprintData]);
 
-
-
   if (!project) return null;
+
   return (
     <Fragment>
-      <BacklogHeader project={project} />
-      <div ref={renderContainerRef} className="min-w-full max-w-max">
-        <Split
-          sizes={issueKey ? [60, 40] : [100, 0]}
-          gutterSize={issueKey ? 2 : 0}
-          className="flex max-h-full w-full"
-          minSize={issueKey ? 400 : 0}
+      <div ref={headerRef}>
+        <BacklogHeader project={project} />
+      </div>
+      <div 
+        ref={containerRef}
+        className="min-w-full max-w-max flex overflow-hidden"
+      >
+        <div 
+          className={clsx(
+            "w-full overflow-auto", 
+            issueKey ? "md:w-4/6 pr-2" : "w-full",
+            issueKey && "pb-5"
+          )}
         >
           <ListGroup
-            className={clsx(issueKey && "pb-5 pr-4")}
             sprints={sprints}
+            isLoading={isFetching}
             hasNextPage={hasNextPage}
             fetchNextPage={fetchNextPage}
             isFetchingNextPage={isFetchingNextPage}
           />
-          <IssueDetails issueKey={issueKey}  />
-        </Split>
+        </div>
+        
+        {issueKey && (
+          <div className="hidden md:block w-2/6 overflow-auto">
+            <IssueDetails />
+          </div>
+        )}
       </div>
     </Fragment>
   );

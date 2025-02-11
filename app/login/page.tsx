@@ -79,8 +79,12 @@ const Login: React.FC = () => {
       if (response.status === 200 && isMounted) {
         let token = response.data.user;
         setCookie("user", token);
-        // Redirect after successful login
-        router.push("/project");
+        console.log("token", token)
+        if(token.role === "superAdmin"){
+          router.push('/admin')
+        }else{
+          router.push("/project");
+        }
       } else {
         setLoading(false);
         setError(response.data.error || "Login failed");

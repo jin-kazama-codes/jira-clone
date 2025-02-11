@@ -17,6 +17,7 @@ export const EditorPreview: React.FC<{
   className?: string;
 }> = ({ action, content, imageURL, className }) => {
   const [jsonState] = useState<EditorContentType>(content);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
@@ -41,6 +42,8 @@ export const EditorPreview: React.FC<{
   };
 
   let documentIndex = 1;
+
+  console.log("commentsjson", content)
 
   return (
     <EditorComposer readonly={true} jsonState={jsonState}>
@@ -84,7 +87,7 @@ export const EditorPreview: React.FC<{
                       href={image}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-500 underline"
+                      className="text-blue-500 underline dark:text-darkSprint-0"
                     >
                       View Document {documentIndex++}
                     </a>

@@ -1,17 +1,23 @@
 import { prisma } from "@/server/db";
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 import { type Project } from "@prisma/client";
 
 export type GetProjectResponse = {
   project: Project | null;
 };
 
-export async function GET(request: Request, { params }: { params: { projectKey: string } }) {
+export async function GET(
+  request: Request,
+  { params }: { params: { projectKey: string } }
+) {
   try {
     const { project_id: projectKey } = params;
 
     if (!projectKey) {
-      return NextResponse.json({ error: 'Project key is required' }, { status: 400 });
+      return NextResponse.json(
+        { error: "Project key is required" },
+        { status: 400 }
+      );
     }
 
     // Fetch project by key
@@ -20,22 +26,28 @@ export async function GET(request: Request, { params }: { params: { projectKey: 
     });
 
     if (!project) {
-      return NextResponse.json({ error: 'Project not found' }, { status: 404 });
+      return NextResponse.json({ error: "Project not found" }, { status: 404 });
     }
 
     return NextResponse.json<GetProjectResponse>({ project });
   } catch (error) {
-    return NextResponse.json({ error: 'Error fetching project' }, { status: 500 });
+    return NextResponse.json(
+      { error: "Error fetching project" },
+      { status: 500 }
+    );
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { project_id: string } }) {
+export async function DELETE(
+  req: Request,
+  { params }: { params: { project_id: string } }
+) {
   try {
     const { project_id } = params;
 
     if (!project_id) {
       return NextResponse.json(
-        { error: 'Project ID is required' },
+        { error: "Project ID is required" },
         { status: 400 }
       );
     }
@@ -49,24 +61,29 @@ export async function DELETE(req: Request, { params }: { params: { project_id: s
     });
 
     if (!activeIssues || activeIssues.length === 0) {
+      await prisma.member.deleteMany({
+        where: {
+          projectId: parseInt(project_id),
+        },
+      });
       // Delete the project as it has no active issues
       await prisma.project.delete({
         where: { id: parseInt(project_id) },
       });
       return NextResponse.json(
-        { message: 'Project successfully deleted' },
+        { message: "Project successfully deleted" },
         { status: 200 }
       );
     } else {
       return NextResponse.json(
-        { message: 'Cannot delete project as it has active issues' },
+        { message: "Cannot delete project as it has active issues" },
         { status: 400 }
       );
     }
   } catch (error) {
-    console.error('ERROR', error);
+    console.error("ERROR", error);
     return NextResponse.json(
-      { error: 'Internal Server Error' },
+      { error: "Internal Server Error" },
       { status: 500 }
     );
   }

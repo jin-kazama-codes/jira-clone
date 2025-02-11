@@ -93,7 +93,7 @@ const UpdateProject: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto my-12 max-w-md rounded-xl bg-header">
+    <div className="container mx-auto my-12 max-w-md rounded-xl dark:bg-darkSprint-10 bg-header">
       <div className=" my-5">
         <div className="rounded-t-xl py-5 text-center ">
           <h1 className="text-3xl font-bold tracking-tight text-white">
@@ -105,11 +105,11 @@ const UpdateProject: React.FC = () => {
         </div>
         <form
           onSubmit={handleSubmit}
-          className="rounded-xl bg-white p-6 pt-5 shadow-lg"
+          className="rounded-xl bg-white p-6 pt-5 dark:bg-darkSprint-20 shadow-lg"
         >
           <div className="grid gap-4">
             <div className="flex flex-col">
-              <label htmlFor="name" className="text-sm font-medium">
+              <label htmlFor="name" className="text-sm dark:text-dark-50 font-medium">
                 New Project Name
               </label>
               <input
@@ -117,7 +117,7 @@ const UpdateProject: React.FC = () => {
                 name="name"
                 type="text"
                 placeholder="Enter new project name"
-                className="focus:border-primary focus:ring-primary mt-3 rounded-xl border border-gray-300 bg-gray-200 px-3 py-2"
+                className="focus:border-primary focus:ring-primary mt-3 rounded-xl dark:bg-darkSprint-30 dark:border-darkSprint-20 dark:placeholder:text-darkSprint-50 dark:text-white border border-gray-300 bg-gray-200 px-3 py-2"
                 onChange={handleChange}
                 value={formData.name}
                 required
@@ -134,20 +134,20 @@ const UpdateProject: React.FC = () => {
                 checked={formData.cloneChild}
                 onChange={handleChange}
               />
-              <label htmlFor="cloneChild" className="text-sm font-medium">
+              <label htmlFor="cloneChild" className="text-sm dark:text-dark-50 font-medium">
                 Clone Child Issues
               </label>
             </div>
 
             {/* New Select for Working Days */}
             <div className="mt-2 flex flex-col">
-              <label htmlFor="workingDays" className="text-sm font-medium">
+              <label htmlFor="workingDays" className="text-sm dark:text-dark-50 font-medium">
                 Working Days
               </label>
               <select
                 id="workingDays"
                 name="workingDays"
-                className="focus:border-primary focus:ring-primary mt-3 rounded-xl border border-gray-300 bg-gray-200 px-3 py-2"
+                className="focus:border-primary focus:ring-primary mt-3 rounded-xl dark:bg-darkSprint-30 dark:border-darkSprint-20 dark:placeholder:text-darkSprint-50 dark:text-white border border-gray-300 bg-gray-200 px-3 py-2"
                 onChange={handleChange}
                 value={formData.workingDays}
               >
@@ -164,7 +164,7 @@ const UpdateProject: React.FC = () => {
             ) : (
               <button
                 type="submit"
-                className="w-full rounded-xl border border-transparent bg-button py-3 text-lg  font-medium text-white shadow-sm transition duration-200 ease-in-out hover:bg-buttonHover focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2"
+                className="w-full rounded-xl border border-transparent dark:!bg-dark-0 bg-button py-3 text-lg  font-medium text-white shadow-sm transition duration-200 ease-in-out hover:bg-buttonHover focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2"
               >
                 Update Project
               </button>
@@ -175,7 +175,7 @@ const UpdateProject: React.FC = () => {
                   e.preventDefault(); 
                   router.push('/workflow');
                 }}
-                className="w-full mt-2 rounded-xl border border-button bg-transparent py-3 text-lg font-medium text-button shadow-sm transition duration-200 ease-in-out hover:border-buttonHover  hover:text-buttonHover focus:ring-2 focus:ring-blue-300 focus:ring-offset-2"
+                className="w-full mt-2 rounded-xl border border-button dark:border-dark-0 dark:text-dark-0 dark:border-2 bg-transparent py-3 text-lg font-medium text-button shadow-sm transition duration-200 ease-in-out hover:border-buttonHover  hover:text-buttonHover focus:ring-2 focus:ring-blue-300 focus:ring-offset-2"
               >
                 View Workflow
               </button>
