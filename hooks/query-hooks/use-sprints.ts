@@ -25,49 +25,64 @@ export const useSprints = (sprintId?: string) => {
   const { mutate: updateSprint, isLoading: isUpdating } = useMutation(
     api.sprints.patchSprint,
     {
-      // OPTIMISTIC UPDATE
       onMutate: async (newSprint) => {
-        // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
         await queryClient.cancelQueries(["sprints"]);
-        // Snapshot the previous value
-        const previousSprints = queryClient.getQueryData<Sprint[]>(["sprints"]);
-        // Optimistically update the sprint
+        const previousSprints = queryClient.getQueryData<{
+          pages: { sprints: Sprint[] }[];
+        }>(["sprints"]);
 
-        // Otherwise, we are generically updating the sprint
-        queryClient.setQueryData(["sprints"], (old?: Sprint[]) => {
-          const newSprints = (
-            old?.pages.flatMap((page) => page.sprints) ?? []
-          ).map((sprint) => {
-            const { sprintId, ...updatedProps } = newSprint;
-            if (sprint.id === sprintId) {
-              // Assign the new prop values to the sprint
-              return Object.assign(sprint, updatedProps);
-            }
-            return sprint;
-          });
-          return newSprints;
-        });
+        queryClient.setQueryData(
+          ["sprints"],
+          (old?: { pages: { sprints: Sprint[] }[] }) => {
+            if (!old) return old;
 
-        // Return a context object with the snapshotted value
+            return {
+              ...old,
+              pages: old.pages.map((page) => ({
+                ...page,
+                sprints: page.sprints.map((sprint) => {
+                  const { sprintId, ...updatedProps } = newSprint;
+                  if (sprint.id === sprintId) {
+                    return { ...sprint, ...updatedProps };
+                  }
+                  return sprint;
+                }),
+              })),
+            };
+          }
+        );
+
         return { previousSprints };
       },
       onError: (err: AxiosError, newSprint, context) => {
-        // If the mutation fails, use the context returned from onMutate to roll back
-        queryClient.setQueryData(["sprints"], context?.previousSprints);
+
+        // Let's skip the error handling for position updates specifically
+        if (newSprint.position !== undefined) {
+          console.log("Skipping error handling for position update");
+          return;
+        }
+
+        if (context?.previousSprints) {
+          queryClient.setQueryData(["sprints"], context.previousSprints);
+        }
 
         if (err?.response?.data == "Too many requests") {
           toast.error(TOO_MANY_REQUESTS);
           return;
         }
+
         toast.error({
           message: `Something went wrong while updating sprint ${newSprint.sprintId}`,
           description: "Please try again later.",
         });
       },
-      onSettled: () => {
-        // Always refetch after error or success
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      onSettled: (newSprint) => {
+        console.log("inside updateSprint")
+        const sprintIden = newSprint?.id ?? "backlog"
+        console.log("updateSprintId", sprintIden)
         queryClient.invalidateQueries(["sprints"]);
+        queryClient.invalidateQueries(["issues", sprintIden])
+        console.log("after updateSprint")
       },
     }
   );

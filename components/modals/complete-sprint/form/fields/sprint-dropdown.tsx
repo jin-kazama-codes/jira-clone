@@ -47,7 +47,7 @@ const SprintDropdownField: React.FC<{
                     <SelectGroup>
                       {sprints &&
                         [...sprints, backlog]
-                        ?.filter((s) => s.id !== sprint.id)
+                        ?.filter((s) => s.id !== sprint?.id)
                           ?.map((sprint) => (
                             <SelectItem
                               key={sprint.id}

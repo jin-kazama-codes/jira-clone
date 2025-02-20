@@ -11,7 +11,8 @@ import { useIssueDetails } from "@/hooks/query-hooks/use-issue-details";
 const IssueDetails: React.FC<{
   issueKey?: string;
   detailPage?: boolean;
-}> = ({ issueKey: detailIssueKey, detailPage }) => {
+  roadmap?: boolean;
+}> = ({ issueKey: detailIssueKey, detailPage, roadmap = false }) => {
   const { issue, issueLoading, refetch } = useIssueDetails();
   const { issueKey, setIssueKey } = useSelectedIssueContext();
   const renderContainerRef = React.useRef<HTMLDivElement>(null);
@@ -52,7 +53,7 @@ const IssueDetails: React.FC<{
     }
   }, [project, projectKey]);
 
-  if (loading || issueLoading) {
+  if (!roadmap && (loading || issueLoading)) {
     return <div ref={renderContainerRef}
     className="relative z-10 flex w-full h-[70vh] items-center justify-center rounded-xl bg-white pl-4 pr-2 dark:bg-darkSprint-10 [&[data-state=closed]]:hidden"><div className="h-10 w-10 animate-spin rounded-full border-4 border-t-4 border-gray-200 border-t-black dark:border-t-dark-0 dark:bg-darkSprint-30" /></div>;
   }

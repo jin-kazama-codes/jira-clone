@@ -7,9 +7,6 @@ const AdminList = ({}) => {
   if(adminsLoading){
     return <div>Loading...</div>
   }
-  if(admins){
-    console.log("admins", admins)
-  }
   return (
     <div className="rounded-xl border bg-white pb-0 dark:border-darkSprint-30 dark:bg-darkSprint-20">
       <div className="rounded-t-xl bg-header p-4 dark:bg-darkSprint-10">

@@ -92,7 +92,7 @@ const EpicFilter: React.FC = () => {
             </DropdownItem>
           ))}
           {issues?.filter(searchFilter).length === 0 && (
-            <div className="py-4 text-center text-sm text-gray-500">
+            <div className="py-4 text-center text-sm text-gray-500 dark:text-dark-50">
               No epics found
             </div>
           )}

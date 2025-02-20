@@ -9,7 +9,6 @@ export const companyRoutes = {
     return data?.companies;
   },
   getCompanyById: async (companyId: any) => {
-    console.log("idinroutes", companyId)
     const { data } = await axios.get(`${baseUrl}/api/company/${companyId}`);
     return data?.company;
   },

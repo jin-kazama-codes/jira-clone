@@ -19,8 +19,6 @@ import { DefaultUser } from "@prisma/client";
 import { useCookie } from "@/hooks/use-cookie";
 import { CgAttachment } from "react-icons/cg";
 import { MdDelete } from "react-icons/md";
-import { useQuery } from "@tanstack/react-query";
-import { api } from "@/utils/api";
 dayjs.extend(relativeTime);
 
 const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
@@ -35,16 +33,6 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
   const [imageUrl, setImageUrl] = useState<String[] | null>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-    // const { data: comments, isLoading: commentsLoading } = useQuery(
-    //   ["comments", issueId],
-    //   () => api.issues.getIssueComments({ issueId: issueId ?? "" }),
-    //   {
-    //     enabled: !!issueId,
-    //     refetchOnMount: false,
-    //   }
-    // );
-  
-
   const handleButtonClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click(); // Trigger file input click
@@ -56,7 +44,7 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
 
     if (!files || files.length === 0 || files.length > 5) {
       alert("You can upload up to 5 files.");
-      setImage(null)
+      setImage(null);
       return;
     }
 
@@ -149,15 +137,18 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
   function handleCancel() {
     setIsWritingComment(false);
   }
-  if(commentsLoading){
-    return(
-      <div className="flex items-center justify-center mt-5"><div className="h-10 w-10 animate-spin rounded-full border-4 border-t-4 border-gray-200 border-t-black dark:border-t-dark-0 dark:bg-darkSprint-30" /></div>
-    )
+  if (commentsLoading) {
+    return (
+      <div className="mt-5 flex items-center justify-center">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-t-4 border-gray-200 border-t-black dark:border-t-dark-0 dark:bg-darkSprint-30" />
+      </div>
+    );
   }
+
   return (
     <Fragment>
       <h2 className="dark:text-dark-50">Comments</h2>
-      <div className="sticky bottom-0 mb-5 w-full bg-white dark:bg-transparent">
+      <div className="mb-5 w-full bg-white dark:bg-transparent">
         <div ref={scrollRef} id="dummy-scroll-div" />
         {isWritingComment ? (
           <Editor
@@ -204,7 +195,7 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
                   </Button>
                 )}
                 {image && (
-                  <div className="flex items-center flex-wrap mt-2 gap-2">
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
                     {image.map((img, index) => (
                       <div key={index} className="flex items-center gap-2 ">
                         <div className="whitespace-nowrap font-mono text-sm dark:text-dark-50">
@@ -241,8 +232,11 @@ const CommentPreview: React.FC<{
   const [isEditing, setIsEditing] = useState(false);
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
   const { updateComment, deleteComment } = useIssueDetails(comment.issueId);
+  const [updatedComment, setUpdatedComment] = useState(comment);
 
-
+  useEffect(() => {
+    setUpdatedComment(comment);
+  }, [comment]);
 
   function handleSave(state: SerializedEditorState | undefined) {
     if (!isAuthenticated) {
@@ -270,19 +264,15 @@ const CommentPreview: React.FC<{
     });
   }
 
-
-
   return (
-    <div className="flex bg-transparent dark:bg-darkSprint-50  rounded-xl px-2 pt-2 w-full gap-x-2">
+    <div className="flex w-full gap-x-2  rounded-xl bg-transparent px-2 pt-2 dark:bg-gray-300">
       <Avatar
         src={comment.author?.avatar ?? ""}
         alt={`${comment.author?.name ?? "Guest"}`}
       />
       <div className="w-full rounded-xl  p-2 px-3">
         <div className="flex items-center gap-x-3 text-xs">
-          <span className="font-bold text-black ">
-            {comment.author?.name}
-          </span>
+          <span className="font-bold text-black ">{comment.author?.name}</span>
           <span className="text-gray-800 dark:text-darkSprint-0">
             {dayjs(comment.createdAt).fromNow()}
           </span>
@@ -298,8 +288,8 @@ const CommentPreview: React.FC<{
           <Editor
             action="comment"
             content={
-              comment.content
-                ? (JSON.parse(comment.content) as EditorContentType)
+              updatedComment.content
+                ? (JSON.parse(updatedComment.content) as EditorContentType)
                 : undefined
             }
             onSave={handleSave}
@@ -308,11 +298,16 @@ const CommentPreview: React.FC<{
           />
         ) : (
           <EditorPreview
-          className="!text-dark-50"
+            key={
+              updatedComment.id +
+              JSON.parse(updatedComment.content).root.children[0].children[0]
+                .text
+            }
+            className="!text-dark-50"
             action="comment"
             content={
-              comment.content
-                ? (JSON.parse(comment.content) as EditorContentType)
+              updatedComment.content
+                ? (JSON.parse(updatedComment.content) as EditorContentType)
                 : undefined
             }
             imageURL={comment.imageURL}

@@ -18,7 +18,7 @@ const BurndownIssueList = ({ issues }) => {
   }, [issues]);
 
   return (
-    <div className=" w-full h-[58vh] overflow-y-scroll" ref={scrollRef}>
+    <div className=" w-full h-[61vh] overflow-y-scroll custom-scrollbar" ref={scrollRef}>
       <h2 className="mb-1  text-xl font-semibold dark:text-dark-50">All Issues</h2>
       <div className="overflow-hidden rounded-lg border  dark:border-darkSprint-30">
         {/* Column Headers */}
@@ -47,10 +47,10 @@ const BurndownIssueList = ({ issues }) => {
               <div className="text-xs font-medium text-gray-600 dark:text-dark-50">
                 {issue.key}
               </div>
-              <div className="truncate text-sm">{issue.name}</div>
+              <div className="truncate text-sm dark:text-dark-50">{issue.name}</div>
               <div className="flex items-center gap-2">
                 <IssueIcon issueType={issue.type} />
-                <span className="text-sm">{capitalize(issue.type)}</span>
+                <span className="text-sm dark:text-dark-50">{capitalize(issue.type)}</span>
               </div>
               <div>
                 <IssueSelectStatus

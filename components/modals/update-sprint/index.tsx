@@ -22,7 +22,7 @@ const UpdateSprintModal: React.FC<{
           <div className="p-5 text-white dark:text-dark-50">
             <ModalTitle>Edit Sprint: {sprint.name}</ModalTitle>
           </div>
-          <div className="bg-white dark:bg-darkSprint-20 rounded-xl p-6">
+          <div className="rounded-xl bg-white p-6 dark:bg-darkSprint-20 h-96 overflow-y-scroll custom-scrollbar">
             <UpdateSprintForm sprint={sprint} setModalIsOpen={setIsOpen} />
           </div>
         </ModalContent>

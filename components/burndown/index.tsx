@@ -38,10 +38,16 @@ const Burndown: React.FC = () => {
   };
 
   useEffect(() => {
-   
     setCurrentPage(1);
   }, [sprintId]);
 
+  // if (issuesLoading) {
+  //   return (
+  //     <div>
+  //       <div className="h-10 w-10 animate-spin rounded-full border-4 border-t-4 border-gray-200 border-t-black" />
+  //     </div>
+  //   );
+  // }
 
   if (!project) return null;
 
@@ -63,8 +69,8 @@ const Burndown: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <p className="text-sm text-gray-700 dark:text-dark-50">
                     Showing {startIndex + 1} to{" "}
-                    {Math.min(endIndex, allIssues?.length)} of {allIssues?.length}{" "}
-                    issues
+                    {Math.min(endIndex, allIssues?.length)} of{" "}
+                    {allIssues?.length} issues
                   </p>
                 </div>
 
@@ -116,7 +122,7 @@ const Burndown: React.FC = () => {
             )}
           </>
         ) : (
-          <p className="mt-36 text-center text-lg text-gray-800">
+          <p className="mt-36 text-center text-lg text-gray-800 dark:text-dark-50">
             Complete your first sprint to view this report{" "}
           </p>
         )}

@@ -65,12 +65,13 @@ const Board: React.FC = () => {
   const project = useCookie("project");
 
   useEffect(() => {
-  
     const projectId = project.id; // Adjust based on your project object structure
     const storageKey = `statusColors-${projectId}`;
     const savedColors = localStorage.getItem(storageKey);
-    const colorMap: Record<string, string> = savedColors ? JSON.parse(savedColors) : {};
-  
+    const colorMap: Record<string, string> = savedColors
+      ? JSON.parse(savedColors)
+      : {};
+
     let needsUpdate = false;
     workflow?.nodes.forEach((node) => {
       const statusLabel = node.data.label;
@@ -80,24 +81,24 @@ const Board: React.FC = () => {
         needsUpdate = true;
       }
     });
-  
+
     if (needsUpdate) {
       localStorage.setItem(storageKey, JSON.stringify(colorMap));
     }
-  
+
     setStatusColors(colorMap);
   }, [workflow]);
 
   const getStatusBackgroundColor = (status: string): string => {
     switch (status) {
       case "To Do":
-        return "#d1d5db"; 
+        return "#d1d5db";
       case "In Progress":
-        return "#93c5fd"; 
+        return "#93c5fd";
       case "Done":
-        return "#86efac"; 
+        return "#86efac";
       default:
-        return statusColors[status] || "#e5e7eb"; 
+        return statusColors[status] || "#e5e7eb";
     }
   };
 
@@ -108,6 +109,14 @@ const Board: React.FC = () => {
     epics,
     sprints: filterSprints,
   } = useFiltersContext();
+
+  if (sprints?.length == 0) {
+    return (
+      <Container className="flex h-full w-full items-center justify-center font-mono text-2xl dark:text-white">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-t-4 border-gray-200 border-t-black" />
+      </Container>
+    );
+  }
 
   const activeSprint = sprints?.find((sprint) => sprint.status === "ACTIVE");
   const fliteredSprint = sprints?.find(
@@ -226,19 +235,26 @@ const Board: React.FC = () => {
       {/* CHILD ISSUE VIEW  */}
       {showChild && (
         // STATUS
-        <div className="relative flex max-w-full flex-col gap-x-4 overflow-y-hidden ">
-          <div className="flex gap-x-4">
+        <div
+          className="custom-scrollbar relative flex h-[68vh]
+         max-w-full flex-col gap-x-4 overflow-y-scroll "
+        >
+          <div className="sticky top-0 z-40 flex gap-x-4 bg-white dark:bg-darkSprint-0">
             {STATUSES.map((status) => {
               return (
                 <>
                   <div
                     key={status}
                     className="h-max min-h-fit w-[350px] rounded-xl border-x-2 px-1.5"
-                    style={{ backgroundColor: getStatusBackgroundColor(status) }}
+                    style={{
+                      backgroundColor: getStatusBackgroundColor(status),
+                    }}
                   >
                     <h2
-                      className={` text-md sticky top-0 -mx-1.5  mb-1.5 rounded-t-md dark:border-y-darkSprint-30   px-2 py-3 font-semibold text-black z-10`}
-                      style={{ backgroundColor: getStatusBackgroundColor(status) }}
+                      className={` text-md sticky top-0 z-10  -mx-1.5 mb-1.5 rounded-t-md   px-2 py-3 font-semibold text-black dark:border-y-darkSprint-30`}
+                      style={{
+                        backgroundColor: getStatusBackgroundColor(status),
+                      }}
                     >
                       {status}{" "}
                       {showChild
@@ -273,8 +289,10 @@ const Board: React.FC = () => {
                     <span className="text-xs font-medium text-gray-600 dark:text-dark-50">
                       {issue.key}
                     </span>
-                    <span>{issue.name}</span>
-                    <span>({issue.children.length} Subtask)</span>
+                    <span className="dark:text-dark-50">{issue.name}</span>
+                    <span className="dark:text-dark-50">
+                      ({issue.children.length} Subtask)
+                    </span>
                     <span className="rounded-xl bg-slate-300 px-3 text-sm">
                       Parent
                     </span>
@@ -292,8 +310,7 @@ const Board: React.FC = () => {
                       {STATUSES.map((status) => (
                         <div
                           className={clsx(
-                            " h-max min-h-fit w-[350px] rounded-xl border-x-2 border-b-2 px-1.5 pb-3 dark:border-darkSprint-30 dark:bg-darkSprint-20",
-                  
+                            " h-max min-h-fit w-[350px] rounded-xl border-x-2 border-b-2 px-1.5 pb-3 dark:border-darkSprint-30 dark:bg-darkSprint-20"
                           )}
                           key={status}
                         >
@@ -322,11 +339,11 @@ const Board: React.FC = () => {
         <DragDropContext onDragEnd={onDragEnd}>
           <div
             ref={renderContainerRef}
-            className="h-90vh relative flex max-w-full gap-x-4 "
+            className="custom-scrollbar relative flex h-[68vh] max-w-full gap-x-4 overflow-y-scroll "
           >
             {STATUSES.map((status) => (
               <IssueList
-              statusColors={statusColors}
+                statusColors={statusColors}
                 sprintId={activeSprintId}
                 key={status}
                 status={status}

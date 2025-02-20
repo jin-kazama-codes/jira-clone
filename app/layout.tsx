@@ -42,19 +42,19 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en">
       <head />
-      <body className="">
+      <body className={"overflow-hidden"}>
         <QueryProvider>
           <AuthModalProvider>
-          <ThemeProvider>
-            <Toaster
-              position="bottom-left"
-              reverseOrder={false}
-              containerStyle={{
-                height: "92vh",
-                marginLeft: "3vw",
-              }}
-            />
-            {children}
+            <ThemeProvider>
+              <Toaster
+                position="bottom-left"
+                reverseOrder={false}
+                containerStyle={{
+                  height: "92vh",
+                  marginLeft: "3vw",
+                }}
+              />
+              {children}
             </ThemeProvider>
           </AuthModalProvider>
         </QueryProvider>

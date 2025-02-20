@@ -33,7 +33,7 @@ const Worklog: React.FC<WorklogProps> = ({ issue }) => {
         <div className="flex items-center justify-center mt-5"><div className="h-10 w-10 animate-spin rounded-full border-4 border-t-4 border-gray-200 border-t-black dark:border-t-dark-0 dark:bg-darkSprint-30" /></div>
       ) : worklogs.length > 0 ? (
         worklogs.map((worklog, index) => (
-          <div className='dark:bg-darkSprint-50 rounded-xl p-3'>
+          <div className='dark:bg-darkSprint-50 rounded-xl p-3 mb-3'>
             <div className='flex space-x-1.5 items-center' key={index + 1}>
               <p className="font-bold text-xm text-black "> {worklog.userName}</p>
               <p className='text-sm font-medium text-gray-800 dark:text-darkSprint-0'>Logged <span className="font-bold text-black"> {worklog.timeLogged}</span> </p>
@@ -58,7 +58,7 @@ const Worklog: React.FC<WorklogProps> = ({ issue }) => {
           </div>
         ))
       ) : (
-        <p className='mb-4'>No worklog entries found.</p>
+        <p className='mb-4 dark:text-dark-50'>No worklog entries found.</p>
       )}
 
     </div>

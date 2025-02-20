@@ -57,7 +57,7 @@ const SprintList: React.FC<{
   const [openAccordion, setOpenAccordion] = useState(sprint.id);
 
   const { search, assignees, issueTypes, epics } = useFiltersContext();
-  const { issues, getIssueCountBySprintId } = useIssues(openAccordion);
+  const { issues } = useIssues(openAccordion);
 
   const filterIssues = useCallback(
     (issues: IssueType[] | undefined, sprintId: string | null) => {
@@ -251,7 +251,7 @@ const SprintListHeader: React.FC<{
                 asChild
                 className="flex items-center gap-x-1 px-1.5 py-0.5 text-xs font-semibold focus:ring-2"
               >
-                <div className="rounded-full px-1.5 py-1.5 text-black hover:cursor-pointer hover:bg-gray-300 dark:text-dark-50 dark:hover:bg-darkSprint-40 [&[data-state=open]]:bg-gray-300 ">
+                <div className="rounded-full px-1.5 py-1.5 text-black hover:cursor-pointer hover:bg-gray-300 dark:text-dark-50 dark:hover:bg-darkSprint-40 dark:[&[data-state=open]]:bg-darkSprint-40 [&[data-state=open]]:bg-gray-300 ">
                   <BsThreeDots className="sm:text-xl " />
                 </div>
               </DropdownTrigger>

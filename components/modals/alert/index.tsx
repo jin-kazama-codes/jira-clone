@@ -23,9 +23,9 @@ const AlertModal: React.FC<{
       <ModalPortal>
         <ModalOverlay />
         <ModalContent>
-          <div className="flex items-center gap-x-2">
-            <IoWarning className="text-xl text-red-600" />
-            <ModalTitle>{title}</ModalTitle>
+          <div className="flex items-center gap-x-2 ">
+            <IoWarning className="text-xl text-red-600 " />
+            <ModalTitle className="dark:text-dark-50">{title}</ModalTitle>
           </div>
           <ModalDescription>
             <BoldDescription description={description} />
@@ -41,7 +41,7 @@ const AlertModal: React.FC<{
             <ModalCancel>
               <Button
                 customColors
-                className="transition-all duration-150 hover:bg-gray-200"
+                className="transition-all duration-150 hover:bg-gray-200 dark:hover:bg-darkSprint-30 dark:text-dark-50"
               >
                 Cancel
               </Button>
@@ -59,7 +59,7 @@ const BoldDescription: React.FC<{ description: string }> = ({
   const parts = description.split("BOLD");
 
   return (
-    <span className="text-gray-700">
+    <span className="text-gray-700 dark:text-dark-50">
       {parts.map((part, index) => {
         if (index % 2 === 1) {
           // This part should be bold

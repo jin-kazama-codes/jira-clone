@@ -8,7 +8,7 @@ import { useSprints } from "@/hooks/query-hooks/use-sprints";
 import { FormSubmit } from "@/components/form/submit";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
 import { useTimeEstimates } from "@/utils/getOriginalEstimate";
-import { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 export type FormValues = {
   moveToSprintId: string;
@@ -30,6 +30,7 @@ const CompleteSprintForm: React.FC<{
     },
   });
 
+  const queryClient = useQueryClient();
   const { convertedOriginalEstimate, convertedTotalTime } = useTimeEstimates(
     issues,
     "velocity"
@@ -63,6 +64,9 @@ const CompleteSprintForm: React.FC<{
         [],
       sprintId: data.moveToSprintId === "backlog" ? null : data.moveToSprintId,
     });
+
+    queryClient.invalidateQueries(["issues", data.moveToSprintId])
+
   }
 
   function handleClose() {
@@ -76,7 +80,7 @@ const CompleteSprintForm: React.FC<{
       onSubmit={handleSubmit(handleCompleteSprint)}
       className="relative h-full"
     >
-      <SprintDropdownField sprint={sprint} control={control} errors={errors} />
+      <SprintDropdownField control={control} errors={errors} />
       <FormSubmit
         submitText="Complete"
         ariaLabel="Complete sprint"

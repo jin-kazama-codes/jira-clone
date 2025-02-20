@@ -4,7 +4,7 @@ import withProjectLayout from "@/app/project-layout/withProjectLayout";
 
 const BacklogLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <Container className="h-full">
+    <Container backlog={true} className="h-full">
       <main className="w-full">
         <SelectedIssueProvider>{children}</SelectedIssueProvider>
       </main>

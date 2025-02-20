@@ -79,7 +79,6 @@ const Login: React.FC = () => {
       if (response.status === 200 && isMounted) {
         let token = response.data.user;
         setCookie("user", token);
-        console.log("token", token)
         if(token.role === "superAdmin"){
           router.push('/admin')
         }else{

@@ -75,7 +75,6 @@ export async function GET(req: NextRequest) {
     },
   };
 
-  console.log("page limit",page, limit)
 
   // Apply pagination only if both page and limit are provided
   if (page !== null && limit !== null) {

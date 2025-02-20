@@ -62,7 +62,7 @@ const IssueDetailsInfoAccordion: React.FC<{ issue: IssueType }> = ({
         <AccordionItem value={"details"}>
           <AccordionTrigger className="flex w-full items-center justify-between p-2 rounded-t-xl font-medium hover:bg-gray-100 dark:hover:bg-darkSprint-20 dark:bg-darkSprint-30 [&[data-state=open]>svg]:rotate-180 [&[data-state=open]]:border-b border-b-black">
             <div className="flex items-center gap-x-1">
-              <span className="text-sm">Details</span>
+              <span className="text-sm dark:text-dark-50">Details</span>
               <span className="text-xs text-gray-600 dark:text-darkSprint-0">
                 (Assignee, Sprint, Reporter)
               </span>
@@ -78,19 +78,19 @@ const IssueDetailsInfoAccordion: React.FC<{ issue: IssueType }> = ({
               className="my-2 grid grid-cols-2 [&[data-state=assigned]]:items-center"
             >
               <div className="flex justify-start gap-x-2 items-center">
-              <MdPersonOutline size={20}/>
-              <span className="text-sm font-semibold text-gray-800 dark:text-darkSprint-0">
+              <MdPersonOutline className="dark:text-dark-50" size={20}/>
+              <span className="text-sm font-semibold text-gray-800 dark:text-dark-50">
                 Assignee
               </span>
               </div>
               <div className="flex flex-col">
-                <IssueAssigneeSelect issue={issue} />
+                <IssueAssigneeSelect className="dark:text-dark-50" issue={issue} />
                 <Button
                   onClick={handleAutoAssign}
                   data-state={issue.assignee ? "assigned" : "unassigned"}
                   customColors
                   customPadding
-                  className="mt-1 hidden text-sm text-blue-600 underline-offset-2 hover:underline [&[data-state=unassigned]]:flex"
+                  className="mt-1 hidden text-sm text-blue-600 dark:text-darkSprint-0 underline-offset-2 hover:underline [&[data-state=unassigned]]:flex"
                 >
                   Assign to me
                 </Button>
@@ -98,21 +98,21 @@ const IssueDetailsInfoAccordion: React.FC<{ issue: IssueType }> = ({
             </div>
             <div className="my-4 grid grid-cols-2 items-center">
             <div className="flex justify-start gap-x-2 items-center">
-            <MdTrackChanges size={20}/>
-              <span className="text-sm font-semibold text-gray-800 dark:text-darkSprint-0">
+            <MdTrackChanges className="dark:text-dark-50" size={20}/>
+              <span className="text-sm font-semibold text-gray-800 dark:text-dark-50">
                 Sprint
               </span>
               </div>
               <div className="flex items-center">
-                <span className="text-sm text-gray-900 dark:text-darkSprint-0">
+                <span className="text-sm text-gray-900 dark:text-dark-50">
                   {issue?.sprint?.name ?? "None"}
                 </span>
               </div>
             </div>
             <div className="my-2 grid grid-cols-2 items-center">
             <div className="flex justify-start gap-x-2 items-center">
-            <MdReportGmailerrorred size={20}/>
-              <span className="text-sm font-semibold text-gray-800 dark:text-darkSprint-0">
+            <MdReportGmailerrorred className="dark:text-dark-50" size={20}/>
+              <span className="text-sm font-semibold text-gray-800 dark:text-dark-50">
                 Reporter
               </span>
               </div>
@@ -128,8 +128,8 @@ const IssueDetailsInfoAccordion: React.FC<{ issue: IssueType }> = ({
             </div>
             <div className="my-6 grid grid-cols-2 items-center">
               <div className="flex justify-start gap-x-2 items-center">
-            <FaRegClock size={17}/>
-              <span className="text-sm font-semibold text-gray-800 dark:text-darkSprint-0">
+            <FaRegClock className="dark:text-dark-50" size={17}/>
+              <span className="text-sm font-semibold text-gray-800 dark:text-dark-50">
                 Original Estimate
               </span>
               </div>
@@ -144,8 +144,8 @@ const IssueDetailsInfoAccordion: React.FC<{ issue: IssueType }> = ({
             </div>
             <div className="my-6 grid grid-cols-2 items-center">
             <div className="flex justify-start gap-x-2 items-center">
-            <IoMdTimer size={20}/>
-              <span className="text-sm font-semibold text-gray-800 dark:text-darkSprint-0">
+            <IoMdTimer className="dark:text-dark-50" size={20}/>
+              <span className="text-sm font-semibold text-gray-800 dark:text-dark-50">
                 Time Tracking
               </span>
               </div>
@@ -161,26 +161,26 @@ const IssueDetailsInfoAccordion: React.FC<{ issue: IssueType }> = ({
             </div>
             <div className="my-4 grid grid-cols-2 items-center">
             <div className="flex justify-start gap-x-2 items-center">
-            <FaRegCalendarAlt size={18}/>
-              <span className="text-sm font-semibold text-gray-800 dark:text-darkSprint-0">
+            <FaRegCalendarAlt className="dark:text-dark-50" size={18}/>
+              <span className="text-sm font-semibold text-gray-800 dark:text-dark-50">
                 Created
               </span>
               </div>
               <div className="flex items-center">
-                <span className="text-sm text-gray-900">
+                <span className="text-sm text-gray-900 dark:text-dark-50">
                   {dateToLongString(issue.createdAt)}
                 </span>
               </div>
             </div>
             <div className="my-4 grid grid-cols-2 items-center">
             <div className="flex justify-start gap-x-2 items-center">
-            <MdUpdate size={20}/>
-              <span className="text-sm font-semibold text-gray-800 dark:text-darkSprint-0">
+            <MdUpdate className="dark:text-dark-50" size={20}/>
+              <span className="text-sm font-semibold text-gray-800 dark:text-dark-50">
                 Updated
               </span>
               </div>
               <div className="flex items-center">
-                <span className="text-sm text-gray-900">
+                <span className="text-sm text-gray-900 dark:text-dark-50">
                 {dateToLongString(issue.updatedAt)}
                 </span>
               </div>

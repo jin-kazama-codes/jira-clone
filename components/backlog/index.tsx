@@ -20,15 +20,15 @@ const Backlog: React.FC = ({ state, project }) => {
         const headerHeight = headerRef.current.offsetHeight;
         const viewportHeight = window.innerHeight;
         const availableHeight = viewportHeight - headerHeight;
-        
+
         containerRef.current.style.height = `${availableHeight}px`;
         containerRef.current.style.maxHeight = `${availableHeight}px`;
       }
     };
 
     adjustHeight();
-    window.addEventListener('resize', adjustHeight);
-    return () => window.removeEventListener('resize', adjustHeight);
+    window.addEventListener("resize", adjustHeight);
+    return () => window.removeEventListener("resize", adjustHeight);
   }, []);
 
   const {
@@ -36,7 +36,7 @@ const Backlog: React.FC = ({ state, project }) => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-    isFetching
+    isFetching,
   } = useInfiniteQuery(
     ["sprints"],
     ({ pageParam = 0 }) => getSprintsPaginatedFromServer(pageParam),
@@ -59,14 +59,11 @@ const Backlog: React.FC = ({ state, project }) => {
       <div ref={headerRef}>
         <BacklogHeader project={project} />
       </div>
-      <div 
-        ref={containerRef}
-        className="min-w-full max-w-max flex overflow-hidden"
-      >
-        <div 
+      <div ref={containerRef} className="min-w-full max-w-max flex overflow-hidden">
+        <div
           className={clsx(
-            "w-full overflow-auto", 
-            issueKey ? "md:w-4/6 pr-2" : "w-full",
+            "w-full overflow-y-auto h-[68vh]  custom-scrollbar",
+            issueKey ? "md:w-4/6 " : "w-full",
             issueKey && "pb-5"
           )}
         >
@@ -78,9 +75,9 @@ const Backlog: React.FC = ({ state, project }) => {
             isFetchingNextPage={isFetchingNextPage}
           />
         </div>
-        
+
         {issueKey && (
-          <div className="hidden md:block w-2/6 overflow-auto">
+          <div className="hidden md:block w-2/6 h-[68vh] overflow-y-auto custom-scrollbar">
             <IssueDetails />
           </div>
         )}

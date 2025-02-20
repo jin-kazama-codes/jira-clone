@@ -402,7 +402,13 @@ export const recalculateEdges = (updatedNodes, setEdges) => {
 };
 
 export const generatePastelColor = () => {
-  const hue = Math.floor(Math.random() * 360);
+  let hue;
+
+  do {
+    hue = Math.floor(Math.random() * 360);
+  } while ((hue >= 80 && hue <= 260));
+
   return `hsl(${hue}, 70%, 85%)`;
 };
+
 

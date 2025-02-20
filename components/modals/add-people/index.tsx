@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { WelcomeNewMemberTemplate } from "@/components/email-template";
+import { toast } from "@/components/toast";
 
 interface UserModalProps {
   children: ReactNode;
@@ -104,9 +105,16 @@ const UserModal: React.FC<UserModalProps> = ({ children, refetch }) => {
               html: emailHtml,
             }),
           });
-          console.log("Email notification sent to:", email);
+          toast.success({
+            message: "Email notification sent to:",
+            description: `${email}`,
+          });
         } catch (error) {
-          console.error("Failed to send email notification:", error);
+          toast.error(
+            {
+              message: "Failed to send email notification:",
+              description: `${error}`,
+            })
         }
         setName("");
         setEmail("");

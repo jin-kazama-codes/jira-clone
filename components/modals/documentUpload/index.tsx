@@ -160,7 +160,7 @@ const DocumentPage: React.FC<DocumentUploadProps> = ({
                     }}
                     multiple
                     accept="image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                    className="file:mr-4 file:rounded-full file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
+                    className="file:mr-4 dark:text-dark-50 file:rounded-full file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
                   />
 
                   {fileName && fileName.length > 0 && (

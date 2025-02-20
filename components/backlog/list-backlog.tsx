@@ -31,18 +31,19 @@ const BacklogList: React.FC<{
   // if(issuesLoading){
   //   return <div>Loading...</div>
   // }
+  const filteredIssues = issues?.filter((issue) => !issue.parentId) ?? [];
 
   return (
     <Accordion
-      className="rounded-xl border-2 bg-slate-100 p-4 pb-20 dark:border-darkSprint-30 dark:bg-darkSprint-10"
+      className="rounded-xl border-2 bg-slate-100 p-4 pb-2 dark:border-darkSprint-30 dark:bg-darkSprint-10"
       type="single"
       value={openAccordion}
       onValueChange={setOpenAccordion}
       collapsible
     >
       <AccordionItem value={`backlog`}>
-        <BacklogListHeader issues={issues ?? []} />
-        <IssueList sprintId={null} issues={issues ?? []} />
+        <BacklogListHeader issues={filteredIssues} />
+        <IssueList sprintId={null}  issues={filteredIssues} />
       </AccordionItem>
     </Accordion>
   );
@@ -79,9 +80,14 @@ const BacklogListHeader: React.FC<{ issues: IssueType[] }> = ({ issues }) => {
             <div className="ml-3 font-normal text-gray-800 dark:text-darkSprint-50">
               ({issues.length ? issues.length : 0} issue{getPluralEnd(issues)})
             </div>
-            <div className="font-normal text-gray-800 dark:text-dark-50">
-              {convertedOriginalEstimate ? convertedOriginalEstimate : ""}
-            </div>
+            {convertedOriginalEstimate ? (
+                  <span className="dark:text-darkSprint-50">
+                    Estimate:{" "}
+                    <span className="text-md font-bold  dark:text-dark-50">
+                      {convertedOriginalEstimate}
+                    </span>
+                  </span>
+                ) : null}
           </div>
         </Fragment>
       </AccordionTrigger>

@@ -44,7 +44,7 @@ const EditWorklog: React.FC<EditWorklogProps> = ({
   );
   const [isOpen, setIsOpen] = useState(false);
   const { updateIssue } = useIssues();
-  const { updateWorklog } = useWorklog();
+  const { updateWorklog } = useWorklog(issue?.id);
 
   useEffect(() => {
     // Calculate percentage and remaining time based on the already logged time

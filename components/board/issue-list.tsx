@@ -18,7 +18,7 @@ const IssueList: React.FC<{
   statusColors?: any
 }> = ({ sprintId, status, issues, showChild, parentId, statusColors }) => {
   const [droppableEnabled] = useStrictModeDroppable();
-  const { createIssue, isCreating } = useIssues();
+  const { createIssue, isCreating } = useIssues(sprintId);
   const [isEditing, setIsEditing] = useState(false);
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
 
@@ -86,7 +86,7 @@ const IssueList: React.FC<{
             <div
               {...droppableProps}
               ref={innerRef}
-              className=" h-fit min-h-[10px] py-2"
+              className=" h-fit min-h-[10px] z-30 py-2"
             >
               {issues
                 .sort((a, b) => a.boardPosition - b.boardPosition)

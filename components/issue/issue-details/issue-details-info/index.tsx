@@ -1,13 +1,9 @@
 import React, { Fragment, useRef, useState } from "react";
-import { NotImplemented } from "@/components/not-implemented";
-import { LightningIcon } from "@/components/svgs";
 import { IssueTitle } from "../../issue-title";
 import { IssueSelectStatus } from "../../issue-select-status";
 import { useSelectedIssueContext } from "@/context/use-selected-issue-context";
 import { type IssueType } from "@/utils/types";
-import { Button } from "@/components/ui/button";
 import { Comments } from "./issue-details-info-comments";
-import { IssueMetaInfo } from "./issue-details-info-meta";
 import { Description } from "./issue-details-info-description";
 import { IssueDetailsInfoAccordion } from "./issue-details-info-accordion";
 import { IssueDetailsInfoActions } from "./issue-details-info-actions";
@@ -172,7 +168,7 @@ const LargeIssueDetails = React.forwardRef<
       } w-full overflow-hidden`}
       minSize={300}
     >
-      <div className="overflow-y-auto pr-3">
+      <div className="overflow-y-auto custom-scrollbar pr-3">
         <div className="flex items-center gap-x-2">
           {isEpic(issue) ? <ColorPicker issue={issue} /> : null}
           <h1
@@ -248,7 +244,7 @@ const LargeIssueDetails = React.forwardRef<
         </div>
       </div>
 
-      <div className="mt-4 overflow-y-scroll pl-3">
+      <div className="mt-4 overflow-y-scroll custom-scrollbar pl-3">
         <div className="relative flex items-center gap-x-3">
           <IssueSelectStatus
             key={issue.id + issue.status}

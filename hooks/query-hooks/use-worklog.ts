@@ -22,11 +22,9 @@ export const useWorklog = (issueId?: string) => {
   } = useMutation({
     mutationFn: ({ worklogId, worklog }: { worklogId: string; worklog: any }) =>
       api.worklog.updateWorklog(worklogId, worklog),
-    onSuccess: (worklog) => {
-      const worklogIssueId = worklog?.issueId;
-
+    onSettled: () => {
       void queryClient.invalidateQueries({
-        queryKey: ["worklogs", worklogIssueId ?? issueId],
+        queryKey: ["worklogs", issueId],
       });
       toast.success("Worklog updated successfully!");
     },
@@ -58,7 +56,6 @@ export const useWorklog = (issueId?: string) => {
   } = useMutation({
     mutationFn: (worklogId) => api.worklog.deleteWorklog(worklogId),
     onSettled: (worklog) => {
-      console.log("Worklog", worklog);
       const worklogIssueId = worklog?.issueId;
       queryClient.invalidateQueries([`worklogs`, worklogIssueId ?? issueId]);
       toast.success("Worklog deleted successfully!");

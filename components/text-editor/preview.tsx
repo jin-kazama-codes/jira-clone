@@ -43,10 +43,9 @@ export const EditorPreview: React.FC<{
 
   let documentIndex = 1;
 
-  console.log("commentsjson", content)
 
   return (
-    <EditorComposer readonly={true} jsonState={jsonState}>
+    <EditorComposer  readonly={true} jsonState={jsonState}>
       <div
         className={`w-full rounded-md bg-transparent relative`}
       >

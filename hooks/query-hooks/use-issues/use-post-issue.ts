@@ -26,7 +26,7 @@ const usePostIssue = (sprintId?:string) => {
           description: "Please try again later.",
         });
       },
-      onSettled: (createdIssue) => {
+      onSettled: () => {
         queryClient.invalidateQueries(["issues", sprintId]);
         queryClient.invalidateQueries([`issueDetails`, issueKey])
         queryClient.invalidateQueries([`${sprintId}-count`, sprintId ])

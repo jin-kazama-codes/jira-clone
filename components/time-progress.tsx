@@ -20,13 +20,13 @@ const ProgressBar = ({ timeSpent, estimateTime }) => {
       <div className="mt-2">
         {timeSpent === '0' || !timeSpent ? (
           <>
-            <p className="text-sm text-gray-700">No time logged</p>
-            <p className="text-sm text-gray-700">{estimateTime}</p>
+            <p className="text-sm text-gray-700 dark:text-dark-50">No time logged</p>
+            <p className="text-sm text-gray-700 dark:text-dark-50">{estimateTime}</p>
           </>
         ) : (
           <>
-            <p className="text-sm text-gray-700 dark:text-darkSprint-0">Time Spent : {timeSpent}</p>
-            <p className="text-sm text-gray-700 whitespace-nowrap dark:text-darkSprint-0">Remaining Time : {remainingTime}</p>
+            <p className="text-sm text-gray-700 dark:text-dark-50">Time Spent : {timeSpent}</p>
+            <p className="text-sm text-gray-700 whitespace-nowrap dark:text-dark-50">Remaining Time : {remainingTime}</p>
           </>
         )}
       </div>

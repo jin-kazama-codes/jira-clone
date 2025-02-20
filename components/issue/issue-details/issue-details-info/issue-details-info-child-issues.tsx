@@ -73,7 +73,7 @@ const ChildIssueList: React.FC<{
             onClick={() => setIsEditing(true)}
             customColors
             customPadding
-            className="p-1 hover:bg-gray-100"
+            className="p-1 hover:bg-gray-100 dark:hover:bg-darkSprint-0 dark:text-dark-50"
           >
             <AiOutlinePlus />
           </Button>

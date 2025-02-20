@@ -12,10 +12,11 @@ import {
 import { type MenuOptionType } from "@/utils/types";
 import { useSprints } from "@/hooks/query-hooks/use-sprints";
 import { useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 type SprintDropdownMenuProps = {
   children: ReactNode;
-  sprint;
+  sprint: any;
   setUpdateModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setDeleteModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -36,9 +37,12 @@ const SprintDropdownMenu: React.FC<SprintDropdownMenuProps> = ({
 
   useEffect(() => {
     if (sprintData?.pages) {
-      const fetchedSprints = sprintData?.pages.flatMap((page) => page.sprints);
-      console.log("sprintsData", fetchedSprints);
-      setSprints(fetchedSprints);
+      const fetchedSprints = sprintData?.pages?.flatMap((page) => page.sprints);
+      const sortedSprints = [...fetchedSprints].sort(
+        (a, b) => a.position - b.position
+      );
+
+      setSprints(sortedSprints);
     }
   }, [sprintData]);
 
@@ -64,26 +68,50 @@ const SprintDropdownMenu: React.FC<SprintDropdownMenuProps> = ({
   }, [sprint.id, sprints]);
 
   const handlePositionChange = (placement: "up" | "down") => {
-    const currentIndex = sprints.findIndex(
-      (s) => s.position === sprint.position
-    );
-    console.log("poscurrentindex", currentIndex);
-    const targetIndex =
-      placement === "up" ? currentIndex - 1 : currentIndex + 1;
+    // Find the index of the current sprint.
+    const currentIndex = sprints.findIndex((s) => s.id === sprint.id);
 
-    console.log("postargetindex", targetIndex);
-
-    if (targetIndex >= 0 && targetIndex < sprints.length) {
-      const targetSprint = sprints[targetIndex];
-      console.log("postargetsprint", targetSprint);
-
-      // Swap positions between current sprint and target sprint
-      updateSprint({ sprintId: sprint.id, position: targetSprint.position });
-      updateSprint({ sprintId: targetSprint.id, position: sprint.position });
+    // Determine the target sprint based on the direction.
+    let targetIndex;
+    if (placement === "up" && currentIndex > 0) {
+      targetIndex = currentIndex - 1;
+    } else if (placement === "down" && currentIndex < sprints.length - 1) {
+      targetIndex = currentIndex + 1;
+    } else {
+      // If no valid move exists (e.g., at the top or bottom), exit early.
+      return;
     }
-  };
 
-  console.log("sprints", sprints);
+    const currentSprint = sprint;
+    const targetSprint = sprints[targetIndex];
+
+
+    updateSprint(
+      { sprintId: currentSprint.id, position: targetSprint.position },
+      {
+        onSuccess: () => {
+          console.log("First update successful");
+          return updateSprint(
+            {
+              sprintId: targetSprint.id,
+              position: currentSprint.position,
+            },
+            {
+              onSuccess: () => {
+                toast.success(`Moved ${sprint.name} ${placement} successfully`)
+              },
+              onError: (error) => {
+                toast.success(`Error moving ${sprint.name} ${placement}`)
+              },
+            }
+          );
+        },
+        onError: (error) => {
+          console.log("Error in first update:", error);
+        },
+      }
+    );
+  };
 
   const handleSprintAction = (
     id: MenuOptionType["id"],
@@ -96,7 +124,6 @@ const SprintDropdownMenu: React.FC<SprintDropdownMenuProps> = ({
       setUpdateModalIsOpen(true);
     } else if (id === "up" || id === "down") {
       handlePositionChange(id);
-      console.log("pos");
     }
   };
 

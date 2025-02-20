@@ -61,7 +61,6 @@ const IssueDropdownMenu: React.FC<{
     if (typeof window !== "undefined") {
       const location = window.location.pathname.split('/', 3);
       const path = `/${location[2]}`
-      console.log("path", path)
       setCurrentPath(path)
     }
   }, []);
