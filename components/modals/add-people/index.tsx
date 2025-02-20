@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { WelcomeNewMemberTemplate } from "@/components/email-template";
+import { toast } from "@/components/toast";
 
 interface UserModalProps {
   children: ReactNode;
@@ -104,9 +105,16 @@ const UserModal: React.FC<UserModalProps> = ({ children, refetch }) => {
               html: emailHtml,
             }),
           });
-          console.log("Email notification sent to:", email);
+          toast.success({
+            message: "Email notification sent to:",
+            description: `${email}`,
+          });
         } catch (error) {
-          console.error("Failed to send email notification:", error);
+          toast.error(
+            {
+              message: "Failed to send email notification:",
+              description: `${error}`,
+            })
         }
         setName("");
         setEmail("");
@@ -127,16 +135,16 @@ const UserModal: React.FC<UserModalProps> = ({ children, refetch }) => {
         <ModalOverlay />
         <ModalContent>
           <div className="p-5 ">
-            <ModalTitle className="text-white">Add Member</ModalTitle>
-            <ModalDescription className="mt-1 text-white">
+            <ModalTitle className="text-white ">Add Member</ModalTitle>
+            <ModalDescription className="mt-1 dark:text-dark-50 text-white">
               Enter the name and email of the new user.
             </ModalDescription>
           </div>
-          <form onSubmit={handleSubmit} className="mt-5 rounded-xl p-6 bg-white space-y-4">
+          <form onSubmit={handleSubmit} className="mt-5 rounded-xl p-6 bg-white dark:bg-darkSprint-20 space-y-4">
             <div>
               <label
                 htmlFor="name"
-                className="block text-sm font-medium text-gray-900"
+                className="block text-sm font-medium dark:text-dark-50 text-gray-900"
               >
                 Name
               </label>
@@ -146,17 +154,17 @@ const UserModal: React.FC<UserModalProps> = ({ children, refetch }) => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                className="mt-1 rounded-md bg-slate-300 w-full px-2 py-1"
+                className="mt-1 rounded-md bg-slate-300 w-full dark:bg-darkSprint-30 dark:border-darkSprint-20 dark:placeholder:text-darkSprint-50 dark:text-white px-2 py-1"
                 autoComplete="off"
               />
               {/* Render suggestions */}
               {suggestions.length > 0 && (
-                <ul className="mt-1 max-h-40 overflow-y-auto rounded-md bg-white shadow-lg">
+                <ul className="mt-1 max-h-40 overflow-y-auto rounded-md dark:bg-darkSprint-10 bg-white shadow-lg">
                   {suggestions.map((user) => (
                     <li
                       key={user.email}
                       onClick={() => handleSelectSuggestion(user)}
-                      className="cursor-pointer px-4 py-2 hover:bg-gray-100"
+                      className="cursor-pointer dark:text-white dark:hover:bg-darkSprint-20 px-4 py-2 hover:bg-gray-100"
                     >
                       {user.name}
                     </li>
@@ -167,7 +175,7 @@ const UserModal: React.FC<UserModalProps> = ({ children, refetch }) => {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-900"
+                className="block text-sm font-medium dark:text-dark-50 text-gray-900"
               >
                 Email
               </label>
@@ -177,13 +185,13 @@ const UserModal: React.FC<UserModalProps> = ({ children, refetch }) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="mb-3 mt-1 w-full rounded-md bg-slate-300 px-2 py-1"
+                className="mb-3 mt-1 w-full rounded-md dark:bg-darkSprint-30 dark:border-darkSprint-20 dark:placeholder:text-darkSprint-50 dark:text-white bg-slate-300 px-2 py-1"
               />
             </div>
             {error && <p className="mt-2 text-red-500">{error}</p>}
             <Button
               type="submit"
-              className="flex w-full justify-center rounded-xl !bg-button hover:!bg-buttonHover text-white"
+              className="flex w-full justify-center rounded-xl !bg-button dark:!bg-dark-0 hover:!bg-buttonHover text-white"
             >
               Add
             </Button>

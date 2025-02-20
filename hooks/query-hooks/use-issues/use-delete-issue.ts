@@ -7,7 +7,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { type AxiosError } from "axios";
 import { TOO_MANY_REQUESTS } from ".";
 
-const useDeleteIssue = () => {
+const useDeleteIssue = (sprintId?: string) => {
   const { issueKey, setIssueKey } = useSelectedIssueContext();
 
   const queryClient = useQueryClient();
@@ -18,11 +18,11 @@ const useDeleteIssue = () => {
       // OPTIMISTIC UPDATE
       onMutate: async (deletedIssue) => {
         // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-        await queryClient.cancelQueries({ queryKey: ["issues"] });
+        await queryClient.cancelQueries({ queryKey: ["issues", sprintId] });
         // Snapshot the previous value
-        const previousIssues = queryClient.getQueryData(["issues"]);
+        const previousIssues = queryClient.getQueryData(["issues", sprintId]);
         // Optimistically delete the issue
-        queryClient.setQueryData(["issues"], (old: IssueType[] | undefined) => {
+        queryClient.setQueryData(["issues", sprintId], (old: IssueType[] | undefined) => {
           return old?.filter((issue) => issue.id !== deletedIssue.issueId);
         });
         // Return a context object with the snapshotted value
@@ -38,12 +38,14 @@ const useDeleteIssue = () => {
           message: `Something went wrong while deleting the issue ${deletedIssue.issueId}`,
           description: "Please try again later.",
         });
-        queryClient.setQueryData(["issues"], context?.previousIssues);
+        queryClient.setQueryData(["issues", sprintId], context?.previousIssues);
       },
       onSettled: (deletedIssue) => {
         // Always refetch after error or success
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        queryClient.invalidateQueries(["issues"]);
+        queryClient.invalidateQueries(["issues", sprintId]);
+        queryClient.invalidateQueries([`${sprintId}-count`,  sprintId ])
+
 
         // Unselect the deleted issue if it is currently selected
         if (issueKey == deletedIssue?.key) {

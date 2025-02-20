@@ -25,9 +25,9 @@ const ImageModal: React.FC<ImageModalProps> = ({ isOpen, onClose, imageUrl }) =>
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="relative bg-white p-10 rounded-lg max-w-2xl w-full mx-4">
+      <div className="relative bg-white dark:bg-darkSprint-20 p-10 rounded-lg max-w-2xl w-full mx-4">
         <button
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+          className="absolute top-2 right-2 text-gray-500 dark:text-dark-50 hover:text-gray-700"
           onClick={onClose}
         ><IoClose /></button>
         <div className="mt-8 mb-6 flex justify-center items-center">
@@ -41,7 +41,7 @@ const ImageModal: React.FC<ImageModalProps> = ({ isOpen, onClose, imageUrl }) =>
         </div>
         <div className="flex justify-center">
           <button
-            className="bg-button hover:bg-buttonHover text-white font-bold py-2 px-4 rounded"
+            className="bg-button dark:bg-dark-0 hover:bg-buttonHover text-white font-bold py-2 px-4 rounded"
             onClick={handleDownload}
           >
             Download

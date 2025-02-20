@@ -37,7 +37,7 @@ const Roadmap: React.FC = () => {
           minSize={issueKey ? 400 : 0}
         >
           <EpicsTable />
-          <IssueDetails issueKey={issueKey} />
+          <IssueDetails roadmap={true} issueKey={issueKey} />
         </Split>
       </div>
     </Fragment>

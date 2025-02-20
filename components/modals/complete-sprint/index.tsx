@@ -20,8 +20,8 @@ const CompleteSprintModal: React.FC<{
   sprint: Sprint;
 }> = ({ children, issues, sprint }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const completedIssues = issues.filter((issue) => issue.status === "DONE");
-  const openIssues = issues.filter((issue) => issue.status !== "DONE");
+  const completedIssues = issues.filter((issue) => issue.status === "Done");
+  const openIssues = issues.filter((issue) => issue.status !== "Done");
   return (
     <Modal open={isOpen} onOpenChange={setIsOpen}>
       <ModalTrigger asChild>{children}</ModalTrigger>
@@ -38,8 +38,8 @@ const CompleteSprintModal: React.FC<{
             </div>
             <ModalTitle>Complete {sprint.name}</ModalTitle>
             <ModalDescription>
-              <span className="text-white">This sprint contains:</span>
-              <ul className="ml-6 mt-2 list-disc text-sm text-white">
+              <span className="text-white ">This sprint contains:</span>
+              <ul className="ml-6 mt-2 list-disc text-sm text-white dark:text-dark-50">
                 <li>
                   <span className="font-bold">{completedIssues.length} </span>
                   completed issues
@@ -51,7 +51,7 @@ const CompleteSprintModal: React.FC<{
               </ul>
             </ModalDescription>
           </div>
-          <div className="bg-white text-black rounded-xl p-6">
+          <div className="bg-white text-black dark:bg-darkSprint-20 rounded-xl p-6">
             <CompleteSprintForm
               sprint={sprint}
               setModalIsOpen={setIsOpen}

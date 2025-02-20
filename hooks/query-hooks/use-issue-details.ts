@@ -6,37 +6,48 @@ import { type GetIssueCommentsResponse } from "@/app/api/issues/[issueId]/commen
 import { toast } from "@/components/toast";
 import { type AxiosError } from "axios";
 import { TOO_MANY_REQUESTS, useIssues } from "./use-issues";
-import { useCallback, useEffect, useState } from "react";
-import { type IssueType } from "@/utils/types";
 
-export const useIssueDetails = () => {
+export const useIssueDetails = (issueId?: string) => {
   const { issueKey } = useSelectedIssueContext();
-  const { issues } = useIssues();
+  
+  // const { issues } = useIssues();
 
-  const getIssueId = useCallback(
-    (issues: IssueType[] | undefined) => {
-      return issues?.find((issue) => issue.key === issueKey)?.id ?? null;
-    },
-    [issueKey]
-  );
+  // const getIssueId = useCallback(
+  //   (issues: IssueType[] | undefined) => {
+  //     return issues?.find((issue) => issue.key === issueKey)?.id ?? null;
+  //   },
+  //   [issueKey]
+  // );
 
-  const [issueId, setIssueId] = useState<IssueType["id"] | null>(() =>
-    getIssueId(issues)
-  );
+  // const [issueId, setIssueId] = useState<IssueType["id"] | null>(() =>
+  //   getIssueId(issues)
+  // );
 
-  useEffect(() => {
-    setIssueId(getIssueId(issues));
-  }, [setIssueId, getIssueId, issues]);
+  // useEffect(() => {
+  //   setIssueId(getIssueId(issues));
+  // }, [setIssueId, getIssueId, issues]);
 
   const queryClient = useQueryClient();
 
   // GET
   const { data: comments, isLoading: commentsLoading } = useQuery(
-    ["issues", "comments", issueId],
+    ["comments", issueId],
     () => api.issues.getIssueComments({ issueId: issueId ?? "" }),
     {
       enabled: !!issueId,
       refetchOnMount: false,
+    }
+  );
+
+  // Get issue Details
+  const { data: issue, isLoading: issueLoading, refetch } = useQuery(
+    [`issueDetails`, issueKey],
+    () => {
+      return api.issues.getIssueDetails(issueKey);
+    },  
+    {
+      enabled: !!issueKey,
+      refetchOnMount: true
     }
   );
 
@@ -46,7 +57,8 @@ export const useIssueDetails = () => {
     {
       onSuccess: () => {
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        queryClient.invalidateQueries(["issues", "comments", issueId]);
+        queryClient.invalidateQueries(["comments", issueId]);
+        queryClient.invalidateQueries([`issueDetails`, issueKey]);
       },
       onError: (err: AxiosError) => {
         if (err?.response?.data == "Too many requests") {
@@ -67,14 +79,15 @@ export const useIssueDetails = () => {
     {
       onMutate: async (newComment) => {
         // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-        await queryClient.cancelQueries(["issues", "comments", issueId]);
+        await queryClient.cancelQueries(["comments", issueId]);
+
         // Snapshot the previous value
         const previousComments = queryClient.getQueryData<
           GetIssueCommentsResponse["comments"]
-        >(["issues", "comments", issueId]);
+        >(["comments", issueId]);
         // Optimistically update the comment
         queryClient.setQueryData(
-          ["issues", "comments", issueId],
+          ["comments", issueId],
           (old?: GetIssueCommentsResponse["comments"]) => {
             const newComments = (old ?? []).map((comment) => {
               const { content } = newComment;
@@ -93,7 +106,7 @@ export const useIssueDetails = () => {
       onError: (err: AxiosError, newIssue, context) => {
         // If the mutation fails, use the context returned from onMutate to roll back
         queryClient.setQueryData(
-          ["issues", "comments", issueId],
+          ["comments", issueId],
           context?.previousComments
         );
 
@@ -107,10 +120,12 @@ export const useIssueDetails = () => {
           description: "Please try again later.",
         });
       },
-      onSettled: () => {
+      onSettled: (comment) => {
         // Always refetch after error or success
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        queryClient.invalidateQueries(["issues", "comments", issueId]);
+        queryClient.invalidateQueries(["comments", issueId]);
+        queryClient.invalidateQueries([`issueDetails`, issueKey]);
+
       },
     }
   );
@@ -132,8 +147,9 @@ export const useIssueDetails = () => {
     },
     {
       // Optimistically update the cache when the comment is deleted
-      onSuccess: () => {
+      onSettled: () => {
         queryClient.invalidateQueries(["comments", issueId]);
+        queryClient.invalidateQueries([`issueDetails`, issueKey]);
       },
     }
   );
@@ -146,5 +162,8 @@ export const useIssueDetails = () => {
     updateComment,
     deleteComment,
     commentUpdating,
+    issue,
+    issueLoading,
+    refetch
   };
 };

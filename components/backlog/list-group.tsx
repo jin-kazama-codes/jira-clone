@@ -1,4 +1,5 @@
 "use client";
+
 import { useIssues } from "@/hooks/query-hooks/use-issues";
 import clsx from "clsx";
 import { BacklogList } from "./list-backlog";
@@ -9,73 +10,80 @@ import {
   type DropResult,
 } from "react-beautiful-dnd";
 import { type IssueType } from "@/utils/types";
-import { useCallback } from "react";
-import { useFiltersContext } from "@/context/use-filters-context";
-import {
-  assigneeNotInFilters,
-  epicNotInFilters,
-  insertItemIntoArray,
-  isEpic,
-  isNullish,
-  isSubtask,
-  issueNotInSearch,
-  issueTypeNotInFilters,
-  moveItemWithinArray,
-  sprintId,
-} from "@/utils/helpers";
-import { useSprints } from "@/hooks/query-hooks/use-sprints";
-import { type Sprint } from "@prisma/client";
+import { insertItemIntoArray, isNullish, sprintId } from "@/utils/helpers";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
+import { type Sprint } from "@prisma/client";
+import { Button } from "../ui/button";
+import IssueListSkeleton from "../ui/issue-list-skeleton";
+import { useQueryClient } from "@tanstack/react-query";
 
-const ListGroup: React.FC<{ className?: string }> = ({ className }) => {
-  const { issues, updateIssue } = useIssues();
+const ListGroup: React.FC<{
+  className?: string;
+  sprints: Sprint[];
+  hasNextPage: any;
+  fetchNextPage: any;
+  isFetchingNextPage: any;
+  isLoading: boolean 
+}> = ({
+  className,
+  hasNextPage,
+  fetchNextPage,
+  isFetchingNextPage,
+  sprints,
+  isLoading,
+}) => {
+  const { updateIssue } = useIssues();
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
-  const { search, assignees, issueTypes, epics } = useFiltersContext();
-  const { sprints } = useSprints();
+  const queryClient = useQueryClient();
 
-  const filterIssues = useCallback(
-    (issues: IssueType[] | undefined, sprintId: string | null) => {
-      if (!issues) return [];
-      const filteredIssues = issues.filter((issue) => {
-        if (
-          issue.sprintId === sprintId &&
-          !isEpic(issue) &&
-          !isSubtask(issue)
-        ) {
-          if (issueNotInSearch({ issue, search })) return false;
-          if (assigneeNotInFilters({ issue, assignees })) return false;
-          if (epicNotInFilters({ issue, epics })) return false;
-          if (issueTypeNotInFilters({ issue, issueTypes })) return false;
-          return true;
-        }
-        return false;
-      });
 
-      return filteredIssues;
-    },
-    [search, assignees, epics, issueTypes]
-  );
+  const handleLoadMore = () => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
 
-  const onDragEnd = (result: DropResult) => {
+  const onDragEnd = async (result: DropResult) => {
     if (!isAuthenticated) {
       openAuthModal();
       return;
     }
+
     const { destination, source } = result;
     if (isNullish(destination) || isNullish(source)) return;
-    updateIssue({
-      issueId: result.draggableId,
-      sprintId: sprintId(destination.droppableId),
-      sprintPosition: calculateIssueSprintPosition({
-        activeIssues: issues ?? [],
-        destination,
-        source,
-        droppedIssueId: result.draggableId,
-      }),
-    });
+
+    //todo calculatesprint position active issues need issues
+    const activeIssues = queryClient.getQueryData<IssueType[]>([
+      "issues",
+      destination.droppableId,
+    ]);
+
+    updateIssue(
+      {
+        issueId: result.draggableId,
+        sprintId: sprintId(destination.droppableId),
+        sprintPosition: calculateIssueSprintPosition({
+          activeIssues: activeIssues ?? [],
+          destination,
+          source,
+          droppedIssueId: result.draggableId,
+        }),
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries(["issues", destination.droppableId]);
+          queryClient.invalidateQueries(["issues", source.droppableId]);
+        },
+      }
+    );
   };
 
+  if (isLoading) {
+    return <IssueListSkeleton />;
+  }
+
   if (!sprints) return <div />;
+
   return (
     <div
       className={clsx(
@@ -84,37 +92,53 @@ const ListGroup: React.FC<{ className?: string }> = ({ className }) => {
       )}
     >
       <DragDropContext onDragEnd={onDragEnd}>
-        {sprints.map((sprint) => (
+        {sprints.map((sprint, index) => (
           <div key={sprint.id} className="my-3">
-            <SprintList
-              sprint={sprint}
-              issues={filterIssues(issues, sprint.id)}
-            />
+            <SprintList sprint={sprint} index={index} />
           </div>
         ))}
-        <BacklogList id="backlog" issues={filterIssues(issues, null)} />
+        {hasNextPage && (
+          <div className="py-4 text-center">
+            <button
+              onClick={handleLoadMore}
+              className="btn btn-primary"
+              disabled={isFetchingNextPage}
+            >
+              {isFetchingNextPage ? (
+                <div className="h-10 w-10 animate-spin rounded-full border-4 border-t-4 border-gray-200 border-t-black dark:border-t-dark-0 dark:bg-darkSprint-30" />
+              ) : (
+                <Button className="rounded-xl !bg-button px-4  hover:!bg-buttonHover dark:!bg-dark-0">
+                  <span className="whitespace-nowrap text-white">
+                    Load More
+                  </span>
+                </Button>
+              )}
+            </button>
+          </div>
+        )}
+        <BacklogList id="backlog" />
       </DragDropContext>
     </div>
   );
 };
 
+// Helper Functions
 function calculateIssueSprintPosition(props: IssueListPositionProps) {
   const { prevIssue, nextIssue } = getAfterDropPrevNextIssue(props);
   let position: number;
 
   if (isNullish(prevIssue) && isNullish(nextIssue)) {
     position = 1;
-  } else if (isNullish(prevIssue) && nextIssue) {
-    position = nextIssue.sprintPosition - 1;
-  } else if (isNullish(nextIssue) && prevIssue) {
-    position = prevIssue.sprintPosition + 1;
-  } else if (prevIssue && nextIssue) {
-    position =
-      prevIssue.sprintPosition +
-      (nextIssue.sprintPosition - prevIssue.sprintPosition) / 2;
+  } else if (isNullish(prevIssue)) {
+    position = nextIssue!.sprintPosition - 1;
+  } else if (isNullish(nextIssue)) {
+    position = prevIssue!.sprintPosition + 1;
   } else {
-    throw new Error("Invalid position");
+    position =
+      prevIssue!.sprintPosition +
+      (nextIssue!.sprintPosition - prevIssue!.sprintPosition) / 2;
   }
+
   return position;
 }
 
@@ -126,50 +150,25 @@ type IssueListPositionProps = {
 };
 
 function getAfterDropPrevNextIssue(props: IssueListPositionProps) {
-  const { activeIssues, destination, source, droppedIssueId } = props;
-  const beforeDropDestinationIssues = getSortedSprintIssues({
-    activeIssues,
-    sprintId: destination.droppableId,
-  });
+  const { activeIssues, destination, droppedIssueId } = props;
+  const sortedIssues = activeIssues.sort(
+    (a, b) => a.sprintPosition - b.sprintPosition
+  );
+
   const droppedIssue = activeIssues.find(
     (issue) => issue.id === droppedIssueId
   );
-
-  if (!droppedIssue) {
-    throw new Error("dropped issue not found");
-  }
-  const isSameList = destination.droppableId === source.droppableId;
-
-  const afterDropDestinationIssues = isSameList
-    ? moveItemWithinArray(
-        beforeDropDestinationIssues,
-        droppedIssue,
-        destination.index
-      )
-    : insertItemIntoArray(
-        beforeDropDestinationIssues,
-        droppedIssue,
-        destination.index
-      );
+  const updatedIssues = insertItemIntoArray(
+    sortedIssues,
+    droppedIssue!,
+    destination.index
+  );
 
   return {
-    prevIssue: afterDropDestinationIssues[destination.index - 1],
-    nextIssue: afterDropDestinationIssues[destination.index + 1],
+    prevIssue: updatedIssues[destination.index - 1],
+    nextIssue: updatedIssues[destination.index + 1],
   };
 }
 
-function getSortedSprintIssues({
-  activeIssues,
-  sprintId,
-}: {
-  activeIssues: IssueType[];
-  sprintId: Sprint["id"] | null;
-}) {
-  return activeIssues
-    .filter((issue) => issue.sprintId === sprintId)
-    .sort((a, b) => a.sprintPosition - b.sprintPosition);
-}
-
 ListGroup.displayName = "ListGroup";
-
 export { ListGroup };

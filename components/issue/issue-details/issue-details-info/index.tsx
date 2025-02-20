@@ -1,13 +1,9 @@
 import React, { Fragment, useRef, useState } from "react";
-import { NotImplemented } from "@/components/not-implemented";
-import { LightningIcon } from "@/components/svgs";
 import { IssueTitle } from "../../issue-title";
 import { IssueSelectStatus } from "../../issue-select-status";
 import { useSelectedIssueContext } from "@/context/use-selected-issue-context";
 import { type IssueType } from "@/utils/types";
-import { Button } from "@/components/ui/button";
 import { Comments } from "./issue-details-info-comments";
-import { IssueMetaInfo } from "./issue-details-info-meta";
 import { Description } from "./issue-details-info-description";
 import { IssueDetailsInfoAccordion } from "./issue-details-info-accordion";
 import { IssueDetailsInfoActions } from "./issue-details-info-actions";
@@ -18,6 +14,8 @@ import { useContainerWidth } from "@/hooks/use-container-width";
 import Split from "react-split";
 import "@/styles/split.css";
 import Worklog from "./issue-details-info-worklog";
+import { HiOutlineChat } from "react-icons/hi";
+import { MdOutlineWorkHistory } from "react-icons/md";
 
 const IssueDetailsInfo = React.forwardRef<
   HTMLDivElement,
@@ -59,7 +57,7 @@ const SmallIssueDetailsInfo = React.forwardRef<
           role="button"
           onClick={() => setIsEditing(true)}
           data-state={isEditing ? "editing" : "notEditing"}
-          className="w-full rounded-xl transition-all [&[data-state=notEditing]]:hover:bg-gray-100"
+          className="w-full rounded-xl transition-all dark:text-dark-50 [&[data-state=notEditing]]:hover:bg-gray-100 dark:[&[data-state=notEditing]]:hover:bg-darkSprint-30"
         >
           <IssueTitle
             className="mr-1 py-1"
@@ -72,24 +70,26 @@ const SmallIssueDetailsInfo = React.forwardRef<
         </h1>
       </div>
 
-      <IssueDetailsInfoActions
-        onAddChildIssue={() => setIsAddingChildIssue(true)}
-      />
-      <div className="relative flex items-center gap-x-3">
+      <div className="relative mt-2 flex items-center gap-x-3">
+        <IssueDetailsInfoActions
+          onAddChildIssue={() => setIsAddingChildIssue(true)}
+          issue={issue}
+        />
+
         <IssueSelectStatus
           key={issue.id + issue.status}
           currentStatus={issue.status}
           issueId={issue.id}
-          variant="lg"
+          variant="sm"
         />
-        <NotImplemented>
+        {/* <NotImplemented>
           <Button customColors className="rounded-xl hover:bg-gray-200">
             <div className="flex items-center">
               <LightningIcon className="mt-0.5" />
               <span>Actions</span>
             </div>
           </Button>
-        </NotImplemented>
+        </NotImplemented> */}
       </div>
       <Description issue={issue} key={String(issueKey) + issue.id} />
       {hasChildren(issue) || isAddingChildIssue ? (
@@ -102,32 +102,47 @@ const SmallIssueDetailsInfo = React.forwardRef<
         />
       ) : null}
       <IssueDetailsInfoAccordion issue={issue} />
-      <IssueMetaInfo issue={issue} />
 
-      <div className="row  mt-2  flex">
-        <h2 className="pr-2">Activity :</h2>
-        <button
+      <div className="row mt-5 flex">
+        <h2 className="pr-2 dark:text-dark-50">Activity :</h2>
+        <div
           className={`${
-            activity === "comments" ? "border-2 bg-slate-300 " : "bg-slate-100"
-          } rounded-md rounded-r-none  border-2 px-2 py-1 `}
+            activity === "comments"
+              ? "border-2 bg-button text-white dark:bg-darkButton-0 "
+              : "bg-slate-100 dark:bg-darkButton-20"
+          } rounded-md rounded-r-none  border-2 border-buttonHover px-2 py-1 hover:cursor-pointer dark:border-darkButton-30 dark:text-dark-50 dark:hover:bg-darkSprint-20 `}
           onClick={() => setActivity("comments")}
         >
-          Comments
-        </button>
-        <button
+          <div className="flex items-center justify-center gap-x-2">
+            <span>
+              <HiOutlineChat />
+            </span>
+            <span>Comments</span>
+          </div>
+        </div>
+        <div
           className={`${
-            activity === "worklog" ? "border-2 bg-slate-300 " : "bg-slate-100"
-          } rounded-md rounded-l-none  border-2 px-2 py-1 `}
+            activity === "worklog"
+              ? "border-2 bg-button text-white dark:bg-darkButton-0"
+              : "bg-slate-100 dark:bg-darkButton-20"
+          } rounded-md rounded-l-none  border-2 border-buttonHover px-2 py-1 hover:cursor-pointer dark:border-darkButton-30 dark:text-dark-50  dark:hover:bg-darkSprint-20 `}
           onClick={() => setActivity("worklog")}
         >
-          Worklog
-        </button>
+          <div className="flex items-center justify-center gap-x-2">
+            <span>
+              <MdOutlineWorkHistory />
+            </span>
+            <span>Worklog</span>
+          </div>
+        </div>
       </div>
-      {activity === "comments" ? (
-        <Comments issue={issue} />
-      ) : (
-        <Worklog issue={issue} />
-      )}
+      <div className="mt-5">
+        {activity === "comments" ? (
+          <Comments issue={issue} />
+        ) : (
+          <Worklog issue={issue} />
+        )}
+      </div>
     </Fragment>
   );
 });
@@ -149,11 +164,11 @@ const LargeIssueDetails = React.forwardRef<
       sizes={[60, 40]}
       gutterSize={2}
       className={`flex ${
-        detailPage ? "max-h-[87vh]" : "max-h-[70vh]"
+        detailPage ? "max-h-[92vh]" : "max-h-[70vh]"
       } w-full overflow-hidden`}
       minSize={300}
     >
-      <div className="overflow-y-auto pr-3">
+      <div className="overflow-y-auto custom-scrollbar pr-3">
         <div className="flex items-center gap-x-2">
           {isEpic(issue) ? <ColorPicker issue={issue} /> : null}
           <h1
@@ -161,7 +176,7 @@ const LargeIssueDetails = React.forwardRef<
             role="button"
             onClick={() => setIsEditing(true)}
             data-state={isEditing ? "editing" : "notEditing"}
-            className="w-full transition-all [&[data-state=notEditing]]:hover:bg-gray-100"
+            className="w-full transition-all dark:text-dark-50 [&[data-state=notEditing]]:hover:bg-gray-100 dark:[&[data-state=notEditing]]:hover:bg-darkSprint-30"
           >
             <IssueTitle
               className="mr-1 py-1"
@@ -188,25 +203,37 @@ const LargeIssueDetails = React.forwardRef<
           />
         ) : null}
         <div className="row mt-6  flex">
-          <h2 className="pr-2">Activity :</h2>
-          <button
+          <h2 className="pr-2 dark:text-dark-50">Activity :</h2>
+          <div
             className={`${
               activity === "comments"
-                ? "border-2 bg-slate-300 "
-                : "bg-slate-100"
-            } rounded-md rounded-r-none  border-2 px-2 py-1 `}
+                ? "border-2 bg-button text-white dark:bg-darkButton-0 "
+                : "bg-slate-100 dark:bg-darkButton-20"
+            } rounded-md rounded-r-none  border-2 border-buttonHover px-2 py-1 hover:cursor-pointer dark:border-darkButton-30 dark:text-dark-50 dark:hover:bg-darkSprint-20 `}
             onClick={() => setActivity("comments")}
           >
-            Comments
-          </button>
-          <button
+            <div className="flex items-center justify-center gap-x-2">
+              <span>
+                <HiOutlineChat />
+              </span>
+              <span>Comments</span>
+            </div>
+          </div>
+          <div
             className={`${
-              activity === "worklog" ? "border-2 bg-slate-300 " : "bg-slate-100"
-            } rounded-md rounded-l-none  border-2 px-2 py-1 `}
+              activity === "worklog"
+                ? "border-2 bg-button text-white dark:bg-darkButton-0"
+                : "bg-slate-100 dark:bg-darkButton-20"
+            } rounded-md rounded-l-none  border-2 border-buttonHover px-2 py-1 hover:cursor-pointer dark:border-darkButton-30 dark:text-dark-50  dark:hover:bg-darkSprint-20 `}
             onClick={() => setActivity("worklog")}
           >
-            Worklog
-          </button>
+            <div className="flex items-center justify-center gap-x-2">
+              <span>
+                <MdOutlineWorkHistory />
+              </span>
+              <span>Worklog</span>
+            </div>
+          </div>
         </div>
         <div className="mt-4">
           {activity === "comments" ? (
@@ -217,7 +244,7 @@ const LargeIssueDetails = React.forwardRef<
         </div>
       </div>
 
-      <div className="mt-4 overflow-y-scroll pl-3">
+      <div className="mt-4 overflow-y-scroll custom-scrollbar pl-3">
         <div className="relative flex items-center gap-x-3">
           <IssueSelectStatus
             key={issue.id + issue.status}
@@ -225,18 +252,17 @@ const LargeIssueDetails = React.forwardRef<
             issueId={issue.id}
             variant="lg"
           />
-          <NotImplemented>
+          {/* <NotImplemented>
             <Button customColors className="hover:bg-gray-200">
               <div className="flex items-center">
                 <LightningIcon className="mt-0.5" />
                 <span>Actions</span>
               </div>
             </Button>
-          </NotImplemented>
+          </NotImplemented> */}
         </div>
 
         <IssueDetailsInfoAccordion issue={issue} />
-        <IssueMetaInfo issue={issue} />
       </div>
     </Split>
   );

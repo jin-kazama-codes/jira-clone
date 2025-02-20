@@ -45,7 +45,6 @@ const Sidebar: React.FC = () => {
     }
   }, [project]);
 
-
   const toggleAssigneeFilter = () => {
     setAssignees(assignees.length === 0 ? [user.id] : []);
   };
@@ -124,72 +123,100 @@ const Sidebar: React.FC = () => {
 
   return (
     <div
-      className={`relative flex h-full ${sidebarWidth} z-20 flex-col gap-y-3 bg-indigo-50 p-3 shadow-inner transition-all duration-300`}
+      className={`relative flex h-[92vh] ${sidebarWidth} rounded-br-xl z-50 flex-col bg-indigo-50 shadow-inner transition-all duration-300 dark:bg-darkSprint-10`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{
         position: isCollapsed ? "absolute" : "relative",
-        height: "100vh",
       }}
     >
-      <div
-        className={`my-5 flex items-center border-b-2 pb-7 ${
-          isCollapsed && !isHovered ? "justify-center px-0" : "gap-x-2 px-3"
-        }`}
-      >
-        <div className="mt-1 flex items-center justify-center rounded-full bg-[#FF5630] p-1 text-xs font-bold text-white">
-          <FaChessPawn className="aspect-square text-2xl" />
-        </div>
-        {(!isCollapsed || isHovered) && (
-          <div className="transition-all duration-300">
-            <h2 className="text-md -mb-[0.5px] font-semibold text-black">
-              {project?.name}
-            </h2>
-          </div>
-        )}
-      </div>
-
-      <NavList
-        label="PLANNING"
-        items={planningItems}
-        isCollapsed={isCollapsed}
-        isHovered={isHovered}
-      />
-      <NavList
-        label="MY WORKSPACE"
-        items={myWorkSpaceItems}
-        isCollapsed={isCollapsed}
-        isHovered={isHovered}
-      />
-
-      {!pathname.includes("/users") && !pathname.includes("/project") && (
-        <button
-          onClick={toggleAssigneeFilter}
-          className="flex items-center rounded-sm rounded-r-xl border-inherit bg-inherit px-2 py-2 hover:bg-slate-200"
+      <div className="flex h-full flex-col overflow-hidden">
+        <div
+          className={`flex items-center border-b-2 px-3 py-6 dark:border-b-darkSprint-30 ${
+            isCollapsed && !isHovered ? "justify-center px-0" : "gap-x-2"
+          }`}
         >
-          <CgGoogleTasks className="h-[22px] w-6" />
+          <div className="mt-1 flex items-center justify-center rounded-full bg-[#FF5630] p-1 text-xs font-bold text-white">
+            <FaChessPawn className="aspect-square text-2xl" />
+          </div>
           {(!isCollapsed || isHovered) && (
-            <span className="ml-3 text-sm transition-all duration-300">
-              {assignees.length === 0 ? "My Tasks" : "All Tasks"}
-            </span>
+            <div className="transition-all duration-300">
+              <h2 className="text-md -mb-[0.5px] font-semibold text-black dark:text-dark-50">
+                {project?.name}
+              </h2>
+            </div>
           )}
-        </button>
-      )}
+        </div>
 
-      {isAdminOrManager && (
-        <NavList
-          label="CONFIGURATION"
-          items={configurationItems}
-          isCollapsed={isCollapsed}
-          isHovered={isHovered}
-        />
-      )}
-      <NavList
-        label="REPORTS"
-        items={reportingItems}
-        isCollapsed={isCollapsed}
-        isHovered={isHovered}
-      />
+        <div className="custom-scrollbar flex-1 overflow-y-auto px-3 py-4">
+          <style jsx global>{`
+            .custom-scrollbar::-webkit-scrollbar {
+              width: 4px;
+            }
+            
+            .custom-scrollbar::-webkit-scrollbar-track {
+              background: transparent;
+            }
+            
+            .custom-scrollbar::-webkit-scrollbar-thumb {
+              background: #94a3b8;
+              border-radius: 2px;
+            }
+            
+            .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+              background: #64748b;
+            }
+            
+            .custom-scrollbar {
+              scrollbar-width: thin;
+              scrollbar-color: #94a3b8 transparent;
+            }
+          `}</style>
+          <div className="flex flex-col gap-y-3">
+            <NavList
+              label="PLANNING"
+              items={planningItems}
+              isCollapsed={isCollapsed}
+              isHovered={isHovered}
+            />
+            <NavList
+              label="MY WORKSPACE"
+              items={myWorkSpaceItems}
+              isCollapsed={isCollapsed}
+              isHovered={isHovered}
+            />
+
+            {!pathname.includes("/users") && !pathname.includes("/project") && (
+              <button
+                onClick={toggleAssigneeFilter}
+                className="flex items-center rounded-sm rounded-r-xl border-inherit bg-inherit px-2 py-2 hover:bg-slate-200 dark:hover:bg-darkSprint-30"
+              >
+                <CgGoogleTasks className="h-[22px] w-6 dark:text-dark-0" />
+                {(!isCollapsed || isHovered) && (
+                  <span className="ml-3 text-sm transition-all duration-300 dark:text-dark-50">
+                    {assignees.length === 0 ? "My Tasks" : "All Tasks"}
+                  </span>
+                )}
+              </button>
+            )}
+
+            {isAdminOrManager && (
+              <NavList
+                label="CONFIGURATION"
+                items={configurationItems}
+                isCollapsed={isCollapsed}
+                isHovered={isHovered}
+              />
+            )}
+            <NavList
+              label="REPORTS"
+              items={reportingItems}
+              isCollapsed={isCollapsed}
+              isHovered={isHovered}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
@@ -242,9 +269,11 @@ const NavListHeader: React.FC<{
       onClick={() => setIsVisible(!isVisible)}
       className="invisible group-hover:visible [&[data-state=open]>svg]:rotate-90"
     >
-      <FaChevronRight className="text-xs transition-transform" />
+      <FaChevronRight className="text-xs transition-transform dark:text-dark-50" />
     </button>
-    <span className="text-xs font-bold text-gray-700">{label}</span>
+    <span className="text-xs font-bold text-gray-700 dark:text-darkSprint-50">
+      {label}
+    </span>
   </div>
 );
 
@@ -259,10 +288,10 @@ const NavItem: React.FC<{
   if (disabled) {
     return (
       <div className="w-full rounded-lg text-gray-600 hover:cursor-not-allowed">
-        <div className="flex items-center gap-x-3 border-l-4 border-transparent px-2 py-2">
+        <div className="flex items-center gap-x-3 border-l-4 border-transparent px-2 py-2 dark:text-dark-0">
           <item.icon />
           {(!isCollapsed || isHovered) && (
-            <span className="text-sm">{item.label}</span>
+            <span className="text-sm dark:text-dark-50">{item.label}</span>
           )}
         </div>
       </div>
@@ -278,18 +307,20 @@ const NavItem: React.FC<{
     >
       <NavigationMenuLink
         active={currentPath === item.href}
-        className={`flex rounded-sm rounded-r-xl border-transparent py-2 hover:bg-slate-200 
-          [&[data-active]]:rounded-r-xl [&[data-active]]:border-l-black [&[data-active]]:bg-slate-200 [&[data-active]]:text-black`}
+        className={`flex rounded-sm rounded-r-xl border-transparent py-2 hover:bg-slate-200 dark:hover:bg-darkSprint-30
+          [&[data-active]]:rounded-r-xl [&[data-active]]:border-l-black [&[data-active]]:bg-slate-200 [&[data-active]]:text-black dark:[&[data-active]]:border-l-dark-0 dark:[&[data-active]]:bg-darkSprint-20`}
       >
         <div
-          className={`flex items-center gap-x-3 border-l-4 border-inherit bg-inherit px-2
+          className={`flex items-center gap-x-3 border-l-4 border-inherit bg-inherit pl-2
           ${
             isCollapsed && !isHovered ? "justify-center border-l-0" : "w-full"
           }`}
         >
-          <item.icon className="[&[data-active]]:text-blue-500" />
+          <item.icon className="dark:text-dark-10 [&[data-active]]:text-blue-500" />
           {(!isCollapsed || isHovered) && (
-            <span className="whitespace-nowrap text-sm">{item.label}</span>
+            <span className="whitespace-nowrap text-sm dark:text-dark-50">
+              {item.label}
+            </span>
           )}
         </div>
       </NavigationMenuLink>

@@ -11,7 +11,8 @@ const DescriptionField: React.FC<{
       <textarea
         {...register("description")}
         id="description"
-        className="block h-32 w-[500px] rounded-xl border border-gray-300 p-2 text-sm shadow-sm outline-2 transition-all duration-75 focus:outline-blue-400"
+        placeholder="Enter your sprint goal here..."
+        className="block h-32 w-[500px] dark:bg-darkSprint-30 dark:border-darkSprint-20 dark:placeholder:text-darkSprint-50 dark:text-white rounded-xl border border-gray-300 p-2 text-sm shadow-sm outline-2 transition-all duration-75 focus:outline-blue-400"
       />
     </div>
   );

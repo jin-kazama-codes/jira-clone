@@ -22,7 +22,7 @@ const ProgressBar: React.FC<{
         style={{ width: "100%" }}
         className={clsx(
           variant === "sm" ? "h-1" : "h-2.5",
-          "flex  gap-x-0.5 overflow-hidden rounded-full bg-white"
+          "flex  gap-x-0.5 overflow-hidden rounded-full dark:bg-darkSprint-30 bg-white"
         )}
       >
         {statusCount.DONE ? (

@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
   });
 
   // Return the fetched worklogs
-  return NextResponse.json({ worklogs });
+  return NextResponse.json({ worklogs: worklogs });
 }
 
 export async function POST(req: NextRequest) {

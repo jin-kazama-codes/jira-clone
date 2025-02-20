@@ -29,7 +29,7 @@ const ModalContent = React.forwardRef<ContentRef, ContentProps>(
     <div className="flex justify-center">
       <ModalPrimitive.Content
         className={clsx(
-          customStyle ? "" : "top-20 bg-header shadow-md",
+          customStyle ? "" : "top-20 bg-header dark:bg-darkSprint-10 shadow-md",
           "fixed z-50 rounded-xl duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95  ",
           className
         )}
@@ -99,7 +99,7 @@ type DescriptionRef = React.ElementRef<typeof ModalPrimitive.Description>;
 const ModalDescription = React.forwardRef<DescriptionRef, DescriptionProps>(
   ({ children, className, ...props }, forwardedRef) => (
     <ModalPrimitive.Description
-      className={clsx(" font-medium text-gray-800", className)}
+      className={clsx(" font-medium text-gray-800 dark:text-dark-50", className)}
       {...props}
       ref={forwardedRef}
     >

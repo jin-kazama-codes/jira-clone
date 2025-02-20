@@ -38,17 +38,17 @@ const BurndownHeader: React.FC<{ project: Project }> = ({
 
   return (
     <div className="flex h-fit flex-col">
-      <div className="text-sm text-gray-500">
+      <div className="text-sm text-gray-500 dark:text-dark-0">
         Projects / {project.name} / Burndown
       </div>
-      <h1 className="mt-2">Burndown report</h1>
+      <h1 className="mt-2 dark:text-dark-50">Burndown report</h1>
       {sprints?.length && (
         <div className="mt-5">
-          <p className="font-semibold text-sm ml-1 text-slate-600">Sprint</p>
+          <p className="font-semibold text-sm ml-1 text-slate-600 dark:text-dark-50">Sprint</p>
           <select
             value={sprintId || ""}
             onChange={(e) => setSprintId(e.target.value)}
-            className="p-2 mt-1 w-1/5 border rounded-xl "
+            className="p-2 mt-1 w-1/5 border dark:bg-darkSprint-20 dark:border-darkSprint-30 dark:border-2 dark:text-dark-50   rounded-xl "
           >
             {sprints?.map((sprint) => (
               <option key={sprint.id} value={sprint.id}>

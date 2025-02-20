@@ -38,7 +38,7 @@ const EpicFilter: React.FC = () => {
   }
   return (
     <Dropdown>
-      <DropdownTrigger className="rounded-xl border-2 border-gray-300 bg-gray-50 px-2  [&[data-state=open]]:bg-gray-700 [&[data-state=open]]:text-white transition-all duration-200 hover:bg-gray-200">
+      <DropdownTrigger className="rounded-xl border-2 dark:bg-darkSprint-20 dark:border-darkSprint-30 dark:text-dark-50  border-gray-300 bg-gray-50 px-2  [&[data-state=open]]:bg-gray-700 [&[data-state=open]]:text-white transition-all duration-200 hover:bg-gray-200">
         <Button
           customColors
           className="flex items-center gap-x-4 "
@@ -56,7 +56,7 @@ const EpicFilter: React.FC = () => {
         <DropdownContent
           side="bottom"
           align="start"
-          className="z-10 mt-2 w-64 rounded-[3px] border-[0.3px] bg-white pb-2 shadow-md"
+          className="z-10 mt-2 w-64 rounded-[3px] border-[0.3px] dark:bg-darkSprint-20 dark:border-darkSprint-30  bg-white pb-2 shadow-md"
         >
           <div className="w-full p-2">
             <SearchBar
@@ -92,7 +92,7 @@ const EpicFilter: React.FC = () => {
             </DropdownItem>
           ))}
           {issues?.filter(searchFilter).length === 0 && (
-            <div className="py-4 text-center text-sm text-gray-500">
+            <div className="py-4 text-center text-sm text-gray-500 dark:text-dark-50">
               No epics found
             </div>
           )}

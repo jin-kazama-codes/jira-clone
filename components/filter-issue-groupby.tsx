@@ -5,7 +5,7 @@ import { Dropdown, DropdownContent, DropdownItem, DropdownPortal, DropdownTrigge
 const IssueTypeGroupBy: React.FC = () => {
     return(
         <Dropdown>
-      <DropdownTrigger className="rounded-xl border-2 transition-all duration-200 hover:bg-gray-200 border-gray-300 bg-gray-50 px-2 [&[data-state=open]]:bg-gray-700 [&[data-state=open]]:text-white">
+      <DropdownTrigger className="rounded-xl border-2 dark:bg-darkSprint-20 dark:border-darkSprint-30 dark:text-dark-50 transition-all duration-200 hover:bg-gray-200 border-gray-300 bg-gray-50 px-2 [&[data-state=open]]:bg-gray-700 [&[data-state=open]]:text-white">
         <Button
           customColors
           className="flex items-center  gap-x-4 "
@@ -18,11 +18,11 @@ const IssueTypeGroupBy: React.FC = () => {
         <DropdownContent
           side="bottom"
           align="start"
-          className="z-10 mt-2 w-32 rounded-[3px] border-[0.3px] bg-white py-2 shadow-md"
+          className="z-10 mt-2 w-32 rounded-[3px] border-[0.3px] dark:bg-darkSprint-20 dark:border-darkSprint-30 bg-white py-2 shadow-md"
         >
             <DropdownItem
               onSelect={(e) => e.preventDefault()}
-              className="px-3 py-1.5 text-sm hover:bg-gray-100"
+              className="px-3 dark:hover:bg-darkSprint-30 py-1.5 text-sm hover:bg-gray-100"
             //   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             //     onSelectChange(e, type)
             //   }
@@ -30,7 +30,7 @@ const IssueTypeGroupBy: React.FC = () => {
             </DropdownItem>
             <DropdownItem
               onSelect={(e) => e.preventDefault()}
-              className="px-3 py-1.5 text-sm hover:bg-gray-100"
+              className="px-3 dark:hover:bg-darkSprint-30 py-1.5 text-sm hover:bg-gray-100"
             //   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             //     onSelectChange(e, type)
             //   }

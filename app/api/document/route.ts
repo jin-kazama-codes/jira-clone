@@ -8,7 +8,6 @@ export async function POST(req: Request) {
   try {
     // Parse JSON from the request body
     const { type, link, name, extension, parentId } = await req.json();
-    console.log("Parsed body:", { type, link, name, extension, parentId });
 
     const { id: projectId } = parseCookies(req, "project");
     const { id: ownerId } = parseCookies(req, "user");

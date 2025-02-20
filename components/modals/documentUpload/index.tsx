@@ -140,11 +140,11 @@ const DocumentPage: React.FC<DocumentUploadProps> = ({
         <ModalContent className="flex items-center justify-center">
           <div className="w-full max-w-sm rounded-xl h-auto">
             <div className="mb-4 p-5 text-white flex items-center gap-3">
-              <ModalTitle className="text-2xl font-bold text-white">
+              <ModalTitle className="text-2xl font-bold dark:text-dark-50 text-white">
                 Upload File
               </ModalTitle>
             </div>
-            <div className="pb-3 flex rounded-t-xl p-6 bg-white">
+            <div className="pb-3 flex rounded-t-xl p-6 dark:bg-darkSprint-20 bg-white">
               <div className="flex items-center justify-center w-full">
                 <div className="flex flex-col items-center space-y-4 w-full">
                   <input
@@ -160,11 +160,11 @@ const DocumentPage: React.FC<DocumentUploadProps> = ({
                     }}
                     multiple
                     accept="image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                    className="file:mr-4 file:rounded-full file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
+                    className="file:mr-4 dark:text-dark-50 file:rounded-full file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
                   />
 
                   {fileName && fileName.length > 0 && (
-                    <div className="text-center text-sm text-gray-700">
+                    <div className="text-center text-sm text-gray-700 dark:text-dark-50">
                       <p className="font-medium">Selected Files:</p>
                       <ul>
                         {fileName.map((name, index) => (
@@ -180,7 +180,7 @@ const DocumentPage: React.FC<DocumentUploadProps> = ({
                 </div>
               </div>
             </div>
-            <div className="flex rounded-b-xl bg-white pr-3 pb-2 justify-end">
+            <div className="flex rounded-b-xl bg-white dark:bg-darkSprint-20 pr-3 pb-2 justify-end">
               <button
                 onClick={() => {
                   if (document && document.length > 0) {
@@ -189,7 +189,7 @@ const DocumentPage: React.FC<DocumentUploadProps> = ({
                     setMessage("No files selected. Please choose files to upload.");
                   }
                 }}
-                className="rounded bg-button text-end px-4 py-2 text-white transition hover:bg-buttonHover disabled:bg-gray-500"
+                className="rounded-2xl bg-button dark:!bg-dark-0 text-end px-4 py-2  text-white transition hover:bg-buttonHover disabled:bg-gray-500"
                 disabled={uploading}
               >
                 {uploading ? "Uploading..." : "Upload"}

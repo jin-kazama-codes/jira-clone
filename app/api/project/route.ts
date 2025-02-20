@@ -8,7 +8,7 @@ export type GetProjectResponse = {
 };
 
 export async function GET() {
-  const projectData = parsePageCookies('project')
+  const projectData = parsePageCookies("project");
   const project = await prisma.project.findUnique({
     where: {
       key: projectData.key,
@@ -19,18 +19,39 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const companyId = parsePageCookies("user").companyId;
   const { name, key, userId } = await request.json();
 
   if (!name || !key || !userId) {
-    return NextResponse.json({ error: 'Name, key, and userId are required' }, { status: 400 });
+    return NextResponse.json(
+      { error: "Name, key, and userId are required" },
+      { status: 400 }
+    );
   }
 
   try {
+    // Check if a project with the same name or key already exists within the same company
+    const existingProject = await prisma.project.findFirst({
+      where: {
+        companyId,
+        OR: [{ name }, { key }],
+      },
+    });
+
+    if (existingProject) {
+      return NextResponse.json(
+        { error: "Project with the same name or key already exists" },
+        { status: 400 }
+      );
+    }
+
+    // Create new project
     const newProject = await prisma.project.create({
       data: {
         name,
         key,
         defaultAssignee: String(userId),
+        companyId,
       },
     });
 
@@ -61,26 +82,19 @@ export async function POST(request: Request) {
       ],
     };
 
-    const existingWorkflow = await prisma.workflow.findUnique({
-      where: {
-        projectId: newProject?.id,
-      }
-    })
-
-    if(existingWorkflow){
-      return;
-    }
-
-    // Create resource in the database
+    // Create workflow only if it does not exist
     const workflow = await prisma.workflow.create({
       data: {
-        projectId: newProject?.id,
+        projectId: newProject.id,
         workflow: workflowData,
       },
     });
 
     return NextResponse.json({ Project: newProject, Workflow: workflow });
   } catch (error) {
-    return NextResponse.json({ error: 'Error creating project' }, { status: 500 });
+    return NextResponse.json(
+      { error: "Error creating project" },
+      { status: 500 }
+    );
   }
 }

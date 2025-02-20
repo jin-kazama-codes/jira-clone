@@ -21,12 +21,14 @@ interface DeleteUserModalProps {
     role?: string;
   };
   onClose?: () => void;
+  onDeleteSuccess: any
 }
 
 const DeleteUserModal: React.FC<DeleteUserModalProps> = ({
   children,
   user,
   onClose,
+  onDeleteSuccess
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -47,6 +49,7 @@ const DeleteUserModal: React.FC<DeleteUserModalProps> = ({
       if (response.ok) {
         const result = await response.json();
         setIsOpen(false);
+        onDeleteSuccess()
       } else {
         const result = await response.json();
       }
@@ -63,18 +66,18 @@ const DeleteUserModal: React.FC<DeleteUserModalProps> = ({
         <ModalContent>
           <div className="p-5 text-white">
             <ModalTitle>Remove member</ModalTitle>
-            <ModalDescription className="mt-1">
+            <ModalDescription className="mt-1 !text-white">
               Are you sure you want to remove the member ?
             </ModalDescription>
           </div>
-          <div className="mt-5 rounded-xl p-6 bg-white space-x-4">
+          <div className="mt-5 rounded-xl p-6 dark:bg-darkSprint-20 bg-white space-x-4">
             <Button
               onClick={handleDelete}
-              className="flex  justify-center px-4 py-1 rounded-xl !bg-red-600 text-white"
+              className="flex  justify-center px-4 py-1 rounded-2xl !bg-red-600 text-white"
             >
-              Ok
+              Delete
             </Button>
-            <button onClick={() => setIsOpen(false)}>
+            <button className="dark:bg-dark-50 px-4 py-1 rounded-2xl" onClick={() => setIsOpen(false)}>
               Cancel
             </button>
           </div>

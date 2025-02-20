@@ -46,6 +46,8 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
 
   const isClosedOnly = searchParams.get("closed") === "true";
+  const page = searchParams.get("page");
+  const limit = searchParams.get("limit") ;
 
   const where = {
     projectId: projectId,
@@ -66,12 +68,39 @@ export async function GET(req: NextRequest) {
     where.position = position;
   }
 
-  const sprints = await prisma.sprint.findMany({
+  let sprintsQuery = {
     where,
     orderBy: {
       position: "asc",
     },
-  });
+  };
 
-  return NextResponse.json({ sprints });
+
+  // Apply pagination only if both page and limit are provided
+  if (page !== null && limit !== null) {
+    const pageNumber = parseInt(page, 10);
+    const limitNumber = parseInt(limit, 10);
+
+    if (!isNaN(pageNumber) && !isNaN(limitNumber)) {
+      sprintsQuery.skip = pageNumber * limitNumber;
+      sprintsQuery.take = limitNumber;
+    }
+  }
+
+  const [sprints, totalCount] = await Promise.all([
+    prisma.sprint.findMany(sprintsQuery),
+    prisma.sprint.count({ where }),
+  ]);
+
+  const hasNextPage =
+    page !== null &&
+    limit !== null &&
+    (parseInt(page, 10) + 1) * parseInt(limit, 10) < totalCount;
+
+  return NextResponse.json({
+    sprints,
+    nextPage: hasNextPage ? parseInt(page, 10) + 1 : null,
+  });
 }
+
+

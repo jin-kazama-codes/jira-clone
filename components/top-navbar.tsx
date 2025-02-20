@@ -4,10 +4,15 @@ import { useRouter } from "next/navigation";
 import { useCookie } from "@/hooks/use-cookie";
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import ThemeToggle from "./theme-button";
+import { useCompany } from "@/hooks/query-hooks/use-company";
 "public/images/karya-io-logo.png"
 
 const TopNavbar: React.FC = () => {
   const user = useCookie("user");
+  const companyId = useCookie("user").companyId;
+  const { company, companyLoading } =
+    useCompany(companyId);
   const router = useRouter();
   const unassigned = {
     id: "unassigned",
@@ -16,9 +21,15 @@ const TopNavbar: React.FC = () => {
     email: "",
   };
   const [showDropdown, setShowDropdown] = useState(false);
+  const [companyName, setCompanyName] = useState('Karya.io');
   const [logo, setLogo] = useState("");
   const dropdownRef = useRef(null);
   const toggleDropdown = () => setShowDropdown((prev) => !prev);
+  const isSuperAdmin = user.role === "superAdmin"
+  const isAdminOrManager =
+    user && (user.role === "admin" || user.role === "manager");
+  const isProMember = company?.proMember
+  const isOnTrial = company?.subscriptionType === "Trial"
 
   function getInitials(name: string) {
     const nameParts = name.split(" ");
@@ -58,25 +69,16 @@ const TopNavbar: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchLogo = async () => {
-      try {
-        const response = await fetch("/api/account");
-        if (response.ok) {
-          const result = await response.json();
-          setLogo(result.account.logo);
-        } else {
-          console.error("Failed to fetch Logo");
-        }
-      } catch (err) {
-        console.error("Error fetching users:", err);
+    if(company){
+      setLogo(company.logo)
+      if(isProMember || isOnTrial){
+        setCompanyName(company.name)
       }
-    };
-
-    fetchLogo();
-  }, []);
+    }
+  }, [company]);
 
   return (
-    <div className="flex bg-indigo-50  h-12 w-full items-center justify-between border-b  px-4">
+    <div className="flex bg-indigo-50 dark:bg-darkSprint-10 h-12 w-full items-center justify-between border-b dark:border-b-darkSprint-30  px-4">
       <button
         onClick={handleNavigation}
         className="flex items-center gap-x-1">
@@ -86,10 +88,13 @@ const TopNavbar: React.FC = () => {
           width={30}
           height={30}
         />
-        <span className="text-xl font-medium text-gray-700">Karya.io</span>
+        <span className="text-xl font-medium text-gray-700 dark:text-dark-50">{companyName}</span>
       </button>
 
       <div className="relative flex items-center gap-x-5">
+        <div className="m-2">
+        <ThemeToggle />
+        </div>
         <div
           className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-300"
           style={{
@@ -107,10 +112,10 @@ const TopNavbar: React.FC = () => {
 
         {showDropdown && (
           <div
-            className="absolute right-0  top-11 z-20  w-80 rounded-md border border-gray-300 bg-white pt-2 shadow-lg"
+            className="absolute right-0  top-11 z-20  w-80 rounded-md dark:bg-darkSprint-20 dark:text-dark-50  dark:border-darkSprint-30 border border-gray-300 bg-white pt-2 shadow-lg"
             ref={dropdownRef}
           >
-            <p className="mt-4 px-6  font-bold  ">Account</p>
+            <p className="mt-4 px-6  font-bold">Account</p>
 
             <div className="flex px-4  pt-3">
               <div
@@ -121,29 +126,29 @@ const TopNavbar: React.FC = () => {
                     : getColorFromLocalStorage(unassigned.id),
                 }}
               >
-                <span className="font-bold text-white">
+                <span className="font-bold text-white ">
                   {user.name
                     ? getInitials(user.name)
                     : getInitials(unassigned.name)}
                 </span>
               </div>
               <div className="px-4 ">
-                <p className="  text-sm font-medium text-gray-700">
+                <p className="  text-sm font-medium text-gray-700 dark:text-white">
                   {user.name}
                 </p>
-                <p className="  text-sm text-gray-500">{user.email}</p>
+                <p className="  text-sm text-gray-500 dark:text-white ">{user.email}</p>
               </div>
             </div>
             <hr className="mt-5" />
-            <button
-              className="w-full  px-5 py-3 text-left text-sm text-gray-600 hover:bg-slate-200"
+            {!isSuperAdmin && isAdminOrManager && (<button
+              className="w-full  px-5 py-3 text-left text-sm dark:text-dark-50  text-gray-600 dark:hover:text-white dark:hover:bg-darkSprint-30 hover:bg-slate-200"
             >
-              <Link className="w-full" href={'/organization/profile'}>
+              <Link className="w-full " href={'/organization/profile'}>
                 Organization settings
               </Link>
-            </button>
+            </button>)}
             <button
-              className="w-full  px-5 py-3 text-left text-sm text-gray-600 hover:bg-slate-200"
+              className="w-full  px-5 py-3 text-left text-sm dark:text-dark-50 dark:hover:bg-darkSprint-30 dark:hover:text-white  text-gray-600 hover:bg-slate-200"
               onClick={handleLogout}
             >
               Log out

@@ -39,13 +39,13 @@ const IssueSelectType: React.FC<{
         text={`${capitalize(selected)} - Change issue type`}
         side="top"
       >
-        <SelectTrigger className="flex items-center gap-x-1 rounded-[3px] bg-opacity-30 p-1.5 text-xs font-semibold text-white hover:bg-gray-200 focus:ring-2">
+        <SelectTrigger className="flex items-center gap-x-1 rounded-[3px] bg-opacity-30 p-1.5 text-xs font-semibold dark:hover:bg-darkSprint-30 text-white hover:bg-gray-200 focus:ring-2">
           <SelectValue>
             <IssueIcon issueType={selected} />
           </SelectValue>
           {dropdownIcon ? (
             <SelectIcon>
-              <FaChevronDown className="text-gray-800" />
+              <FaChevronDown className="text-gray-800 dark:text-dark-50" />
             </SelectIcon>
           ) : null}
         </SelectTrigger>

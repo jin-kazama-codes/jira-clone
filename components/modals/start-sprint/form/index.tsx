@@ -52,7 +52,6 @@ const StartSprintForm: React.FC<{
       openAuthModal();
       return;
     }
-
     updateSprint(
       {
         sprintId: sprint.id,

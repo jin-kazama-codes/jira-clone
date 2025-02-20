@@ -14,10 +14,10 @@ const ProjectLayout = ({ children }: { children: React.ReactNode }) => {
         <Fragment>
             <FiltersProvider>
                 <TopNavbar />
-                <main className="flex h-auto w-full relative">
+                <main className="flex h-full w-full relative dark:bg-darkSprint-0">
                     {!hideSidebar && <Sidebar />}
                     <div
-                        className={`w-full h-screen ${
+                        className={`w-full min-h-screen ${
                             !hideSidebar ? "max-w-[calc(100vw_-_4rem)] ml-16" : "max-w-full"
                         }`}
                     >

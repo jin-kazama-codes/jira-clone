@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, ReactNode, } from "react";
+import { useState, useEffect, ReactNode } from "react";
 import {
   Modal,
   ModalContent,
@@ -16,6 +16,7 @@ import { calculatePercentage, calculateTimeRemaining } from "@/utils/helpers";
 import { combineTimeSpent } from "@/utils/helpers";
 import { useCookie } from "@/hooks/use-cookie";
 import WorklogDlt from "../worklogdelete";
+import { useWorklog } from "@/hooks/query-hooks/use-worklog";
 
 interface EditWorklogProps {
   isOpen: boolean;
@@ -34,18 +35,16 @@ const EditWorklog: React.FC<EditWorklogProps> = ({
   worklog,
   children,
 }) => {
-
   const [timeSpent, setTimeSpent] = useState(issue.timeSpent || ""); // Initially empty when modal opens
   const [percentage, setPercentage] = useState(0);
   const [remainingTime, setRemainingTime] = useState("");
-  const [newTimeSpent, setNewTimeSpent] = useState(worklog.timeLogged);
-  const [workDescription, setWorkDescription] = useState(worklog.workDescription);
-  const userName = useCookie('user')?.name
+  const [newTimeSpent, setNewTimeSpent] = useState("");
+  const [workDescription, setWorkDescription] = useState(
+    worklog.workDescription
+  );
   const [isOpen, setIsOpen] = useState(false);
   const { updateIssue } = useIssues();
-
-
-
+  const { updateWorklog } = useWorklog(issue?.id);
 
   useEffect(() => {
     // Calculate percentage and remaining time based on the already logged time
@@ -67,34 +66,27 @@ const EditWorklog: React.FC<EditWorklogProps> = ({
     setPercentage(newPercentage);
   }, [newTimeSpent, issue.timeSpent, issue.estimateTime]);
 
-
   const progressBarColor = percentage > 100 ? "bg-orange-500" : "bg-green-500";
 
   // Handle input edit
 
   const onSave = async (worklogId: string) => {
+    let worklogData = JSON.stringify({
+      timeLogged: timeSpent,
+      workDescription: workDescription,
+      issueId: issue.id,
+    });
     try {
-      const response = await fetch(`/api/worklog/${worklogId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          timeLogged: newTimeSpent,
-          workDescription: workDescription,
-          issueId: issue.id,
-        }),
+      updateWorklog({
+        worklogId: worklogId,
+        worklog: worklogData,
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to update worklog');
-      }
       updateIssue({ issueId: issue.id, timeSpent: timeSpent });
-      setIsOpen(false)
+      setIsOpen(false);
     } catch (error) {
-      updateIssue({ issueId: issue.id, timeSpent: timeSpent });
-      setIsOpen(false)
+      setIsOpen(false);
     }
   };
-
 
   return (
     <Modal open={isOpen} onOpenChange={setIsOpen}>
@@ -102,21 +94,17 @@ const EditWorklog: React.FC<EditWorklogProps> = ({
       <ModalPortal>
         <ModalOverlay />
         <ModalContent className="flex items-center justify-center ">
-          <div className="w-full max-w-sm rounded-xl bg-header  overflow-y-scroll h-96">
-            <div className="mb-3 flex items-center align-middle p-5  justify-between">
+          <div className="h-96 w-full max-w-sm overflow-y-scroll rounded-xl bg-header dark:bg-darkSprint-10">
+            <div className="mb-3 flex items-center justify-between p-5  align-middle">
               <ModalTitle className="text-2xl font-bold text-white">
                 Edit Worklog
               </ModalTitle>
-              <button
-                className="text-white"
-                onClick={() => setIsOpen(false)}
-              >
-
+              <button className="text-white" onClick={() => setIsOpen(false)}>
                 <IoClose size={20} />
               </button>
             </div>
 
-            <div className="rounded-xl p-5 bg-white">
+            <div className="rounded-xl bg-white p-5 dark:bg-darkSprint-20">
               <div className="space-y-4">
                 {/* Progress bar */}
                 <div className="h-2 w-full cursor-pointer rounded-lg bg-gray-200">
@@ -130,7 +118,7 @@ const EditWorklog: React.FC<EditWorklogProps> = ({
                 </div>
 
                 {/* Time logging information */}
-                <div className="flex justify-between text-sm text-gray-600">
+                <div className="flex justify-between text-sm text-gray-600 dark:text-dark-50">
                   {timeSpent ? (
                     <span>{timeSpent} logged</span>
                   ) : (
@@ -143,9 +131,9 @@ const EditWorklog: React.FC<EditWorklogProps> = ({
                   </span>
                 </div>
 
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-gray-600 dark:text-dark-50">
                   The original estimate for this issue was{" "}
-                  <span className="rounded-xl bg-slate-100 px-2 font-medium ">
+                  <span className="rounded-xl bg-slate-100 px-2 font-medium dark:text-darkSprint-0 ">
                     {issue.estimateTime}
                   </span>
                   .
@@ -156,23 +144,24 @@ const EditWorklog: React.FC<EditWorklogProps> = ({
                   <div className="space-y-2">
                     <label
                       htmlFor="currentTime"
-                      className="block text-sm font-medium text-gray-700"
+                      className="block text-sm font-medium text-gray-700 dark:text-dark-50"
                     >
                       Current Logged Time
                     </label>
                     <input
                       type="text"
                       id="currentTime"
+                      placeholder="e.g., 2w 4d 6h 45m"
                       value={newTimeSpent}
                       onChange={(e) => setNewTimeSpent(e.target.value)} // Handle input change
-                      className="w-full rounded-md bg-gray-200 border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full rounded-md border border-gray-300 bg-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-darkSprint-20 dark:bg-darkSprint-30 dark:text-white dark:placeholder:text-darkSprint-50"
                     />
                   </div>
 
                   <div className="space-y-2">
                     <label
                       htmlFor="timeRemaining"
-                      className="block text-sm font-medium text-gray-700"
+                      className="block text-sm font-medium text-gray-700 dark:text-dark-50"
                     >
                       Time remaining
                     </label>
@@ -181,7 +170,7 @@ const EditWorklog: React.FC<EditWorklogProps> = ({
                         type="text"
                         id="timeRemaining"
                         value={remainingTime}
-                        className="w-full rounded-md bg-gray-200 border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full rounded-md border border-gray-300 bg-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-darkSprint-20 dark:bg-darkSprint-30 dark:text-white dark:placeholder:text-darkSprint-50"
                         readOnly
                       />
                     </div>
@@ -190,7 +179,7 @@ const EditWorklog: React.FC<EditWorklogProps> = ({
               </div>
 
               {/* Time format help */}
-              <div className="rounded-lg bg-gray-50 p-3 text-sm text-gray-600">
+              <div className="mt-2 rounded-lg bg-gray-50 p-3 text-sm text-gray-600 dark:border-darkSprint-20 dark:bg-darkSprint-30 dark:text-white dark:placeholder:text-darkSprint-50">
                 <p className="mb-1 font-medium">Use the format: 2w 4d 6h 45m</p>
                 <ul className="list-inside list-disc space-y-1">
                   <li>w = weeks</li>
@@ -200,20 +189,19 @@ const EditWorklog: React.FC<EditWorklogProps> = ({
                 </ul>
               </div>
 
-
               <div>
                 <label
                   htmlFor="message"
-                  className="mb-2 mt-2 block text-sm font-medium text-gray-900"
+                  className="mb-2 mt-2 block text-sm font-medium text-gray-900 dark:text-dark-50"
                 >
-                  Edit  Description
+                  Edit Description
                 </label>
                 <textarea
                   id="message"
-                  rows="4"
+                  rows={4}
                   value={workDescription}
                   onChange={(e) => setWorkDescription(e.target.value)}
-                  className="block w-full rounded-lg border border-gray-300 bg-gray-200 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+                  className="block w-full rounded-lg border border-gray-300 bg-gray-200 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-darkSprint-20 dark:bg-darkSprint-30 dark:text-white dark:placeholder:text-darkSprint-50"
                   placeholder="Write your description here..."
                 ></textarea>
               </div>
@@ -221,14 +209,14 @@ const EditWorklog: React.FC<EditWorklogProps> = ({
               {/* Modal buttons */}
               <div className="mt-6 flex justify-end space-x-3">
                 <Button
-                  className="rounded-2xl border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="rounded-2xl border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-dark-50"
                   onClick={() => setIsOpen(false)}
                 >
                   Cancel
                 </Button>
                 <Button
                   onClick={() => onSave(worklog.id)}
-                  className="rounded-2xl !bg-button px-4 py-2 text-sm font-medium text-white hover:bg-buttonHover focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="rounded-2xl !bg-button px-4 py-2 text-sm font-medium text-white hover:bg-buttonHover focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:!bg-dark-0"
                 >
                   Save
                 </Button>

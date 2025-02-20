@@ -39,7 +39,9 @@ export async function PATCH(
       },
     });
 
-    return new Response(JSON.stringify(updatedWorklog), { status: 200 });
+    const parsedWorklog = JSON.stringify(updatedWorklog);
+
+    return NextResponse.json({ worklog: parsedWorklog }, { status: 200 });
   } catch (error) {
     console.error("Error updating worklog:", error);
     return new Response("Failed to update worklog", { status: 500 });
@@ -55,9 +57,6 @@ export async function DELETE(
   const userId = parseCookies(req, "user").id;
   if (!userId) return new Response("Unauthenticated request", { status: 403 });
 
-  // const { success } = await ratelimit.limit(userId);
-  // if (!success) return new Response("Too many requests", { status: 429 });
-
   const { worklogId } = params;
 
   try {
@@ -70,18 +69,16 @@ export async function DELETE(
       return new Response("Worklog not found", { status: 404 });
     }
 
-    // if (worklog.authorId !== userId) {
-    //   return new Response("You do not have permission to delete this worklog", {
-    //     status: 403,
-    //   });
-    // }
-
     // Delete the comment
-    await prisma.worklog.delete({
+
+    const deletedWorklog = await prisma.worklog.delete({
       where: { id: worklogId },
     });
 
-    return new Response("Worklog deleted successfully", { status: 200 });
+    return NextResponse.json(
+      { worklog: deletedWorklog, message: "Worklog deleted successfully" },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Error deleting worklog:", error);
     return new Response("Failed to delete worklog", { status: 500 });

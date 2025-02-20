@@ -30,11 +30,11 @@ const Issue: React.FC<{ issue: IssueType; index: number }> = ({
           {...dragHandleProps}
           className={clsx(
             isDragging && "bg-white z-auto",
-            "group my-2 max-w-full  rounded-xl bg-slate-50 border-[0.2px] border-slate-200  p-2 text-sm shadow-sm shadow-gray-300 hover:bg-gray-200 "
+            "group my-2 max-w-full dark:border-darkButton-0 dark:bg-darkButton-30 rounded-xl bg-slate-50 border-[0.2px] border-slate-200  p-2 text-sm shadow-sm dark:shadow-none shadow-gray-300 hover:bg-gray-200 "
           )}
         >
           <div className="flex items-start justify-between">
-            <span className="mb-2">{issue.name}</span>
+            <span className="mb-2 dark:text-dark-50" >{issue.name}</span>
             {(user?.role === "admin" ||
               user?.role === "manager") &&
               <IssueDropdownMenu issue={issue}>
@@ -42,7 +42,7 @@ const Issue: React.FC<{ issue: IssueType; index: number }> = ({
                   asChild
                   className="rounded-m flex h-fit items-center gap-x-2 bg-opacity-30 px-1.5 text-xs font-semibold focus:ring-2"
                 >
-                  <div className="invisible rounded-full px-1.5 py-1.5 text-gray-700 group-hover:visible group-hover:bg-slate-100 group-hover:hover:bg-slate-300 [&[data-state=open]]:visible [&[data-state=open]]:bg-slate-700 [&[data-state=open]]:text-white">
+                  <div className="invisible rounded-full px-1.5 py-1.5 text-gray-700 group-hover:visible group-hover:bg-slate-100 dark:group-hover:!bg-darkSprint-40 group-hover:hover:bg-slate-300 [&[data-state=open]]:visible [&[data-state=open]]:bg-slate-700 [&[data-state=open]]:text-white">
                     <BsThreeDots className="sm:text-xl text-black" />
                   </div>
                 </DropdownTrigger>
@@ -57,7 +57,7 @@ const Issue: React.FC<{ issue: IssueType; index: number }> = ({
           <div className="mt-3 flex items-center justify-between">
             <div className="flex items-center gap-x-3">
               <IssueIcon issueType={issue.type} />
-              <span className="text-xs font-medium text-gray-600">
+              <span className="text-xs font-medium text-gray-600 dark:text-dark-50">
                 {issue.key}
               </span>
             </div>

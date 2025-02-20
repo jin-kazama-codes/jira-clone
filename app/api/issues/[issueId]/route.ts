@@ -1,11 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/server/db";
-import {
-  IssueStatus,
-  type Issue,
-  IssueType,
-  type DefaultUser,
-} from "@prisma/client";
+import { type Issue, IssueType, type DefaultUser } from "@prisma/client";
 import { z } from "zod";
 import { type GetIssuesResponse } from "../route";
 import { filterUserForClient, getBaseUrl } from "@/utils/helpers";
@@ -22,22 +17,58 @@ export async function GET(
   req: NextRequest,
   { params }: { params: { issueId: string } }
 ) {
+  const projectId = parseCookies(req, "project").id
   const { issueId } = params;
-  const issue = await prisma.issue.findUnique({
-    where: {
-      id: issueId,
-    },
-  });
-  if (!issue?.parentId) {
-    return NextResponse.json({ issue: { ...issue, parent: null } });
+
+  try {
+    // Fetch the main issue
+    const issue = await prisma.issue.findFirst({
+      where: {
+        key: issueId,
+        projectId
+      },
+    });
+
+    if (!issue) {
+      return NextResponse.json({ error: "Issue not found" }, { status: 404 });
+    }
+
+    // Fetch child issues
+    const childIssues = await prisma.issue.findMany({
+      where: {
+        parentId: issue.id,
+      },
+    });
+
+    // Fetch sprint only if sprintId exists
+    const sprint = issue.sprintId
+      ? await prisma.sprint.findUnique({
+          where: { id: issue.sprintId },
+        })
+      : null;
+
+    const assignee = issue.assigneeId
+      ? await prisma.defaultUser.findUnique({
+          where: { id: issue.assigneeId },
+        })
+      : null;
+
+    // Combine data into a single object
+    const issueWithChildren = {
+      ...issue,
+      children: childIssues,
+      sprint,
+      assignee
+    };
+
+    return NextResponse.json({ issue: issueWithChildren }, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching issue:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
-  const parent = await prisma.issue.findUnique({
-    where: {
-      id: issue.parentId,
-    },
-  });
-  // return NextResponse.json<GetIssueDetailsResponse>({ issue });
-  return NextResponse.json({ issue: { ...issue, parent } });
 }
 
 const patchIssueBodyValidator = z.object({

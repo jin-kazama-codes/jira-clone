@@ -1,9 +1,11 @@
 "use client";
 import { api } from "@/utils/api";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCookie } from "../use-cookie";
+import toast from "react-hot-toast";
 
 export const useMembers = () => {
+  const queryClient = useQueryClient();
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const project = useCookie("project");
 
@@ -18,11 +20,31 @@ export const useMembers = () => {
     }
   );
 
+  const {
+    mutate: updateMember,
+    isLoading: memberUpdating,
+    error: updatingMemberError,
+  } = useMutation({
+    mutationFn: (updatedData: any) =>
+      api.project.updateMember(updatedData),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: ["project-members", project?.id],
+      });
+      toast.success("Member updated successfully!");
+    },
+    onError: (error: any) => {
+      toast.error(`Failed to update Member: ${error.message}`);
+    },
+  });
+
   return {
     members,
     isLoading,
     isError,
     error,
     refetch, // Optionally expose refetch for manual refetching
+    updateMember,
+    memberUpdating
   };
 };

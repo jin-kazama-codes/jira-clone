@@ -8,7 +8,7 @@ import {
 
 const BacklogSkeleton = () => {
   return (
-    <div role="status" className="flex animate-pulse flex-col gap-y-4">
+    <div role="status" className="flex animate-pulse flex-col gap-y-4 mt-2">
       <BreadCrumbSkeleton />
       <TitleSkeleton />
       <SprintSearchSkeleton />

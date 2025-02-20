@@ -106,18 +106,18 @@ const ResetPassword = () => {
 
   return (
     <div
-      className="flex min-h-screen items-center justify-center  p-4"
+      className="flex min-h-screen items-center justify-center dark:bg-darkSprint-0 p-4"
     >
       <div
         style={{
-          boxShadow: "0px 0px 24px rgb(92, 86, 150)",
+          boxShadow: "0px 0px 35px 0px rgba(113,114,122,1)",
         }}
-        className="w-full max-w-md bg-header overflow-hidden rounded-2xl"
+        className="w-full max-w-md bg-header overflow-hidden dark:bg-darkSprint-20 rounded-2xl"
       >
         {/* Content */}
         <div className="relative z-10">
           {/* Header */}
-          <div className="p-8  text-center text-white">
+          <div className="p-8  text-center text-white dark:bg-darkSprint-10">
             <div className="  absolute inset-0 -z-10"></div>
             <div className="relative z-10">
               <h1 className="text-3xl font-bold tracking-tight">
@@ -132,13 +132,13 @@ const ResetPassword = () => {
           {/* Form */}
           <form
             onSubmit={handleSubmit}
-            className=" space-y-6 bg-body rounded-t-3xl px-8 pb-8 pt-10"
+            className=" space-y-6 bg-white dark:bg-darkSprint-20 rounded-t-3xl px-8 pb-8 pt-10"
           >
             {/* New Password Field */}
             <div className="relative space-y-2">
               <label
                 htmlFor="password"
-                className="text-sm font-medium text-gray-800"
+                className="text-sm font-medium dark:text-dark-50 text-gray-800"
               >
                 New Password
               </label>
@@ -150,7 +150,7 @@ const ResetPassword = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 minLength={8}
                 required
-                className="w-full rounded-xl border border-blue-300 border-opacity-50 px-4 py-3  text-black placeholder-gray-700 transition  duration-200 ease-in-out focus:border-transparent focus:outline-none bg-gray-200 focus:ring-blue-300"
+                className="w-full rounded-xl border dark:bg-darkSprint-30 dark:border-darkSprint-20 dark:placeholder:text-darkSprint-50 dark:text-white border-blue-300 border-opacity-50 px-4 py-3  text-black placeholder-gray-700 transition  duration-200 ease-in-out focus:border-transparent focus:outline-none bg-gray-200 focus:ring-blue-300"
               />
             </div>
 
@@ -158,7 +158,7 @@ const ResetPassword = () => {
             <div className="relative  space-y-2">
               <label
                 htmlFor="confirmPassword"
-                className="text-sm font-medium text-gray-800"
+                className="text-sm font-medium dark:text-dark-50 text-gray-800"
               >
                 Confirm Password
               </label>
@@ -169,12 +169,12 @@ const ResetPassword = () => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
-                className="w-full rounded-xl border border-blue-300 border-opacity-50 px-4 py-3  text-black bg-gray-200 placeholder-gray-700 transition  duration-200 ease-in-out focus:border-transparent focus:outline-none focus:ring-blue-300"
+                className="w-full rounded-xl border dark:bg-darkSprint-30 dark:border-darkSprint-20 dark:placeholder:text-darkSprint-50 dark:text-white border-blue-300 border-opacity-50 px-4 py-3  text-black bg-gray-200 placeholder-gray-700 transition  duration-200 ease-in-out focus:border-transparent focus:outline-none focus:ring-blue-300"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 pt-3 text-gray-500"
+                className="absolute right-4 top-1/2 -translate-y-1/2 pt-3  text-gray-500"
               >
                 {showPassword ? (
                   <AiFillEyeInvisible className="text-xl" />
@@ -195,7 +195,7 @@ const ResetPassword = () => {
                 <button
                   type="submit"
                   disabled={loading || !isValidToken}
-                  className="w-full rounded-xl border border-transparent bg-button py-3 text-lg  font-medium text-white shadow-sm transition duration-200 ease-in-out hover:bg-buttonHover focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2"
+                  className="w-full rounded-xl border border-transparent dark:bg-dark-0 bg-button py-3 text-lg  font-medium text-white shadow-sm transition duration-200 ease-in-out hover:bg-buttonHover focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2"
                 >
                   Reset Password
                 </button>

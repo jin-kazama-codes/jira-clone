@@ -49,6 +49,8 @@ const Issue: React.FC<{
   const { setIssueKey, issueKey } = useSelectedIssueContext();
   const issueKeyColorClass = getIssueKeyColorClass(issue.type);
   const user = useCookie("user");
+  const isAdminOrManager =
+    user && (user.role === "admin" || user.role === "manager");
 
   return (
     <Draggable draggableId={issue.id} index={index}>
@@ -62,20 +64,19 @@ const Issue: React.FC<{
           {...dragHandleProps}
           className={clsx(
             onChecked
-              ? "bg-gray-200"
+              ? "bg-gray-200 dark:bg-darkButton-20"
               : isDragging
-                ? "rounded-xl border-[0.3px] border-gray-300 bg-transparent"
-                : "border-[0.3px] border-slate-200 bg-slate-50",
-            "group flex w-full max-w-full items-center justify-between rounded-xl   px-3 py-1.5 text-sm hover:bg-gray-300 [&[data-state=selected]]:bg-transparent"
+              ? "rounded-xl border-[0.3px] border-gray-300 bg-transparent"
+              : "border-[0.3px] border-slate-200 bg-slate-50 dark:border-darkButton-0 dark:bg-darkButton-30",
+            "group flex w-full max-w-full  items-center justify-between rounded-xl   px-3 py-1.5 text-sm hover:bg-gray-300 [&[data-state=selected]]:bg-transparent dark:[&[data-state=selected]]:bg-darkButton-20",
+            // Add Tailwind classes for border-bottom
+            "border-b-[0.3px]", // Border width
+            isDragging
+              ? "border-b-gray-300"
+              : "border-b-slate-200 dark:border-b-darkButton-0"
           )}
-          style={{
-            borderBottomWidth: "0.3px", // Ensuring the bottom border is visible
-            borderBottomColor: isDragging
-              ? "rgb(209 213 219)"
-              : "rgb(226 232 240)", // Color matches the side borders
-          }}
         >
-          <input
+          {isAdminOrManager && (<input
             type="checkbox"
             checked={onChecked}
             onClick={(e) => e.stopPropagation()} // Prevent parent click event from triggering
@@ -84,7 +85,7 @@ const Issue: React.FC<{
               onHandleCheck();
             }}
             className="form-checkbox mr-3 h-3 w-3 rounded-sm"
-          />
+          />)}
           <div
             data-state={isEditing ? "editing" : "not-editing"}
             className="flex w-fit items-center gap-x-2 rounded-xl [&[data-state=editing]]:w-full [&[data-state=not-editing]]:overflow-x-hidden"
@@ -102,7 +103,7 @@ const Issue: React.FC<{
 
             <IssueTitle
               key={issue.id + issue.name}
-              className="truncate py-1.5 hover:cursor-pointer hover:underline"
+              className="truncate py-1.5 hover:cursor-pointer hover:underline dark:text-white"
               isEditing={isEditing}
               setIsEditing={setIsEditing}
               issue={issue}
@@ -119,7 +120,7 @@ const Issue: React.FC<{
                   e.stopPropagation();
                   setIsEditing(!isEditing);
                 }}
-                className="invisible w-0 px-0 group-hover:visible group-hover:w-fit group-hover:bg-transparent group-hover:px-1.5 group-hover:hover:bg-gray-200 "
+                className="invisible w-0 px-0 group-hover:visible group-hover:w-fit group-hover:bg-transparent group-hover:px-1.5 dark:text-dark-50 dark:group-hover:hover:bg-darkSprint-20 group-hover:hover:bg-gray-200 "
               >
                 <MdEdit className="text-sm" />
               </Button>
@@ -130,9 +131,9 @@ const Issue: React.FC<{
             <ContextTrigger className="h-8 w-full" />
           </IssueContextMenu>
           <div className="relative ml-2 flex min-w-fit items-center justify-end gap-x-6">
-            <div className="flex w-32 justify-end items-center gap-x-2">
+            <div className="flex w-32 items-center justify-end gap-x-2">
               {hasChildren(issue) ? (
-                <ChildrenTreeIcon className="p-0.5 text-gray-600" />
+                <ChildrenTreeIcon className="p-0.5 text-gray-600 dark:text-dark-50" />
               ) : null}
               <IssueSelectStatus
                 key={issue.id + issue.status}
@@ -140,10 +141,20 @@ const Issue: React.FC<{
                 issueId={issue.id}
               />
             </div>
-            <div className="w-20 flex justify-center items-center" onClick={e => e.stopPropagation()} onBlur={() => setIsEditingEstimate(false)}>
-              <OriginalEstimate setIsEditing={setIsEditingEstimate} isEditing={isEditingEstimate} page="backlog" issue={issue} className="bg-gray-300 px-2  rounded-xl" />
+            <div
+              className="flex w-20 items-center justify-center"
+              onClick={(e) => e.stopPropagation()}
+              onBlur={() => setIsEditingEstimate(false)}
+            >
+              <OriginalEstimate
+                setIsEditing={setIsEditingEstimate}
+                isEditing={isEditingEstimate}
+                page="backlog"
+                issue={issue}
+                className="rounded-xl bg-gray-300 dark:bg-darkSprint-20 dark:text-dark-50  px-2"
+              />
             </div>
-            <div className="flex w-20 justify-end items-center gap-x-2">
+            <div className="flex w-20 items-center justify-end gap-x-2">
               <IssueAssigneeSelect issue={issue} avatarOnly />
               {(user?.role === "admin" || user?.role === "manager") && (
                 <IssueDropdownMenu issue={issue}>
@@ -151,8 +162,8 @@ const Issue: React.FC<{
                     asChild
                     className=" flex items-center gap-x-2 bg-opacity-30 px-1.5 text-xs font-semibold  "
                   >
-                    <div className="invisible !rounded-full !bg-gray-300 px-1.5 py-1.5 group-hover:visible group-hover:bg-gray-300 group-hover:hover:bg-gray-300 [&[data-state=open]]:visible [&[data-state=open]]:bg-gray-300">
-                      <BsThreeDots className="text-black sm:text-xl" />
+                    <div className="invisible !rounded-full !bg-gray-300 p-1.5 group-hover:visible group-hover:bg-gray-300  dark:group-hover:!bg-darkSprint-40 dark:!bg-transparent group-hover:hover:bg-gray-300 [&[data-state=open]]:visible [&[data-state=open]]:bg-gray-300">
+                      <BsThreeDots className="dark:!text-dark-50 text-black sm:text-xl" />
                     </div>
                   </DropdownTrigger>
                 </IssueDropdownMenu>

@@ -17,6 +17,7 @@ export const EditorPreview: React.FC<{
   className?: string;
 }> = ({ action, content, imageURL, className }) => {
   const [jsonState] = useState<EditorContentType>(content);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
@@ -42,8 +43,9 @@ export const EditorPreview: React.FC<{
 
   let documentIndex = 1;
 
+
   return (
-    <EditorComposer readonly={true} jsonState={jsonState}>
+    <EditorComposer  readonly={true} jsonState={jsonState}>
       <div
         className={`w-full rounded-md bg-transparent relative`}
       >
@@ -58,7 +60,7 @@ export const EditorPreview: React.FC<{
             />
           }
           placeholder={
-            <div className="pointer-events-none absolute left-0 top-0 flex h-full select-none items-center px-1 text-sm text-gray-500">
+            <div className="pointer-events-none absolute left-0 top-0 flex h-full select-none items-center px-1 text-sm text-gray-500 dark:text-darkSprint-10">
               Add your {action} here...
             </div>
           }
@@ -84,7 +86,7 @@ export const EditorPreview: React.FC<{
                       href={image}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-500 underline"
+                      className="text-blue-500 underline dark:text-darkSprint-0"
                     >
                       View Document {documentIndex++}
                     </a>

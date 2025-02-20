@@ -26,7 +26,7 @@ const ModalContent = React.forwardRef<ContentRef, ContentProps>(
   ({ children, className, ...props }, forwardedRef) => (
     <AlertModalPrimitive.Content
       className={clsx(
-        "fixed left-1/2 top-20 z-50 -translate-x-1/2 rounded-[3px] bg-white p-8  shadow-md",
+        "fixed left-1/2 top-20 z-50 -translate-x-1/2 rounded-[3px] dark:bg-darkSprint-20 bg-white p-8  shadow-md",
         className
       )}
       {...props}

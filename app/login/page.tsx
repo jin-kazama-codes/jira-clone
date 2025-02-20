@@ -79,8 +79,11 @@ const Login: React.FC = () => {
       if (response.status === 200 && isMounted) {
         let token = response.data.user;
         setCookie("user", token);
-        // Redirect after successful login
-        router.push("/project");
+        if(token.role === "superAdmin"){
+          router.push('/admin')
+        }else{
+          router.push("/project");
+        }
       } else {
         setLoading(false);
         setError(response.data.error || "Login failed");
@@ -100,20 +103,20 @@ const Login: React.FC = () => {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
+    <div className="flex min-h-screen items-center dark:bg-darkSprint-0 justify-center p-4">
       <div
         style={{
-          boxShadow: "0px 0px 24px rgb(92, 86, 150)",
+          boxShadow: "0px 0px 35px 0px rgba(113,114,122,1)",
         }}
-        className="w-full max-w-md overflow-hidden rounded-2xl bg-header"
+        className="w-full max-w-md overflow-hidden rounded-2xl dark:bg-darkSprint-20 bg-header"
       >
         {/* Content */}
         <div className="relative z-10">
           {/* Header */}
-          <div className="min-w-screen relative  flex items-center justify-center p-8 text-center">
+          <div className="min-w-screen relative  flex items-center justify-center dark:bg-darkSprint-10 p-8 text-center">
             {/* Content */}
 
-            <div className="relative z-10">
+            <div className="relative z-10 ">
               <div className="flex items-center gap-x-2">
                 <Image
                   src="/images/karya-io-logo.png"
@@ -133,13 +136,13 @@ const Login: React.FC = () => {
           {/* Form */}
           <form
             onSubmit={handleSubmit}
-            className="  space-y-6 rounded-t-3xl bg-body px-8 pb-8 pt-10"
+            className="  space-y-6 rounded-t-3xl dark:bg-darkSprint-20 bg-white px-8 pb-8 pt-10"
           >
             {/* Email Field */}
             <div className="space-y-2">
               <label
                 htmlFor="email"
-                className="text-sm font-medium text-gray-800"
+                className="text-sm font-medium dark:text-dark-50 text-gray-800"
               >
                 Email
               </label>
@@ -151,7 +154,7 @@ const Login: React.FC = () => {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 bg-gray-200 rounded-xl border border-blue-300 border-opacity-50  text-black placeholder-gray-600 focus:outline-none  focus:ring-blue-300 focus:border-transparent transition duration-200 ease-in-out"
+                className="w-full px-4 py-3 dark:bg-darkSprint-30 dark:border-darkSprint-20 dark:placeholder:text-darkSprint-50 dark:text-white bg-gray-200 rounded-xl border border-blue-300 border-opacity-50  text-black placeholder-gray-600 focus:outline-none  focus:ring-blue-300 focus:border-transparent transition duration-200 ease-in-out"
               />
             </div>
 
@@ -159,7 +162,7 @@ const Login: React.FC = () => {
             <div className="space-y-2">
               <label
                 htmlFor="password"
-                className="text-sm font-medium text-gray-700"
+                className="text-sm font-medium text-gray-700 dark:text-dark-50"
               >
                 Password
               </label>
@@ -172,7 +175,7 @@ const Login: React.FC = () => {
                   value={formData.password}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-gray-200 rounded-xl border border-blue-300 border-opacity-50  text-black placeholder-gray-700 focus:outline-none  focus:ring-blue-300 focus:border-transparent transition duration-200 ease-in-out"
+                  className="w-full px-4 py-3 dark:bg-darkSprint-30 dark:border-darkSprint-20 dark:placeholder:text-darkSprint-50 dark:text-white bg-gray-200 rounded-xl border border-blue-300 border-opacity-50  text-black placeholder-gray-700 focus:outline-none  focus:ring-blue-300 focus:border-transparent transition duration-200 ease-in-out"
                 />
                 <button
                   type="button"
@@ -190,7 +193,7 @@ const Login: React.FC = () => {
 
             {/* Forgot Password Link */}
             <p
-              className="mt-2 cursor-pointer text-gray-800 hover:text-gray-900 hover:underline"
+              className="mt-2 cursor-pointer dark:text-dark-50 text-gray-800 hover:text-gray-900 hover:underline"
               onClick={() => {
                 router.push("/forgot-password");
               }}
@@ -209,7 +212,7 @@ const Login: React.FC = () => {
                 <button
                   type="submit"
                   disabled={Loading}
-                  className="w-full rounded-xl border border-transparent bg-button py-3 text-lg  font-medium text-white shadow-sm transition duration-200 ease-in-out hover:bg-buttonHover focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2"
+                  className="w-full rounded-xl border border-transparent dark:bg-dark-0 bg-button py-3 text-lg  font-medium text-white shadow-sm transition duration-200 ease-in-out hover:bg-buttonHover focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2"
                 >
                   Log in
                 </button>

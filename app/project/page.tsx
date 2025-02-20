@@ -6,25 +6,36 @@ import { prisma } from "@/server/db";
 
 const Project: React.FC = async () => {
   const user = parsePageCookies("user");
+  const companyId = parsePageCookies("user").companyId
   const isAdminOrManager =
     user && (user.role === "admin" || user.role === "manager");
 
   // Single query to get both member and project data
   const projects = await prisma.project.findMany({
-    where: isAdminOrManager ? {} : { members: { some: { id: user.id } } },
-    include: { members: true }
+    where: {
+      companyId, // Ensure projects belong to the user's company
+      ...(isAdminOrManager ? {} : { members: { some: { id: user.id } } }),
+    },
+    include: { members: true },
   });
 
   return (
     <>
-      <div className="container h-screen mx-auto py-16">
+      <div className={`container h-screen mx-auto py-16`}>
         <div
-          className={`grid gap-6 ${isAdminOrManager ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1"
-            }`}
+          className={`grid gap-6 ${
+            isAdminOrManager ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1"
+          }`}
         >
           {/* Left: Project List */}
           {projects && (
-            <div className={isAdminOrManager ? "lg:col-span-1 " : "col-span-1"}>
+            <div
+              className={
+                isAdminOrManager
+                  ? "lg:col-span-1"
+                  : "col-span-1 mx-auto max-w-3xl w-full"
+              }
+            >
               <ProjectList projects={projects} admin={isAdminOrManager} />
             </div>
           )}

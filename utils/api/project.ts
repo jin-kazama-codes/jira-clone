@@ -1,6 +1,6 @@
 import { type GetProjectResponse } from "@/app/api/project/route";
 import axios from "axios";
-import { getBaseUrl } from "../helpers";
+import { getBaseUrl, getHeaders } from "../helpers";
 import { type GetProjectMembersResponse } from "@/app/api/project/[project_id]/members/route";
 
 const baseUrl = getBaseUrl();
@@ -17,5 +17,11 @@ export const projectRoutes = {
       `${baseUrl}/api/project/${project_id}/members`
     );
     return data?.members;
+  },
+  updateMember: async (updatedData: any) => {
+    const { data } = await axios.patch(`${baseUrl}/api/users`, updatedData, {
+      headers: getHeaders(),
+    });
+    return data?.user;
   },
 };
