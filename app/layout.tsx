@@ -40,9 +40,9 @@ export const metadata: Metadata = {
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <html lang="en">
+    <html lang="en" className="custom-scrollbar">
       <head />
-      <body className={"overflow-hidden"}>
+      <body className={"overflow-auto h-full "}>
         <QueryProvider>
           <AuthModalProvider>
             <ThemeProvider>
