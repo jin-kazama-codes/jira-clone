@@ -66,7 +66,6 @@ export async function GET(req: NextRequest) {
     where: {
       projectId: projectId,
       isDeleted: false,
-      type: "TASK",
       sprintId: sprintId ? sprintId : null,
     },
   });
