@@ -21,7 +21,7 @@ const IssueDetailsInfoActions: React.FC<{
         <Button
           onClick={onAddChildIssue}
           customColors
-          className="flex items-center whitespace-nowrap rounded-full bg-gray-100 hover:bg-gray-200"
+          className="flex items-center whitespace-nowrap rounded-full dark:bg-darkSprint-30 dark:text-dark-50 bg-gray-100 hover:bg-gray-200"
         >
           <ChildrenTreeIcon />
           <span

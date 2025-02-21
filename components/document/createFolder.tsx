@@ -61,7 +61,7 @@ const CreateFolderButton: React.FC<CreateFolderButtonProps> = ({ onFolderCreated
     <div>
       <button
         onClick={() => setIsModalOpen(true)}
-        className="bg-button text-white px-4 py-2 rounded hover:bg-buttonHover"
+        className="bg-button text-white px-4 py-2 rounded-xl hover:bg-buttonHover dark:bg-dark-0 dark:hover:bg-darkSprint-20"
       >
         + Create Folder
       </button>
@@ -72,20 +72,20 @@ const CreateFolderButton: React.FC<CreateFolderButtonProps> = ({ onFolderCreated
           onClick={() => setIsModalOpen(false)}
         >
           <div
-            className=" m-6  bg-header  rounded-lg shadow-xl w-96"
+            className=" m-6  bg-header dark:bg-darkSprint-10 rounded-lg shadow-xl w-96"
             onClick={(e) => e.stopPropagation()}
           >
             <div className=' p-6 rounded-t-lg '>
-              <h2 className="text-xl text-white font-bold mb-4">Create New Folder</h2>
+              <h2 className="text-xl text-white font-bold">Create New Folder</h2>
             </div>
 
-            <div className='bg-white p-6 rounded-lg'>
+            <div className='bg-white p-6 dark:bg-darkSprint-20 rounded-lg'>
               <input
                 type="text"
                 value={folderName}
                 onChange={(e) => setFolderName(e.target.value)}
                 placeholder="Enter folder name"
-                className="w-full px-3 py-2  border rounded mb-2 placeholder:text-gray-600"
+                className="w-full px-3 py-2  border rounded mb-2 dark:bg-darkSprint-30 dark:border-darkSprint-20 dark:placeholder:text-darkSprint-50 dark:text-white placeholder:text-gray-600"
                 disabled={isCreating}
               />
 
@@ -103,7 +103,7 @@ const CreateFolderButton: React.FC<CreateFolderButtonProps> = ({ onFolderCreated
                 </button>
                 <button
                   onClick={handleCreateFolder}
-                  className="px-4 py-2 bg-button text-white rounded hover:bg-buttonHover"
+                  className="px-4 py-2 bg-button text-white rounded dark:bg-dark-0 hover:bg-buttonHover"
                   disabled={isCreating || !folderName.trim()}
                 >
                   {isCreating ? 'Creating...' : 'Create'}

@@ -76,7 +76,7 @@ const EndDateField: React.FC<{
         className={clsx(
           duration === "custom" ? "" : "bg-gray-200 opacity-50",
           errors.endDate ? "focus:outline-red-500" : "focus:outline-blue-400",
-          "block h-10 w-64 rounded-xl border border-gray-300 px-2 text-sm shadow-sm outline-2 transition-all duration-75"
+          "block h-10 w-64 rounded-xl dark:bg-darkSprint-30 dark:border-darkSprint-20 dark:placeholder:text-darkSprint-50 dark:text-white border border-gray-300 px-2 text-sm shadow-sm outline-2 transition-all duration-75"
         )}
       />
       <Error

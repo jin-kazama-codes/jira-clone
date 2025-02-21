@@ -20,8 +20,8 @@ const BoardHeader: React.FC<{ project: Project; activeSprint }> = ({
 
   return (
     <div className="flex h-fit flex-col">
-      <div className="text-sm text-gray-500">Projects / {project.name}</div>
-      <h1>{activeSprint ? activeSprint.name : "Active Sprint"}</h1>
+      <div className="text-sm text-gray-500 dark:text-dark-0">Projects / {project.name}</div>
+      <h1 className="dark:text-dark-50">{activeSprint ? activeSprint.name : "Active Sprint"}</h1>
       <div className="text-gray-500  text-sm">
         {activeSprint ? activeSprint.description : ""}
       </div>
@@ -37,7 +37,7 @@ const BoardHeader: React.FC<{ project: Project; activeSprint }> = ({
           <IssueTypeFilter />
           <SprintFilter />
           <ClearFilters />
-          <label className="flex items-center">
+          <label className="flex items-center dark:text-dark-50">
             <input
               type="checkbox"
               checked={showChild}

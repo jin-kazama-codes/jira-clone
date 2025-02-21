@@ -5,9 +5,11 @@ import { api } from "@/utils/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { type AxiosError } from "axios";
 import { TOO_MANY_REQUESTS } from ".";
+import { useSelectedIssueContext } from "@/context/use-selected-issue-context";
 
-const usePostIssue = () => {
+const usePostIssue = (sprintId?:string) => {
   const queryClient = useQueryClient();
+  const { issueKey } = useSelectedIssueContext()
 
   const { mutate: createIssue, isLoading: isCreating } = useMutation(
     api.issues.postIssue,
@@ -25,9 +27,9 @@ const usePostIssue = () => {
         });
       },
       onSettled: () => {
-        // Always refetch after error or success
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        queryClient.invalidateQueries(["issues"]);
+        queryClient.invalidateQueries(["issues", sprintId]);
+        queryClient.invalidateQueries([`issueDetails`, issueKey])
+        queryClient.invalidateQueries([`${sprintId}-count`, sprintId ])
       },
     }
   );

@@ -1,13 +1,13 @@
-'use client';
-import { useWorkflow } from '@/hooks/query-hooks/use-workflow';
-import { useCookie } from '@/hooks/use-cookie';
-import { useRouter } from 'next/navigation';
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+"use client";
+import { useWorkflow } from "@/hooks/query-hooks/use-workflow";
+import { useCookie } from "@/hooks/use-cookie";
+import { useRouter } from "next/navigation";
+import React, { useState, ChangeEvent, FormEvent } from "react";
 
 const CreateProject: React.FC = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    key: '',
+    name: "",
+    key: "",
   });
 
   const [error, setError] = useState<string | null>(null);
@@ -15,7 +15,9 @@ const CreateProject: React.FC = () => {
   const router = useRouter();
 
   // Handle input changes
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -26,14 +28,14 @@ const CreateProject: React.FC = () => {
   // Handle form submission
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const userId = String(useCookie('user').id);
-    const { name, key } = formData
+    const userId = String(useCookie("user").id);
+    const { name, key } = formData;
 
     try {
-      const response = await fetch('/api/project', {
-        method: 'POST',
+      const response = await fetch("/api/project", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           name,
@@ -42,44 +44,48 @@ const CreateProject: React.FC = () => {
         }),
       });
 
+      const responseData = await response.json(); 
+
       if (response.ok) {
         setFormData({
-          name: '',
-          key: '',
+          name: "",
+          key: "",
         });
         setError(null);
         setSuccess("Project Created Successfully");
         router.refresh();
       } else {
-        setError('Failed to create project');
+        setError(responseData.error || "Failed to create project"); // Set error from backend
         setSuccess(null);
       }
     } catch (err) {
-      setError('An error occurred');
+      setError("An error occurred");
       setSuccess(null);
     }
   };
 
   return (
-    <div
-
-      className="bg-white border rounded-xl">
-      <div
-        className="p-4 bg-header rounded-t-xl border-b">
-        <h2 className="text-2xl text-white font-semibold text-center">Create New Project</h2>
+    <div className="rounded-xl border bg-white dark:border-darkSprint-30 dark:bg-darkSprint-20">
+      <div className="rounded-t-xl border-b bg-header p-4 dark:border-b-darkSprint-30 dark:bg-darkSprint-10 ">
+        <h2 className="text-center text-2xl font-semibold text-white dark:text-dark-50">
+          Create New Project
+        </h2>
       </div>
-      <div className="p-4 bg-white rounded-3xl">
+      <div className="rounded-3xl bg-white p-4 dark:bg-darkSprint-20">
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Project Name Field */}
           <div className="space-y-2">
-            <label htmlFor="name" className="text-sm text-gray-700 font-medium">
+            <label
+              htmlFor="name"
+              className="text-sm font-medium text-gray-700 dark:text-dark-50"
+            >
               Name
             </label>
             <input
               id="name"
               name="name"
               type="text"
-              className="w-full border border-gray-300 placeholder-gray-600 bg-gray-200 rounded-xl px-3 py-2 text-sm"
+              className="w-full rounded-xl border border-gray-300 bg-gray-200 px-3 py-2 text-sm placeholder-gray-600 dark:border-darkSprint-20 dark:bg-darkSprint-30 dark:text-white dark:placeholder:text-darkSprint-50"
               placeholder="Enter a descriptive name"
               value={formData.name}
               onChange={handleChange}
@@ -89,14 +95,17 @@ const CreateProject: React.FC = () => {
 
           {/* Project Key Field */}
           <div className="space-y-2">
-            <label htmlFor="key" className="text-sm text-gray-700 font-medium">
+            <label
+              htmlFor="key"
+              className="text-sm font-medium text-gray-700 dark:text-dark-50"
+            >
               Key
             </label>
             <input
               id="key"
               name="key"
               type="text"
-              className="w-full border border-gray-300 placeholder-gray-600 bg-gray-200 rounded-xl px-3 py-2 text-sm"
+              className="w-full rounded-xl border border-gray-300 bg-gray-200 px-3 py-2 text-sm placeholder-gray-600 dark:border-darkSprint-20 dark:bg-darkSprint-30 dark:text-white dark:placeholder:text-darkSprint-50"
               placeholder="Enter a unique key"
               value={formData.key}
               onChange={handleChange}
@@ -111,7 +120,8 @@ const CreateProject: React.FC = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full py-3 border border-transparent rounded-xl shadow-sm text-lg  font-medium text-white bg-button hover:bg-buttonHover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition duration-200 ease-in-out">
+            className="w-full rounded-xl border border-transparent bg-button py-3 text-lg font-medium  text-white shadow-sm transition duration-200 ease-in-out hover:bg-buttonHover focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2 dark:bg-dark-0"
+          >
             Create Project
           </button>
         </form>

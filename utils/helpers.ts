@@ -54,7 +54,7 @@ export function isSubtask(issue: IssueType | null) {
 
 export function hasChildren(issue: IssueType | IssueType["parent"] | null) {
   if (!issue) return false;
-  return issue.children.length > 0;
+  return issue.children?.length > 0;
 }
 
 export function sprintId(id: string | null | undefined) {
@@ -150,7 +150,7 @@ export function dateToLongString(date: Date) {
 }
 
 export function isDone(issue: IssueType) {
-  return issue.status == "DONE";
+  return issue.status == "Done";
 }
 
 export function hexToRgba(hex: string | null, opacity?: number) {
@@ -165,7 +165,7 @@ export function hexToRgba(hex: string | null, opacity?: number) {
 export function generateIssuesForClient(
   issues: Issue[],
   users: DefaultUser[],
-  activeSprintIds?: string[]
+  // activeSprintIds?: string[]
 ) {
   // Maps are used to make lookups faster
   const userMap = new Map(users.map((user) => [user.id, user]));
@@ -181,7 +181,9 @@ export function generateIssuesForClient(
         const assignee = userMap.get(issue.assigneeId ?? "") ?? null;
         return Object.assign(issue, { assignee });
       });
-    const sprintIsActive = activeSprintIds?.includes(issue.sprintId ?? "");
+    // const sprintIsActive = activeSprintIds?.includes(issue.sprintId ?? "");
+    const sprintIsActive = true;
+
     return { ...issue, sprintIsActive, parent, assignee, reporter, children };
   });
 
@@ -376,25 +378,37 @@ export function getProjectKeyFromUrl() {
   const pathname = window.location.pathname;
 
   // Split the path into segments
-  const segments = pathname.split('/');
+  const segments = pathname.split("/");
 
   // Extract and return the project key (assumed to be the second segment)
   return segments[1]; // "KARYA-IO" in this example
 }
 
-  // Recalculate edges based on nodes' position
-  export const recalculateEdges = (updatedNodes, setEdges) => {
-    // Sort nodes by x-coordinate
-    const sortedNodes = [...updatedNodes].sort((a, b) => a.position.x - b.position.x);
+// Recalculate edges based on nodes' position
+export const recalculateEdges = (updatedNodes, setEdges) => {
+  // Sort nodes by x-coordinate
+  const sortedNodes = [...updatedNodes].sort(
+    (a, b) => a.position.x - b.position.x
+  );
 
-    // Generate new edges based on sorted nodes
-    const newEdges = sortedNodes.slice(0, -1).map((node, index) => ({
-      id: `e${node.id}-${sortedNodes[index + 1].id}`,
-      source: node.id,
-      target: sortedNodes[index + 1].id,
-    }));
+  // Generate new edges based on sorted nodes
+  const newEdges = sortedNodes.slice(0, -1).map((node, index) => ({
+    id: `e${node.id}-${sortedNodes[index + 1].id}`,
+    source: node.id,
+    target: sortedNodes[index + 1].id,
+  }));
 
-    setEdges(newEdges);
-  };
+  setEdges(newEdges);
+};
+
+export const generatePastelColor = () => {
+  let hue;
+
+  do {
+    hue = Math.floor(Math.random() * 360);
+  } while ((hue >= 80 && hue <= 260));
+
+  return `hsl(${hue}, 70%, 85%)`;
+};
 
 

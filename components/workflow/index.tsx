@@ -19,7 +19,13 @@ const Workflow = () => {
   const isAdminOrManager =
     user && (user.role === "admin" || user.role === "manager");
 
-  const { data: workflow, isLoading, isError, error, updateWorkflow } = useWorkflow();
+  const {
+    data: workflow,
+    isLoading,
+    isError,
+    error,
+    updateWorkflow,
+  } = useWorkflow();
 
   const [nodes, setNodes, onNodesChangeBase] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -45,7 +51,8 @@ const Workflow = () => {
   };
 
   // Detect changes in edges
-  const edgesHaveChanged = JSON.stringify(edges) !== JSON.stringify(originalEdges);
+  const edgesHaveChanged =
+    JSON.stringify(edges) !== JSON.stringify(originalEdges);
 
   useEffect(() => {
     if (workflow) {
@@ -73,13 +80,15 @@ const Workflow = () => {
 
   const updateFlow = () => {
     if (!isAdminOrManager) return;
-    const reorderedNodes = [...nodes].sort((a, b) => a.position.x - b.position.x);
+    const reorderedNodes = [...nodes].sort(
+      (a, b) => a.position.x - b.position.x
+    );
     const nodesWithUpdatedIds = reorderedNodes.map((node, index) => ({
       ...node,
       id: `${index + 1}`,
     }));
     updateWorkflow({ nodes: nodesWithUpdatedIds, edges });
-    setOriginalEdges(edges); 
+    setOriginalEdges(edges);
     setSelectedNode(null); // Clear the selected node
     setHasAddedNode(false); // Reset the "added node" state
   };
@@ -87,11 +96,10 @@ const Workflow = () => {
   const handleAddNode = () => {
     if (!isAdminOrManager) return;
     if (nodeName.trim()) {
-
       const lastNode = nodes.length > 0 ? nodes[nodes.length - 1] : null;
       const newNodePosition = {
         x: lastNode ? lastNode.position.x + 200 : Math.random() * 400, // Place 200px ahead of the last node
-        y: 50, 
+        y: 50,
       };
 
       const newNode = {
@@ -153,7 +161,9 @@ const Workflow = () => {
       );
 
       // Automatically connect the neighbors of the deleted node
-      const remainingNodes = nodes.filter((node) => node.id !== selectedNode.id);
+      const remainingNodes = nodes.filter(
+        (node) => node.id !== selectedNode.id
+      );
       const updatedEdges = [];
 
       // Reconnect the remaining nodes
@@ -180,21 +190,21 @@ const Workflow = () => {
   return (
     <div className="flex h-[90vh] flex-col">
       {isAdminOrManager && (
-        <div className="flex items-center justify-between border-b border-gray-300 bg-gray-100 p-4">
+        <div className="flex items-center justify-between border-b border-gray-300 bg-gray-100 p-4 dark:border-none dark:bg-darkSprint-10">
           <button
             onClick={addNode}
-            className="rounded-md bg-button px-4 py-2 text-white hover:bg-buttonHover"
+            className="rounded-md bg-button px-4 py-2 text-white hover:bg-buttonHover dark:bg-dark-0"
           >
             Add Workflow
           </button>
           {selectedNode && (
-            <button
-              onClick={deleteNode}
-              className="rounded-md bg-red-500 px-4 py-2 text-white hover:bg-red-600"
-            >
-              Delete Node
-            </button>
-          )}
+              <button
+                onClick={deleteNode}
+                className="rounded-md bg-red-500 px-4 py-2 text-white hover:bg-red-600"
+              >
+                Delete Node
+              </button>
+            )}
           {(edgesHaveChanged || hasAddedNode) && (
             <button
               onClick={updateFlow}
@@ -213,8 +223,7 @@ const Workflow = () => {
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={() => {}}
-          onNodeClick={onNodeClick} 
-          
+          onNodeClick={onNodeClick}
           onNodeDoubleClick={onNodeDoubleClick}
           fitView
         >
@@ -225,26 +234,28 @@ const Workflow = () => {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="rounded-md bg-white p-6 shadow-md">
-            <h2 className="mb-4 text-lg font-semibold">Enter Node Name</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center   bg-black bg-opacity-50">
+          <div className="rounded-md bg-white p-6 shadow-md dark:bg-darkSprint-20">
+            <h2 className="mb-4 text-lg font-semibold dark:text-dark-50">
+              Enter Node Name
+            </h2>
             <input
               type="text"
               value={nodeName}
               onChange={(e) => setNodeName(e.target.value)}
               placeholder="Node Name"
-              className="mb-4 w-full rounded-md border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mb-4 w-full rounded-md border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-darkSprint-20 dark:bg-darkSprint-30 dark:text-white dark:placeholder:text-darkSprint-50"
             />
             <div className="flex justify-end space-x-2">
               <button
                 onClick={handleCancel}
-                className="rounded-md bg-gray-300 px-4 py-2 hover:bg-gray-400"
+                className="rounded-md bg-gray-300 px-4 py-2  hover:bg-gray-400"
               >
                 Cancel
               </button>
               <button
                 onClick={handleAddNode}
-                className="rounded-md bg-button px-4 py-2 text-white hover:bg-buttonHover"
+                className="rounded-md bg-button px-4 py-2 text-white hover:bg-buttonHover dark:bg-dark-0"
               >
                 Add Node
               </button>
@@ -253,7 +264,7 @@ const Workflow = () => {
         </div>
       )}
 
-{editingNode && (
+      {editingNode && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="rounded-md bg-white p-6 shadow-md">
             <h2 className="mb-4 text-lg font-semibold">Edit Node Name</h2>

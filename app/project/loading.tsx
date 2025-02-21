@@ -7,7 +7,7 @@ import {
   
   const ProjectSkeleton = () => {
     return (
-      <div role="status" className="flex animate-pulse flex-col gap-y-4">
+      <div role="status" className="flex animate-pulse flex-col gap-y-4 mt-5">
         <TitleSkeleton />
         <SprintSearchSkeleton />
         <SprintHeaderSkeleton />

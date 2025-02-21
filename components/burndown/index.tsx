@@ -12,26 +12,24 @@ const ITEMS_PER_PAGE = 20;
 const Burndown: React.FC = () => {
   const project = useCookie("project");
   const renderContainerRef = React.useRef<HTMLDivElement>(null);
-  const [sprintId, setSprintId] = useState('');
+  const [sprintId, setSprintId] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const { issues } = useIssues();
+  const { issues, issuesLoading } = useIssues(sprintId);
 
-  // useLayoutEffect(() => {
-  //   if (!renderContainerRef.current) return;
-  //   const calculatedHeight = renderContainerRef.current.offsetTop;
-  //   renderContainerRef.current.style.height = `calc(100vh - ${calculatedHeight}px)`;
-  // }, []);
+  useLayoutEffect(() => {
+    if (!renderContainerRef.current) return;
+    const calculatedHeight = renderContainerRef.current.offsetTop;
+    renderContainerRef.current.style.height = `calc(100vh - ${calculatedHeight}px)`;
+  }, []);
 
   const allIssues =
-    issues?.flatMap((issue) =>
-      issue.sprintId === sprintId ? [issue, ...(issue.children || [])] : []
-    ) || [];
+    issues?.flatMap((issue) => [issue, ...(issue.children || [])]) || [];
 
   // Calculate pagination values
-  const totalPages = Math.ceil(allIssues.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(allIssues?.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
-  const paginatedIssues = allIssues.slice(startIndex, endIndex);
+  const paginatedIssues = allIssues?.slice(startIndex, endIndex);
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
@@ -43,6 +41,14 @@ const Burndown: React.FC = () => {
     setCurrentPage(1);
   }, [sprintId]);
 
+  // if (issuesLoading) {
+  //   return (
+  //     <div>
+  //       <div className="h-10 w-10 animate-spin rounded-full border-4 border-t-4 border-gray-200 border-t-black" />
+  //     </div>
+  //   );
+  // }
+
   if (!project) return null;
 
   return (
@@ -52,19 +58,19 @@ const Burndown: React.FC = () => {
         sprintId={sprintId}
         setSprintId={setSprintId}
       />
-      <div className="min-w-full mt-8 max-w-max flex flex-col items-center justify-center">
-        {allIssues.length > 0 ? (
+      <div className="mt-8 flex min-w-full max-w-max flex-col items-center justify-center">
+        {allIssues?.length > 0 ? (
           <>
             <BurndownIssueList issues={paginatedIssues} />
 
             {/* Pagination Controls */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-between border-t bg-white px-4 py-3 w-full">
+              <div className="flex w-full items-center justify-between  border-t bg-white px-4 py-3 dark:bg-darkSprint-20">
                 <div className="flex items-center gap-2">
-                  <p className="text-sm text-gray-700">
+                  <p className="text-sm text-gray-700 dark:text-dark-50">
                     Showing {startIndex + 1} to{" "}
-                    {Math.min(endIndex, allIssues.length)} of {allIssues.length}{" "}
-                    issues
+                    {Math.min(endIndex, allIssues?.length)} of{" "}
+                    {allIssues?.length} issues
                   </p>
                 </div>
 
@@ -92,10 +98,11 @@ const Burndown: React.FC = () => {
                           )}
                           <button
                             onClick={() => handlePageChange(page)}
-                            className={`${page === currentPage
-                              ? "bg-slate-500 text-white"
-                              : "bg-slate-300"
-                              } w-8 rounded-full`}
+                            className={`${
+                              page === currentPage
+                                ? "bg-slate-500 text-white"
+                                : "bg-slate-300"
+                            } w-8 rounded-full`}
                           >
                             {page}
                           </button>
@@ -115,7 +122,9 @@ const Burndown: React.FC = () => {
             )}
           </>
         ) : (
-          <p className="text-center mt-36 text-gray-800 text-lg">Complete your first sprint to view this report </p>
+          <p className="mt-36 text-center text-lg text-gray-800 dark:text-dark-50">
+            Complete your first sprint to view this report{" "}
+          </p>
         )}
       </div>
     </Fragment>

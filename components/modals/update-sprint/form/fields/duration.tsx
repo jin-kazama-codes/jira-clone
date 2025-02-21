@@ -38,7 +38,7 @@ const DurationField: React.FC<{
         render={({ field }) => {
           return (
             <Select onValueChange={field.onChange} defaultValue={field.value}>
-              <SelectTrigger className="flex h-10 w-64 items-center justify-between rounded-xl bg-gray-100 px-2 text-xs font-semibold transition-all duration-200 hover:bg-gray-200 focus:ring-2">
+              <SelectTrigger className="flex h-10 w-64 items-center justify-between  dark:bg-darkSprint-30 dark:border-darkSprint-20 dark:placeholder:text-darkSprint-50 dark:text-white  rounded-xl bg-gray-100 px-2 text-xs font-semibold transition-all duration-200 hover:bg-gray-200 focus:ring-2">
                 <SelectValue />
                 <SelectIcon>
                   <FaChevronDown className="text-gray-500" />
@@ -46,14 +46,14 @@ const DurationField: React.FC<{
               </SelectTrigger>
               <SelectPortal className="z-50">
                 <SelectContent position="popper">
-                  <SelectViewport className="w-64 rounded-md border border-gray-300 bg-white py-2 shadow-md">
+                  <SelectViewport className="w-64 rounded-md dark:bg-darkSprint-20 dark:border-darkSprint-30 dark:text-white border border-gray-300 bg-white py-2 shadow-md">
                     <SelectGroup>
                       {durationOptions.map((option) => (
                         <SelectItem
                           key={option}
                           value={option}
                           className={clsx(
-                            "border-l-2 border-transparent py-2 pl-3 text-sm hover:cursor-default hover:border-inprogress hover:bg-gray-100 [&[data-state=checked]]:border-inprogress [&[data-state=checked]]:bg-blue-100 [&[data-state=checked]]:text-blue-600"
+                            "border-l-2 border-transparent py-2 pl-3 dark:hover:bg-darkSprint-10 dark:[&[data-state=checked]]:bg-darkSprint-0 text-sm hover:cursor-default hover:border-inprogress hover:bg-gray-100 [&[data-state=checked]]:border-inprogress [&[data-state=checked]]:bg-blue-100 [&[data-state=checked]]:text-blue-600"
                           )}
                         >
                           <span className={clsx("px-2 text-xs")}>{option}</span>

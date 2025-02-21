@@ -9,7 +9,7 @@ const ProgressBar = ({ timeSpent, estimateTime }) => {
   return (
     <div className=" cursor-pointer">
       {/* Progress Bar */}
-      <div className="w-[150px] bg-gray-200 rounded-lg h-2">
+      <div className="w-[150px] bg-gray-200 dark:bg-darkSprint-20 rounded-lg h-2">
         <div
           className={`${progressBarColor} h-full rounded-lg`}
           style={{ width: `${Math.min(percentage, 100)}%`, transition: 'width 0.5s ease-in-out' }}
@@ -20,13 +20,13 @@ const ProgressBar = ({ timeSpent, estimateTime }) => {
       <div className="mt-2">
         {timeSpent === '0' || !timeSpent ? (
           <>
-            <p className="text-sm text-gray-700">No time logged</p>
-            <p className="text-sm text-gray-700">{estimateTime}</p>
+            <p className="text-sm text-gray-700 dark:text-dark-50">No time logged</p>
+            <p className="text-sm text-gray-700 dark:text-dark-50">{estimateTime}</p>
           </>
         ) : (
           <>
-            <p className="text-sm text-gray-700">Time Spent : {timeSpent}</p>
-            <p className="text-sm text-gray-700 whitespace-nowrap">Remaining Time : {remainingTime}</p>
+            <p className="text-sm text-gray-700 dark:text-dark-50">Time Spent : {timeSpent}</p>
+            <p className="text-sm text-gray-700 whitespace-nowrap dark:text-dark-50">Remaining Time : {remainingTime}</p>
           </>
         )}
       </div>

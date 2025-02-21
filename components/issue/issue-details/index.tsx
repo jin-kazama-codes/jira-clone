@@ -1,83 +1,84 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
-import { useIssues } from "@/hooks/query-hooks/use-issues";
+import React, { useEffect, useState } from "react";
 import { useIsInViewport } from "@/hooks/use-is-in-viewport";
 import { IssueDetailsHeader } from "./issue-details-header";
 import { IssueDetailsInfo } from "./issue-details-info";
 import { useSelectedIssueContext } from "@/context/use-selected-issue-context";
 import { useCookie } from "@/hooks/use-cookie";
 import { getProjectKeyFromUrl, setCookie } from "@/utils/helpers";
+import { useIssueDetails } from "@/hooks/query-hooks/use-issue-details";
 
 const IssueDetails: React.FC<{
-  issueKey: string | null;
+  issueKey?: string;
   detailPage?: boolean;
-}> = ({ issueKey, detailPage }) => {
-  const { issues } = useIssues();
-  const { setIssueKey } = useSelectedIssueContext();
+  roadmap?: boolean;
+}> = ({ issueKey: detailIssueKey, detailPage, roadmap = false }) => {
+  const { issue, issueLoading, refetch } = useIssueDetails();
+  const { issueKey, setIssueKey } = useSelectedIssueContext();
   const renderContainerRef = React.useRef<HTMLDivElement>(null);
   const [isInViewport, viewportRef] = useIsInViewport({ threshold: 1 });
   const project = useCookie("project");
-  const [loading, setLoading] = useState(true); // Initial loading state
+  const [loading, setLoading] = useState(true);
   const projectKey = getProjectKeyFromUrl();
 
   useEffect(() => {
-    // Only execute if project cookie is not found
+    if (detailIssueKey) {
+      setIssueKey(detailIssueKey);
+    }
+    if (issueKey) {
+      refetch();
+    }
+  }, [detailIssueKey, issueKey]);
+
+
+  useEffect(() => {
     if (!project) {
-      async function fetchProjectByKey(projectKey) {
+      async function fetchProjectByKey(projectKey: string | null) {
         try {
           const response = await fetch(`/api/project/${projectKey}`);
           if (!response.ok) {
             throw new Error("Failed to fetch project");
           }
           const data = await response.json();
-          // Optionally, set cookie here
           setCookie("project", data.project);
         } catch (error) {
           console.error("Error fetching project:", error);
         } finally {
-          setLoading(false); // Set loading to false once data is fetched
+          setLoading(false);
         }
       }
-
       fetchProjectByKey(projectKey);
     } else {
-      setLoading(false); // Skip fetch if project already exists in cookie
+      setLoading(false);
     }
-  }, [project]);
+  }, [project, projectKey]);
 
-  const getIssue = useCallback(
-    (issueKey: string | null) => {
-      return issues?.find((issue) => issue.key === issueKey);
-    },
-    [issues]
-  );
+  if (!roadmap && (loading || issueLoading)) {
+    return <div ref={renderContainerRef}
+    className="relative z-10 flex w-full h-[70vh] items-center justify-center rounded-xl bg-white pl-4 pr-2 dark:bg-darkSprint-10 [&[data-state=closed]]:hidden"><div className="h-10 w-10 animate-spin rounded-full border-4 border-t-4 border-gray-200 border-t-black dark:border-t-dark-0 dark:bg-darkSprint-30" /></div>;
+  }
 
-  const [issueInfo, setIssueInfo] = useState(() => getIssue(issueKey));
-
-  useEffect(() => {
-    setIssueInfo(() => getIssue(issueKey));
-    if (renderContainerRef.current) {
-      renderContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  }, [issueKey, getIssue]);
-
-  if (!issueInfo || !issues) return <div />;
+  if (!issue) {
+    return <div ref={renderContainerRef}
+    data-state={issueKey ? "open" : "closed"}
+    className="relative z-10 flex w-full flex-col  rounded-xl bg-white pl-4 pr-2 dark:bg-darkSprint-10 [&[data-state=closed]]:hidden">Couldn't find Issue</div>;
+  }
 
   return (
     <div
       ref={renderContainerRef}
       data-state={issueKey ? "open" : "closed"}
-      className="relative z-10 flex rounded-xl bg-white w-full flex-col overflow-y-scroll pl-4 pr-2 [&[data-state=closed]]:hidden"
+      className="relative z-10 flex w-full flex-col  rounded-xl bg-white pl-4 pr-2 dark:bg-darkSprint-10 [&[data-state=closed]]:hidden"
     >
       <IssueDetailsHeader
         detailPage={detailPage}
-        issue={issueInfo}
+        issue={issue}
         setIssueKey={setIssueKey}
         isInViewport={isInViewport}
       />
       <IssueDetailsInfo
         detailPage={detailPage}
-        issue={issueInfo}
+        issue={issue}
         ref={viewportRef}
       />
     </div>

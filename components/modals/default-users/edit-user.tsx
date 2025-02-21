@@ -11,6 +11,7 @@ import {
   ModalTrigger,
 } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
+import { useMembers } from "@/hooks/query-hooks/use-members";
 
 interface EditUserModalProps {
   children: ReactNode;
@@ -33,37 +34,20 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState(user.name);
   const [error, setError] = useState<string | null>(null);
+  const { updateMember, memberUpdating } = useMembers();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    let body = JSON.stringify({
+      id: user.id,
+      name: name,
+    });
 
-    try {
-      const response = await fetch("/api/users", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: user.id,
-          name: name,
-        }),
-      });
-
-      if (response.ok) {
-        onEditSuccess?.(); // Notify parent to refresh data
-        const result = await response.json();
-        onClose?.();
-        setIsOpen(false);
-        setName("");
-      } else {
-        const result = await response.json();
-        setError(result.error || "Failed to update user");
-      }
-    } catch (err) {
-      console.error("Error updating user:", err);
-      setError("An unexpected error occurred. Please try again.");
-    }
+    updateMember(body);
+    onClose?.();
+    setIsOpen(false);
+    setName("");
   };
 
   return (
@@ -74,18 +58,18 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
         <ModalContent>
           <div className="p-5 text-white">
             <ModalTitle>Edit User</ModalTitle>
-            <ModalDescription className="mt-1">
+            <ModalDescription className="mt-1 !text-white">
               Enter the name of the user.
             </ModalDescription>
           </div>
           <form
             onSubmit={handleSubmit}
-            className="mt-5 space-y-4 rounded-xl bg-white p-6"
+            className="mt-5 space-y-4 rounded-xl bg-white p-6 dark:bg-darkSprint-20"
           >
             <div>
               <label
                 htmlFor="name"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-gray-700 dark:text-dark-50"
               >
                 Name
               </label>
@@ -94,16 +78,16 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="mt-1 rounded-md bg-slate-100 px-2 py-1"
+                className="mt-1 rounded-md bg-slate-100 px-2 py-1 dark:border-darkSprint-20 dark:bg-darkSprint-30 dark:text-white dark:placeholder:text-darkSprint-50"
                 autoComplete="off"
               />
             </div>
             {error && <p className="mt-2 text-red-500">{error}</p>}
             <Button
               type="submit"
-              className="flex w-full justify-center rounded-xl !bg-black text-white"
+              className="flex w-full justify-center rounded-xl !bg-black text-white dark:!bg-dark-0"
             >
-              Update
+              {memberUpdating ? "Updating Member..." : "Update member"}
             </Button>
           </form>
         </ModalContent>

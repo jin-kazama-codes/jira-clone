@@ -13,30 +13,36 @@ import {
 import { useSprints } from "@/hooks/query-hooks/use-sprints";
 import { useIsAuthenticated } from "@/hooks/use-is-authed";
 import { useCookie } from "@/hooks/use-cookie";
-import { getTimeEstimates } from "@/utils/getOriginalEstimate";
+import { useTimeEstimates } from "@/utils/getOriginalEstimate";
 import Timelist from "./estimate-time-list";
+import { useIssues } from "@/hooks/query-hooks/use-issues";
+import { getPluralEnd } from "@/utils/helpers";
 
 const BacklogList: React.FC<{
   id: string;
-  issues: IssueType[];
-}> = ({ id, issues }) => {
-  const [openAccordion, setOpenAccordion] = useState("");
+}> = ({ id }) => {
+  const [openAccordion, setOpenAccordion] = useState("backlog");
+  const { issues } = useIssues(openAccordion);
 
-  useEffect(() => {
-    setOpenAccordion(`backlog`); // Open accordion on mount in order for DND to work.
-  }, [id]);
+  // useEffect(() => {
+  //   setOpenAccordion(`backlog`);
+  // }, [id]);
 
+  // if(issuesLoading){
+  //   return <div>Loading...</div>
+  // }
+  const filteredIssues = issues?.filter((issue) => issue.type === "TASK") ?? [];
   return (
     <Accordion
-      className="rounded-xl bg-slate-100 border-2 p-4 pb-20 "
+      className="rounded-xl border-2 bg-slate-100 p-4 pb-2 dark:border-darkSprint-30 dark:bg-darkSprint-10"
       type="single"
       value={openAccordion}
       onValueChange={setOpenAccordion}
       collapsible
     >
       <AccordionItem value={`backlog`}>
-        <BacklogListHeader issues={issues ?? []} />
-        <IssueList sprintId={null} issues={issues ?? []} />
+        <BacklogListHeader issues={filteredIssues} />
+        <IssueList sprintId={null} issues={filteredIssues} />
       </AccordionItem>
     </Accordion>
   );
@@ -56,28 +62,31 @@ const BacklogListHeader: React.FC<{ issues: IssueType[] }> = ({ issues }) => {
   }
 
   const { convertedOriginalEstimate, convertedTotalTime } =
-    getTimeEstimates(issues);
+    useTimeEstimates(issues);
 
   return (
     <div className="flex w-full items-center justify-between text-sm ">
       <AccordionTrigger className="flex w-full items-center p-2  font-medium [&[data-state=open]>svg]:rotate-90">
         <Fragment>
           <FaChevronRight
-            className="mr-2 text-xs text-black transition-transform"
+            className="mr-2 text-xs text-black transition-transform dark:text-dark-50"
             aria-hidden
           />
           <div className="flex items-center gap-x-3">
-            <div className="text-semibold text-xl">Backlog</div>
-            <div className="ml-3 font-normal text-gray-800">
-              ({issues.length} issues)
+            <div className="text-semibold text-xl dark:text-dark-50">
+              Backlog
             </div>
-            <div className="font-normal text-gray-800">
-              {convertedOriginalEstimate
-                ? convertedOriginalEstimate
-                : ""}
-
-
+            <div className="ml-3 font-normal text-gray-800 dark:text-darkSprint-50">
+              ({issues.length ? issues.length : 0} issue{getPluralEnd(issues)})
             </div>
+            {convertedOriginalEstimate ? (
+              <span className="dark:text-darkSprint-50">
+                Estimate:{" "}
+                <span className="text-md font-bold  dark:text-dark-50">
+                  {convertedOriginalEstimate}
+                </span>
+              </span>
+            ) : null}
           </div>
         </Fragment>
       </AccordionTrigger>
@@ -86,10 +95,9 @@ const BacklogListHeader: React.FC<{ issues: IssueType[] }> = ({ issues }) => {
         {(user?.role === "admin" || user?.role === "manager") && (
           <Button
             onClick={handleCreateSprint}
-            className="rounded-xl  px-4 !text-white !bg-button  hover:!bg-buttonHover"
-
+            className="rounded-xl  !bg-button px-4 !text-white hover:!bg-buttonHover  dark:!bg-dark-0"
           >
-            <span className="whitespace-nowrap text-white">Create Sprint</span>
+            <span className="whitespace-nowrap text-white ">Create Sprint</span>
           </Button>
         )}
       </div>

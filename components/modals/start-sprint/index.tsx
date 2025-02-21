@@ -27,12 +27,12 @@ const StartSprintModal: React.FC<{
           <div className="p-5 text-white">
             <ModalTitle>Start Sprint</ModalTitle>
             <ModalDescription>
-              <span className="font-bold text-white">{issueCount}
+              <span className="font-bold text-white dark:text-dark-50">{issueCount}
                 {issueCount > 1 ? " issues" : " issue"} will be included in this
                 sprint.</span>
             </ModalDescription>
           </div>
-          <div className="rounded-xl bg-white p-6  h-96 overflow-y-scroll">
+          <div className="rounded-xl bg-white p-6 dark:bg-darkSprint-20 h-96 overflow-y-scroll custom-scrollbar">
             <StartSprintForm sprint={sprint} setModalIsOpen={setIsOpen} />
           </div>
         </ModalContent>

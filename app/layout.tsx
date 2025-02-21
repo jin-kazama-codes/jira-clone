@@ -4,6 +4,7 @@ import "@/styles/globals.css";
 import Toaster from "@/components/toast";
 import QueryProvider from "@/utils/provider";
 import { AuthModalProvider } from "@/context/use-auth-modal";
+import { ThemeProvider } from "@/context/theme-context";
 
 export const metadata: Metadata = {
   title: {
@@ -41,18 +42,20 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en">
       <head />
-      <body className="">
+      <body className={"overflow-hidden"}>
         <QueryProvider>
           <AuthModalProvider>
-            <Toaster
-              position="bottom-left"
-              reverseOrder={false}
-              containerStyle={{
-                height: "92vh",
-                marginLeft: "3vw",
-              }}
-            />
-            {children}
+            <ThemeProvider>
+              <Toaster
+                position="bottom-left"
+                reverseOrder={false}
+                containerStyle={{
+                  height: "92vh",
+                  marginLeft: "3vw",
+                }}
+              />
+              {children}
+            </ThemeProvider>
           </AuthModalProvider>
         </QueryProvider>
       </body>

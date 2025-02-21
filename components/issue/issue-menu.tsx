@@ -41,11 +41,13 @@ const IssueDropdownMenu: React.FC<{
   children: ReactNode;
   issue: IssueType;
 }> = ({ children, issue }) => {
-  const { deleteIssue, updateIssue } = useIssues();
-  const { sprints } = useSprints();
+  const { deleteIssue, updateIssue } = useIssues(issue?.sprintId);
+  const { sprints: sprintData } = useSprints();
   const [isAuthenticated, openAuthModal] = useIsAuthenticated();
   const [currentPath, setCurrentPath] = useState<string | undefined>(undefined);
   let backlogObj;
+
+  const sprints = sprintData?.pages?.flatMap((page) => page?.sprints)
 
   if (issue.sprintId) {
     backlogObj = {
@@ -57,7 +59,9 @@ const IssueDropdownMenu: React.FC<{
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setCurrentPath(window.location.pathname);
+      const location = window.location.pathname.split('/', 3);
+      const path = `/${location[2]}`
+      setCurrentPath(path)
     }
   }, []);
 
@@ -98,6 +102,7 @@ const IssueDropdownMenu: React.FC<{
     }
   };
 
+
   return (
     <Dropdown>
       {children}
@@ -106,9 +111,9 @@ const IssueDropdownMenu: React.FC<{
           side="top"
           sideOffset={5}
           align="end"
-          className="z-50 w-fit min-w-[100px] rounded-md border border-gray-300 bg-white pt-2 shadow-md"
+          className="z-50 w-fit min-w-[100px] rounded-md border dark:bg-darkSprint-20 dark:border-darkSprint-30 border-gray-300 bg-white pt-2 shadow-md"
         >
-          <DropdownLabel className="p-2 text-xs font-normal text-gray-400">
+          <DropdownLabel className="p-2 text-xs font-normal dark:text-darkButton-50 text-gray-400">
             ACTIONS
           </DropdownLabel>
           <DropdownGroup>
@@ -118,17 +123,17 @@ const IssueDropdownMenu: React.FC<{
                 key={action.id}
                 textValue={action.label}
                 className={clsx(
-                  "border-transparent p-2 text-sm hover:cursor-default hover:bg-gray-100"
+                  "border-transparent p-2 text-sm hover:cursor-default dark:hover:bg-darkSprint-30 dark:hover:text-white hover:bg-gray-100"
                 )}
               >
-                <span className={clsx("pr-2 text-sm")}>{action.label}</span>
+                <span className={clsx("pr-2 text-sm dark:text-dark-50 ")}>{action.label}</span>
               </DropdownItem>
             ))}
           </DropdownGroup>
           {/* TODO: Implement "move to" actions */}
           {isBacklogPage && (
             <>
-              <DropdownLabel className="p-2 text-xs font-normal text-gray-400">
+              <DropdownLabel className="p-2 text-xs font-normal text-gray-400 ">
                 MOVE TO
               </DropdownLabel>
               <DropdownGroup>
@@ -149,7 +154,7 @@ const IssueDropdownMenu: React.FC<{
                         key={sprint.id}
                         textValue={sprint.name}
                         className={clsx(
-                          "border-transparent p-2 text-sm hover:cursor-default hover:bg-gray-100"
+                          "border-transparent p-2 text-sm hover:cursor-default dark:text-dark-50 hover:bg-gray-100 dark:hover:bg-darkSprint-30"
                         )}
                       >
                         <span className={clsx("pr-2 text-sm")}>

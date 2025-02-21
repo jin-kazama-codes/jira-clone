@@ -27,9 +27,9 @@ const
             <Button
               onClick={() => setIssueKey(issue.key)}
               customColors
-              className=" bg-transparent text-xs text-gray-800 underline-offset-2 hover:underline"
+              className=" bg-transparent text-xs dark:text-dark-50 text-gray-800 underline-offset-2 hover:underline"
             >
-              <span className="whitespace-nowrap">{issue.key}</span>
+              <span className="whitespace-nowrap ">{issue.key}</span>
             </Button>
           </TooltipWrapper>
         </div>
@@ -90,7 +90,7 @@ const ParentContainer: React.FC<{
   }
   return (
     <div className="flex  gap-x-3">
-      <div className="flex  items-center">
+      <div className="flex  items-center dark:text-dark-50">
         {children}
         <IssueLink issue={issue.parent} setIssueKey={setIssueKey} />
       </div>
@@ -126,7 +126,7 @@ const IssueLink: React.FC<{
         customColors
         className=" bg-transparent text-xs text-black underline-offset-2 hover:underline"
       >
-        <span className="whitespace-nowrap">{issue?.key}</span>
+        <span className="whitespace-nowrap dark:text-dark-50">{issue?.key}</span>
       </Button>
     </TooltipWrapper>
   );
@@ -134,7 +134,7 @@ const IssueLink: React.FC<{
 
 const AddEpic: React.FC = () => {
   return (
-    <div className="flex items-center rounded-xl font-normal text-black">
+    <div className="flex items-center rounded-xl font-normal  text-black dark:text-dark-50">
       <AiOutlinePlus className="text-sm" />
       <span>Add Epic</span>
     </div>
