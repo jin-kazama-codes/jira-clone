@@ -42,7 +42,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en" className="custom-scrollbar">
       <head />
-      <body className={"overflow-auto h-full "}>
+      <body className={"overflow-hidden"}>
         <QueryProvider>
           <AuthModalProvider>
             <ThemeProvider>

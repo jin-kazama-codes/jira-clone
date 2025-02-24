@@ -57,7 +57,7 @@ const SprintList: React.FC<{
   const [openAccordion, setOpenAccordion] = useState(sprint.id);
 
   const { search, assignees, issueTypes, epics } = useFiltersContext();
-  const { issues } = useIssues(openAccordion);
+  const { issues, issuesLoading } = useIssues(openAccordion);
 
   const filterIssues = useCallback(
     (issues: IssueType[] | undefined, sprintId: string | null) => {
@@ -94,10 +94,14 @@ const SprintList: React.FC<{
             sprint={sprint}
             issues={filterIssues(issues, sprint.id)}
           />
-          <IssueList
-            sprintId={sprint.id}
-            issues={filterIssues(issues, sprint.id)}
-          />
+          {issuesLoading ? (
+            <IssueListSkeleton size={4} />
+          ) : (
+            <IssueList
+              sprintId={sprint.id}
+              issues={filterIssues(issues, sprint.id)}
+            />
+          )}
         </AccordionItem>
       </Suspense>
     </Accordion>
@@ -139,31 +143,31 @@ const SprintListHeader: React.FC<{
   //   //     },
   //   //   }
   //   // );
-    
+
   // }
 
-  const handleDeleteSprint = async() => {
+  const handleDeleteSprint = async () => {
     if (!isAuthenticated) {
       openAuthModal();
       return;
     }
-  
+
     try {
       const response = await fetch(`/api/sprints/${sprint.id}`, {
         method: "DELETE",
       });
-  
+
       if (!response.ok) {
         throw new Error("Failed to delete sprint");
       }
-  
+
       await queryClient.invalidateQueries(["sprints"]);
-  
+
       toast.success({
         message: `Deleted sprint ${sprint.name}`,
         description: "Sprint deleted successfully",
       });
-  
+
       setDeleteModalIsOpen(false);
     } catch (error) {
       toast.error({
@@ -171,8 +175,7 @@ const SprintListHeader: React.FC<{
         description: "Something went wrong. Please try again.",
       });
     }
-  }
-  
+  };
 
   function getFormattedDateRange(
     startDate: Date | undefined | null,
@@ -224,7 +227,8 @@ const SprintListHeader: React.FC<{
                   {getFormattedDateRange(sprint.startDate, sprint.endDate)}
                 </span>
                 <span className="dark:text-dark-50">
-                  ({issues.length ? issues.length : 0} issue{getPluralEnd(issues)})
+                  ({issues.length ? issues.length : 0} issue
+                  {getPluralEnd(issues)})
                 </span>
                 {convertedOriginalEstimate ? (
                   <span className="dark:text-darkSprint-50">
@@ -251,7 +255,7 @@ const SprintListHeader: React.FC<{
                 asChild
                 className="flex items-center gap-x-1 px-1.5 py-0.5 text-xs font-semibold focus:ring-2"
               >
-                <div className="rounded-full px-1.5 py-1.5 text-black hover:cursor-pointer hover:bg-gray-300 dark:text-dark-50 dark:hover:bg-darkSprint-40 dark:[&[data-state=open]]:bg-darkSprint-40 [&[data-state=open]]:bg-gray-300 ">
+                <div className="rounded-full px-1.5 py-1.5 text-black hover:cursor-pointer hover:bg-gray-300 dark:text-dark-50 dark:hover:bg-darkSprint-40 [&[data-state=open]]:bg-gray-300 dark:[&[data-state=open]]:bg-darkSprint-40 ">
                   <BsThreeDots className="sm:text-xl " />
                 </div>
               </DropdownTrigger>
