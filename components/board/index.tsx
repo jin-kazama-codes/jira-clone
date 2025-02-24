@@ -113,7 +113,7 @@ const Board: React.FC = () => {
   if (sprints?.length == 0) {
     return (
       <Container className="flex h-full w-full items-center justify-center font-mono text-2xl dark:text-white">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-t-4 border-gray-200 border-t-black" />
+        <div>No sprints are available at the moment.</div>
       </Container>
     );
   }

@@ -33,6 +33,15 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
   const [imageUrl, setImageUrl] = useState<String[] | null>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  const [scrollPos, setScrollPos] = useState(0);
+  useEffect(() => {
+    if (isWritingComment) {
+      setScrollPos(window.scrollY); // Save current scroll position
+    } else {
+      window.scrollTo(0, scrollPos); // Restore scroll position
+    }
+  }, [isWritingComment]);
+
   const handleButtonClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click(); // Trigger file input click
@@ -90,11 +99,6 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
   useKeydownListener(scrollRef, ["m", "M"], handleEdit);
   function handleEdit(ref: React.RefObject<HTMLElement>) {
     setIsWritingComment(true);
-    setTimeout(() => {
-      if (ref.current) {
-        ref.current.scrollIntoView({ behavior: "smooth" });
-      }
-    }, 50);
   }
 
   function handleSave(state: SerializedEditorState | undefined) {

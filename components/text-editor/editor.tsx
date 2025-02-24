@@ -66,7 +66,7 @@ export const Editor: React.FC<{
 
           <CodeHighlightPlugin />
           <ListPlugin />
-          <AutoFocusPlugin />
+          {/* <AutoFocusPlugin /> */}
           <OnChangePlugin
             onChange={(editor) => onChange(editor, setJsonState)}
           />
