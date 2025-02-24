@@ -62,9 +62,9 @@ const Backlog: React.FC = ({ state, project }) => {
       <div ref={containerRef} className="min-w-full max-w-max flex overflow-hidden">
         <div
           className={clsx(
-            "w-full overflow-y-auto h-[68vh]  custom-scrollbar",
+            "w-full overflow-y-auto h-[68vh] rounded-xl custom-scrollbar",
             issueKey ? "md:w-4/6 " : "w-full",
-            issueKey && "pb-5"
+            issueKey && "pb-5 pr-2"
           )}
         >
           <ListGroup
@@ -77,7 +77,7 @@ const Backlog: React.FC = ({ state, project }) => {
         </div>
 
         {issueKey && (
-          <div className="hidden md:block w-2/6 h-[68vh] overflow-y-auto custom-scrollbar">
+          <div className="hidden md:block w-2/6 h-[68vh] rounded-xl overflow-y-auto custom-scrollbar">
             <IssueDetails />
           </div>
         )}
