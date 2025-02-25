@@ -65,6 +65,9 @@ const TopNavbar: React.FC = () => {
   }, []);
 
   const handleNavigation = () => {
+    if(isSuperAdmin){
+      return;
+    }
     router.push('/project'); // Navigate to the home page
   };
 
