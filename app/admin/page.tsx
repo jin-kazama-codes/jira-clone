@@ -7,13 +7,10 @@ import { AddCompanyModal } from "@/components/modals/super-admin/company/add-com
 import { FaRegBuilding, FaUserShield } from "react-icons/fa";
 import { useCompany } from "@/hooks/query-hooks/use-company";
 import { AddAdminModal } from "@/components/modals/super-admin/admin/add-admin";
+import { useState } from "react";
 
-const SuperAdminPage = ({
-  searchParams,
-}: {
-  searchParams?: { view?: string };
-}) => {
-  const view = searchParams?.view || "companies";
+const SuperAdminPage = () => {
+  const [view, setView] = useState("companies")
 
   const { companies, companiesLoading } = useCompany();
 
@@ -29,8 +26,8 @@ const SuperAdminPage = ({
             className="inline-flex rounded-md text-white shadow-sm dark:bg-darkSprint-30"
             role="group"
           >
-            <Link
-              href="?view=companies"
+            <button
+              onClick={() => setView("companies")}
               className={`
           inline-flex items-center rounded-s-lg border dark:border-darkSprint-30 px-4 py-2
           text-sm font-medium
@@ -45,9 +42,10 @@ const SuperAdminPage = ({
             >
               <FaRegBuilding className="mr-2 h-4 w-4" />
               Companies
-            </Link>
-            <Link
-              href="?view=admins"
+            </button>
+            <button
+              onClick={() => setView("admins")}
+
               className={`
           inline-flex items-center rounded-r-lg border-b border-r border-t px-4
           py-2 text-sm font-medium
@@ -62,7 +60,7 @@ const SuperAdminPage = ({
             >
               <FaUserShield className="mr-2 h-4 w-4" />
               Admins
-            </Link>
+            </button>
           </div>
 
           {view === "companies" ? (
