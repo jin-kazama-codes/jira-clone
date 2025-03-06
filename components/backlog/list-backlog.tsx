@@ -31,7 +31,7 @@ const BacklogList: React.FC<{
   // if(issuesLoading){
   //   return <div>Loading...</div>
   // }
-  const filteredIssues = issues?.filter((issue) => issue.type === "TASK") ?? [];
+  const filteredIssues = issues?.filter((issue) => ["TASK", "STORY", "BUG"].includes(issue.type)) ?? [];
   return (
     <Accordion
       className="rounded-xl border-2 bg-slate-100 p-4 pb-2 dark:border-darkSprint-30 dark:bg-darkSprint-10"
