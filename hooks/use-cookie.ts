@@ -1,4 +1,11 @@
+"use client";
+
 export const useCookie = (cookieParam: string) => {
+  // Check if running on the client
+  if (typeof document === 'undefined') {
+    return null;
+  }
+  
   const cookies = document.cookie.split(";");
   const cookieObj = cookies.find((cookie) =>
     cookie.trim().startsWith(`${cookieParam}=`)
