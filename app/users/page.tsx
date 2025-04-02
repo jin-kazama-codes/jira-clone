@@ -13,7 +13,7 @@ const Userspage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 5;
   const hasManager = members?.some(
-    (user) => user.role.toLowerCase() === "manager"
+    (user) => user?.role?.toLowerCase() === "manager"
   );
 
   const refreshMembers = async () => {
@@ -26,7 +26,7 @@ const Userspage = () => {
       (user) =>
         user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.role.toLowerCase().includes(searchQuery.toLowerCase())
+        user?.role?.toLowerCase().includes(searchQuery.toLowerCase())
     ) || [];
 
   // Calculate pagination
@@ -66,14 +66,14 @@ const Userspage = () => {
         </div>
 
         {!hasManager && (
-  <div className="flex justify-end mb-4">
-    <UserModal refetch={refreshMembers} manager={true}>
-      <button className="rounded-lg bg-green-500 px-4 py-2 text-white hover:bg-green-600">
-        Add Manager
-      </button>
-    </UserModal>
-  </div>
-)}
+          <div className="mb-4 flex justify-end">
+            <UserModal refetch={refreshMembers} manager={true}>
+              <button className="rounded-lg bg-green-500 px-4 py-2 text-white hover:bg-green-600">
+                Add Manager
+              </button>
+            </UserModal>
+          </div>
+        )}
 
         {members ? (
           <div className="mx-auto">
