@@ -11,7 +11,7 @@ const Userspage = () => {
   const { members, refetch } = useMembers();
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 5;
+  const usersPerPage = 4;
   const hasManager = members?.some(
     (user) => user?.role?.toLowerCase() === "manager"
   );
