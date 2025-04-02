@@ -5,23 +5,29 @@ import { useMembers } from "@/hooks/query-hooks/use-members";
 import withProjectLayout from "@/app/project-layout/withProjectLayout";
 import React, { Fragment, useState, useEffect } from "react";
 import { FaSearch, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { UserModal } from "@/components/modals/add-people";
 
 const Userspage = () => {
   const { members, refetch } = useMembers();
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 5;
+  const hasManager = members?.some(
+    (user) => user?.role?.toLowerCase() === "manager"
+  );
 
   const refreshMembers = async () => {
     await refetch();
   };
 
   // Filter users based on search query
-  const filteredUsers = members?.filter(user =>
-    user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user.role.toLowerCase().includes(searchQuery.toLowerCase())
-  ) || [];
+  const filteredUsers =
+    members?.filter(
+      (user) =>
+        user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user?.role?.toLowerCase().includes(searchQuery.toLowerCase())
+    ) || [];
 
   // Calculate pagination
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
@@ -46,18 +52,28 @@ const Userspage = () => {
         </h2>
 
         {/* Search Bar */}
-        <div className="mb-6 max-w-md mx-auto">
-          <div className="relative">
+        <div className="mx-auto mb-6 flex max-w-md justify-between">
+          <div className="relative w-full">
             <input
               type="text"
               placeholder="Search users..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-2 pl-10 rounded-lg border dark:border-darkButton-0 dark:bg-darkButton-30 dark:text-dark-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-lg border px-4 py-2 pl-10 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-darkButton-0 dark:bg-darkButton-30 dark:text-dark-50"
             />
-            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 transform text-gray-400" />
           </div>
         </div>
+
+        {!hasManager && (
+          <div className="mb-4 flex justify-end">
+            <UserModal refetch={refreshMembers} manager={true}>
+              <button className="rounded-lg bg-green-500 px-4 py-2 text-white hover:bg-green-600">
+                Add Manager
+              </button>
+            </UserModal>
+          </div>
+        )}
 
         {members ? (
           <div className="mx-auto">
@@ -79,10 +95,13 @@ const Userspage = () => {
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
+                <tbody className="divide-y divide-gray-200 bg-white dark:bg-darkSprint-30">
                   {currentUsers.length === 0 ? (
                     <tr>
-                      <td colSpan="4" className="px-6 py-4 text-center text-gray-500 dark:text-dark-50">
+                      <td
+                        colSpan="4"
+                        className="px-6 py-4 text-center text-gray-500 dark:text-dark-50"
+                      >
                         No users found
                       </td>
                     </tr>
@@ -117,7 +136,10 @@ const Userspage = () => {
                                 Edit
                               </button>
                             </EditUserModal>
-                            <DeleteUserModal user={user} onDeleteSuccess={refreshMembers}>
+                            <DeleteUserModal
+                              user={user}
+                              onDeleteSuccess={refreshMembers}
+                            >
                               <button className="rounded-lg border border-red-500 bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:border-red-700 hover:bg-red-600 focus:z-10 focus:outline-none focus:ring-4 focus:ring-red-100">
                                 Delete
                               </button>
@@ -133,33 +155,35 @@ const Userspage = () => {
 
             {/* Pagination Controls */}
             {totalPages > 1 && (
-              <div className="flex justify-center items-center space-x-2 mt-4">
+              <div className="mt-4 flex items-center justify-center space-x-2">
                 <button
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className="p-2 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed dark:hover:bg-darkButton-20 dark:text-dark-50"
+                  className="rounded-lg p-2 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 dark:text-dark-50 dark:hover:bg-darkButton-20"
                 >
                   <FaChevronLeft className="h-4 w-4" />
                 </button>
 
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-                  <button
-                    key={pageNum}
-                    onClick={() => handlePageChange(pageNum)}
-                    className={`px-3 py-1 rounded-lg ${
-                      currentPage === pageNum
-                        ? "bg-button text-white"
-                        : "hover:bg-gray-100 dark:text-dark-50 dark:hover:bg-darkButton-20"
-                    }`}
-                  >
-                    {pageNum}
-                  </button>
-                ))}
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  (pageNum) => (
+                    <button
+                      key={pageNum}
+                      onClick={() => handlePageChange(pageNum)}
+                      className={`rounded-lg px-3 py-1 ${
+                        currentPage === pageNum
+                          ? "bg-button text-white"
+                          : "hover:bg-gray-100 dark:text-dark-50 dark:hover:bg-darkButton-20"
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  )
+                )}
 
                 <button
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages}
-                  className="p-2 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed dark:hover:bg-darkButton-20 dark:text-dark-50"
+                  className="rounded-lg p-2 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 dark:text-dark-50 dark:hover:bg-darkButton-20"
                 >
                   <FaChevronRight className="h-4 w-4" />
                 </button>

@@ -27,7 +27,7 @@ const TopNavbar: React.FC = () => {
   const toggleDropdown = () => setShowDropdown((prev) => !prev);
   const isSuperAdmin = user.role === "superAdmin"
   const isAdminOrManager =
-    user && (user.role === "admin" || user.role === "manager");
+    user && (user.role === "admin");
   const isProMember = company?.proMember
   const isOnTrial = company?.subscriptionType === "Trial"
 

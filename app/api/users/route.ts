@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { parseCookies, parsePageCookies } from "@/utils/cookies";
 import bcrypt from "bcryptjs";
@@ -8,13 +8,12 @@ import { getBaseUrl } from "@/utils/helpers";
 const prisma = new PrismaClient();
 
 export async function GET() {
-  
   const { companyId } = parsePageCookies("user");
   try {
     const users = await prisma.defaultUser.findMany({
-      where:{
-        companyId ,
-      }
+      where: {
+        companyId,
+      },
     });
 
     return NextResponse.json({ users }, { status: 200 });
@@ -32,6 +31,9 @@ export async function POST(req: Request) {
     const { name, email } = await req.json();
     const { id: projectId } = parseCookies(req, "project");
     const { companyId } = parseCookies(req, "user");
+
+    const url = new URL(req.url);
+    const role = url.searchParams.get("role") === "manager" ? "manager" : "member";
 
     const resetToken = jwt.sign(
       { email: email, projectId: projectId },
@@ -80,7 +82,13 @@ export async function POST(req: Request) {
     } else {
       const hashedPassword = await bcrypt.hash("member@f2-fin", 10);
       const newUser = await prisma.defaultUser.create({
-        data: { name, email, password: hashedPassword, companyId: parseInt(companyId) },
+        data: {
+          name,
+          email,
+          password: hashedPassword,
+          companyId: parseInt(companyId),
+          role,
+        },
       });
 
       const newMember = await prisma.member.create({
