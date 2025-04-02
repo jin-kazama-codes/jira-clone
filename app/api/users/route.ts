@@ -26,14 +26,14 @@ export async function GET() {
   }
 }
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
     const { name, email } = await req.json();
     const { id: projectId } = parseCookies(req, "project");
     const { companyId } = parseCookies(req, "user");
 
-    const role =
-      req.nextUrl.searchParams.get("role") === "manager" ? "manager" : "member";
+    const url = new URL(req.url);
+    const role = url.searchParams.get("role") === "manager" ? "manager" : "member";
 
     const resetToken = jwt.sign(
       { email: email, projectId: projectId },
