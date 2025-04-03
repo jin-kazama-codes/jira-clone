@@ -16,25 +16,42 @@ const ClearFilters: React.FC = () => {
     setSprints,
   } = useFiltersContext();
   const { showAssignedTasks } = useCookie("project");
+  const user = useCookie("user");
+  const isAdminOrManager =
+    user && (user.role === "admin" || user.role === "manager");
 
-  function clearAllFilters() {
-    setIssueTypes([]);
-    setEpics([]);
-    setSprints([]);
-    setSearch("");
-
-    // Only clear assignees if showAssignedTasks is false
-    if (!showAssignedTasks) {
-      setAssignees([]);
+    function clearAllFilters() {
+      setIssueTypes([]);
+      setEpics([]);
+      setSprints([]);
+      setSearch("");
+    
+      if (isAdminOrManager || !showAssignedTasks) {
+        setAssignees([]);
+      }
     }
-  }
+    
 
+  // Admins/Managers: Show only if assignees.length >= 1
   if (
+    isAdminOrManager &&
+    assignees.length < 1 &&
     issueTypes.length === 0 &&
     epics.length === 0 &&
     sprints.length === 0 &&
-    search === "" &&
-    (assignees.length === 0 || (showAssignedTasks && assignees.length >= 1))
+    search === ""
+  ) {
+    return null;
+  }
+
+  // Regular users: Show only if showAssignedTasks is false
+  if (
+    !isAdminOrManager &&
+    showAssignedTasks &&
+    issueTypes.length === 0 &&
+    epics.length === 0 &&
+    sprints.length === 0 &&
+    search === ""
   ) {
     return null;
   }
@@ -43,7 +60,7 @@ const ClearFilters: React.FC = () => {
     <Button
       customColors
       onClick={clearAllFilters}
-      className="text-sm px-4 hover:bg-gray-200 dark:hover:bg-darkSprint-30 dark:bg-darkSprint-20 dark:text-dark-50"
+      className="px-4 text-sm hover:bg-gray-200 dark:bg-darkSprint-20 dark:text-dark-50 dark:hover:bg-darkSprint-30"
     >
       Clear Filters
     </Button>

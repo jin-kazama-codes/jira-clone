@@ -25,7 +25,7 @@ const UpdateProject: React.FC = () => {
     const projectId = useCookie("project").id;
     const name = useCookie("project").name;
     const cloneChild = useCookie("project").cloneChild;
-    const showAssignedTasks = useCookie("project").showAssignedTasks;
+    const { showAssignedTasks } = useCookie("project");
     const workingDays = parseInt(useCookie("project").workingDays, 10) || 5;
     if (projectId && name) {
       setFormData((prevData) => ({
@@ -74,7 +74,7 @@ const UpdateProject: React.FC = () => {
           cloneChild: updatedProject.cloneChild,
           workingDays: updatedProject.workingDays,
           key: updatedProject.key,
-          showAssignedTasks: updatedProject.showAssignedTasks
+          showAssignedTasks: updatedProject.showAssignedTasks,
         });
         router.push("/backlog");
       } else {
