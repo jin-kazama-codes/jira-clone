@@ -6,6 +6,7 @@ import { UserModal } from "./modals/add-people/index";
 import { AddPeopleIcon } from "./svgs";
 import { useCookie } from "@/hooks/use-cookie";
 import { TooltipWrapper } from "./ui/tooltip";
+import { useEffect } from "react";
 
 const colorPalette = [
   "#4A9D8E",
@@ -35,8 +36,16 @@ const Members = () => {
     email: "",
   };
   const user = useCookie("user");
+  const { showAssignedTasks } = useCookie("project");
+
+  useEffect(() => {
+    if (showAssignedTasks) {
+      setAssignees(assignees.length === 0 ? [user.id] : []);
+    }
+  }, [showAssignedTasks]);
 
   function handleAssigneeFilter(id: string) {
+    if (showAssignedTasks) return;
     setAssignees((prev) => {
       if (prev.includes(id)) return prev.filter((a) => a !== id);
       return [...prev, id];
@@ -70,18 +79,23 @@ const Members = () => {
   const needsScroll = totalMembers > 7;
 
   return (
-    <div
-
-      className="flex bg-transparent  items-center">
+    <div className="flex items-center  bg-transparent">
       <div className="relative bg-transparent">
         {/* Subtle fade effects */}
         {/* <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-6 bg-gradient-to-r from-white to-transparent opacity-90" /> */}
-        {needsScroll && (<div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-6 bg-gradient-to-l from-transparent to-transparent opacity-90" />
+        {needsScroll && (
+          <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-6 bg-gradient-to-l from-transparent to-transparent opacity-90" />
         )}
 
         {/* Scrollable container with subtle shadow */}
-        <div className={`${needsScroll ? 'w-56 overflow-x-auto [-ms-scrollbar:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden' : ''} rounded-xl  py-2`}>
-          <div className={`flex ${needsScroll ? 'px-3' : ''}`}>
+        <div
+          className={`${
+            needsScroll
+              ? "w-56 overflow-x-auto [-ms-scrollbar:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              : ""
+          } rounded-xl  py-2`}
+        >
+          <div className={`flex ${needsScroll ? "px-3" : ""}`}>
             {[...members, unassigned].map((member, index) => {
               const initials = getInitials(member.name);
               const bgColor = getColorForInitial(member.id, index);
@@ -96,9 +110,11 @@ const Members = () => {
                     customColors
                     customPadding
                     data-state={
-                      assignees.includes(member.id) ? "selected" : "not-selected"
+                      assignees.includes(member.id)
+                        ? "selected"
+                        : "not-selected"
                     }
-                    className="flex border-spacing-2 rounded-full dark:bg-darkSprint-20 border-2 border-transparent bg-white p-0.5 transition-all duration-75 hover:-mt-1.5 [&[data-state=selected]]:border-inprogress"
+                    className="flex border-spacing-2 rounded-full border-2 border-transparent bg-white p-0.5 transition-all duration-75 hover:-mt-1.5 dark:bg-darkSprint-20 [&[data-state=selected]]:border-inprogress"
                   >
                     {member.avatar ? (
                       <Avatar src={member.avatar} alt={`${member.name}`} />
@@ -108,7 +124,9 @@ const Members = () => {
                           className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-300"
                           style={{ backgroundColor: bgColor }}
                         >
-                          <span className="font-bold text-white">{initials}</span>
+                          <span className="font-bold text-white">
+                            {initials}
+                          </span>
                         </div>
                       </TooltipWrapper>
                     )}
@@ -124,7 +142,7 @@ const Members = () => {
         <UserModal refetch={refetch}>
           <button>
             <AddPeopleIcon
-              className="ml-3 rounded-full dark:bg-darkSprint-20 dark:text-dark-50 bg-gray-200 p-1 text-gray-500"
+              className="ml-3 rounded-full bg-gray-200 p-1 text-gray-500 dark:bg-darkSprint-20 dark:text-dark-50"
               size={35}
             />
           </button>

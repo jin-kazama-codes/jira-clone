@@ -53,24 +53,28 @@ export type GetIssuesResponse = {
 };
 
 export async function GET(req: NextRequest) {
-  const { id: projectId } = parseCookies(req, "project");
+  const { id: projectId, showAssignedTasks } = parseCookies(req, "project");
+  const { id: userId, role: userRole } = parseCookies(req, "user");
   const { searchParams } = new URL(req.url);
+  const isAdminOrManager =
+    userRole && (userRole === "admin" || userRole === "manager");
 
   let sprintId = searchParams.get("sprintId");
-  if(sprintId === "undefined" || sprintId === "backlog") {
+  if (sprintId === "undefined" || sprintId === "backlog") {
     sprintId = null;
   }
 
-  // Fetch active issues
+  // Fetch active issues, applying `showAssignedTasks` filter
   const activeIssues = await prisma.issue.findMany({
     where: {
       projectId: projectId,
       isDeleted: false,
       sprintId: sprintId ? sprintId : null,
+      ...(showAssignedTasks && !isAdminOrManager ? { assigneeId: userId } : {}), // Apply assignee filter if needed
     },
   });
 
-  if (!activeIssues || activeIssues.length === 0) {
+  if (!activeIssues.length) {
     return NextResponse.json({ issues: [] });
   }
 
@@ -96,10 +100,10 @@ export async function GET(req: NextRequest) {
     },
   });
 
-  // Generate client-ready issues (without children for now)
+  // Generate client-ready issues
   const issuesForClient = generateIssuesForClient(activeIssues, users);
 
-  // Attach child issues to their respective parent issues AFTER issuesForClient is generated
+  // Attach child issues to their respective parent issues
   const issuesWithChildren = issuesForClient.map((issue) => ({
     ...issue,
     children: childIssues.filter((child) => child.parentId === issue.id),
@@ -107,8 +111,6 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json({ issues: issuesWithChildren });
 }
-
-
 
 const createChildIssues = async (
   KEY,
