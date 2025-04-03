@@ -29,7 +29,7 @@
 - `npm run dev`
 - App should now be running on `http://localhost:3000/`
 
-## What's Pending?
+## <h1>What's Pending?</h1>
 
 There are features pending from this showcase product which should exist in a real product:
 

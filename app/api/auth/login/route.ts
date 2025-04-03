@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/server/db";
 import { DefaultUser } from "@prisma/client";
-import bcrypt from 'bcryptjs';
-
+import bcrypt from "bcryptjs";
 
 export async function POST(request: Request) {
   const { email, password }: Partial<DefaultUser> = await request.json();
@@ -13,10 +12,10 @@ export async function POST(request: Request) {
   });
 
   if (!user) {
-    return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
 
-  const isPasswordHashed = user.password.startsWith('$2');
+  const isPasswordHashed = user.password.startsWith("$2");
 
   let isMatch;
   if (isPasswordHashed) {
@@ -28,22 +27,22 @@ export async function POST(request: Request) {
   }
 
   if (!isMatch) {
-    return NextResponse.json({ error: 'Invalid password' }, { status: 401 });
+    return NextResponse.json({ error: "Invalid password" }, { status: 401 });
   }
 
   // Omit the password from the user object in the response
   const { password: _, ...userWithoutPassword } = user;
 
   return NextResponse.json(
-    { message: 'Login successful', user: userWithoutPassword },
+    { message: "Login successful", user: userWithoutPassword },
     { status: 200 }
   );
 }
 
-
 export async function PATCH(request: Request) {
   try {
-    const { projectId, name, cloneChild, workingDays } = await request.json();
+    const { projectId, name, cloneChild, workingDays, showAssigned } =
+      await request.json();
 
     // Ensure that projectId, name, and cloneChild are provided
     if (
@@ -68,7 +67,7 @@ export async function PATCH(request: Request) {
 
     const updatedProject = await prisma.project.update({
       where: { id: parseInt(projectId) },
-      data: { name, cloneChild, workingDays }, // Update both name and cloneChild
+      data: { name, cloneChild, workingDays, showAssignedTasks: showAssigned }, // Update both name and cloneChild
     });
 
     return NextResponse.json(

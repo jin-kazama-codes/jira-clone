@@ -59,10 +59,13 @@ const Backlog: React.FC = ({ state, project }) => {
       <div ref={headerRef}>
         <BacklogHeader project={project} />
       </div>
-      <div ref={containerRef} className="min-w-full max-w-max flex overflow-hidden">
+      <div
+        ref={containerRef}
+        className="flex min-w-full max-w-max overflow-hidden"
+      >
         <div
           className={clsx(
-            "w-full overflow-y-auto h-[68vh] rounded-xl custom-scrollbar",
+            "custom-scrollbar h-[68vh] w-full overflow-y-auto rounded-xl",
             issueKey ? "md:w-4/6 " : "w-full",
             issueKey && "pb-5 pr-2"
           )}
@@ -77,7 +80,7 @@ const Backlog: React.FC = ({ state, project }) => {
         </div>
 
         {issueKey && (
-          <div className="hidden md:block w-2/6 h-[68vh] rounded-xl overflow-y-auto custom-scrollbar">
+          <div className="custom-scrollbar hidden h-[68vh] w-2/6 overflow-y-auto rounded-xl md:block">
             <IssueDetails />
           </div>
         )}
