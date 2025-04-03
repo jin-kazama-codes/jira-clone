@@ -37,15 +37,17 @@ const Members = () => {
   };
   const user = useCookie("user");
   const { showAssignedTasks } = useCookie("project");
+  const isAdminOrManager =
+    user && (user.role === "admin" || user.role === "manager");
 
   useEffect(() => {
-    if (showAssignedTasks) {
+    if (showAssignedTasks && !isAdminOrManager) {
       setAssignees(assignees.length === 0 ? [user.id] : []);
     }
   }, [showAssignedTasks]);
 
   function handleAssigneeFilter(id: string) {
-    if (showAssignedTasks) return;
+    if (showAssignedTasks && !isAdminOrManager) return;
     setAssignees((prev) => {
       if (prev.includes(id)) return prev.filter((a) => a !== id);
       return [...prev, id];
