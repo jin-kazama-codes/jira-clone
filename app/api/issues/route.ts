@@ -56,21 +56,21 @@ export async function GET(req: NextRequest) {
   const { id: projectId, showAssignedTasks } = parseCookies(req, "project");
   const { id: userId, role: userRole } = parseCookies(req, "user");
   const { searchParams } = new URL(req.url);
-  const isAdminOrManager =
-    userRole && (userRole === "admin" || userRole === "manager");
+  
+  const isAdminOrManager = userRole && (userRole === "admin" || userRole === "manager");
 
   let sprintId = searchParams.get("sprintId");
   if (sprintId === "undefined" || sprintId === "backlog") {
     sprintId = null;
   }
 
-  // Fetch active issues, applying `showAssignedTasks` filter
+  // Fetch active issues
   const activeIssues = await prisma.issue.findMany({
     where: {
       projectId: projectId,
       isDeleted: false,
       sprintId: sprintId ? sprintId : null,
-      ...(showAssignedTasks && !isAdminOrManager ? { assigneeId: userId } : {}), // Apply assignee filter if needed
+      ...(showAssignedTasks && !isAdminOrManager ? { assigneeId: userId } : {}), // Only filter if not admin/manager
     },
   });
 
@@ -111,6 +111,7 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json({ issues: issuesWithChildren });
 }
+
 
 const createChildIssues = async (
   KEY,

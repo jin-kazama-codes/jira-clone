@@ -41,7 +41,7 @@ export async function POST(request: Request) {
 
 export async function PATCH(request: Request) {
   try {
-    const { projectId, name, cloneChild, workingDays, showAssigned } =
+    const { projectId, name, cloneChild, workingDays, showAssignedTasks } =
       await request.json();
 
     // Ensure that projectId, name, and cloneChild are provided
@@ -67,7 +67,7 @@ export async function PATCH(request: Request) {
 
     const updatedProject = await prisma.project.update({
       where: { id: parseInt(projectId) },
-      data: { name, cloneChild, workingDays, showAssignedTasks: showAssigned }, // Update both name and cloneChild
+      data: { name, cloneChild, workingDays, showAssignedTasks }, // Update both name and cloneChild
     });
 
     return NextResponse.json(
