@@ -106,7 +106,7 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
       openAuthModal();
       return;
     }
-    if (imageUrl?.length === 0 && ! state) {
+    if (imageUrl?.length === 0 && !state) {
       setIsWritingComment(false);
       return;
     }
@@ -180,10 +180,19 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
                   handleImageUpload(e);
                 }}
                 multiple
-                accept="image/*, application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, text/plain"
-                ref={fileInputRef} // Attach the ref to the input
-                style={{ display: "none" }} // Hide the file input
+                accept="
+    image/*,
+    application/pdf,
+    application/msword,
+    application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+    text/plain,
+    application/vnd.ms-excel,
+    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+  "
+                ref={fileInputRef}
+                style={{ display: "none" }}
               />
+
               <div className="">
                 {uploading && !image ? (
                   <div className="loader"></div>
