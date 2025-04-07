@@ -48,26 +48,19 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
     }
   };
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
+  const handleImageUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    newFiles: File[]
+  ) => {
+    if (!newFiles || newFiles.length === 0) return;
 
-    if (!files || files.length === 0 || files.length > 5) {
-      alert("You can upload up to 5 files.");
-      setImage(null);
-      return;
-    }
-
+    setUploading(true);
     const fileURLs: string[] = [];
 
-    // Loop through each file and upload to S3
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      // Prepare formData for the API request
-      setUploading(true);
+    for (let file of newFiles) {
       const formData = new FormData();
       formData.append("image", file);
 
-      // Upload to the backend (S3) and get the file URL
       try {
         const response = await fetch("/api/attachment", {
           method: "POST",
@@ -88,12 +81,8 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
 
     setUploading(false);
 
-    // After all files are uploaded, update the state with the file URLs
-    if (fileURLs.length > 0) {
-      setImageUrl(fileURLs);
-    } else {
-      console.error("No file URLs returned.");
-    }
+    // Append new URLs to existing ones
+    setImageUrl((prev) => [...(prev || []), ...fileURLs]);
   };
 
   useKeydownListener(scrollRef, ["m", "M"], handleEdit);
@@ -176,8 +165,16 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
                   const selectedFiles = e.target.files
                     ? Array.from(e.target.files)
                     : [];
-                  setImage(selectedFiles); // Set the selected files in state
-                  handleImageUpload(e);
+
+                  const allFiles = [...(image || []), ...selectedFiles];
+
+                  if (allFiles.length > 5) {
+                    alert("You can upload up to 5 files.");
+                    return;
+                  }
+
+                  setImage(allFiles);
+                  handleImageUpload(e, selectedFiles); // pass only new files to upload
                 }}
                 multiple
                 accept="
