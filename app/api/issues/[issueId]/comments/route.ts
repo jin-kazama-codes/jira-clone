@@ -47,7 +47,7 @@ export async function GET(
 }
 
 const postCommentBodyValidator = z.object({
-  content: z.string(),
+  content: z.string().optional(),
   authorId: z.number(),
   imageURL: z.string().optional(),
 });
@@ -77,10 +77,12 @@ export async function POST(
 
   const { data: valid } = validated;
 
+  console.log("data", valid)
+
   const comment = await prisma.comment.create({
     data: {
       issueId: issueId,
-      content: valid.content,
+      content: valid.content ?? '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Attachment","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}' ,
       authorId: valid.authorId,
       imageURL: valid.imageURL ?? undefined,
     },
