@@ -106,7 +106,7 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
       openAuthModal();
       return;
     }
-    if (!state) {
+    if (imageUrl?.length === 0 && ! state) {
       setIsWritingComment(false);
       return;
     }
