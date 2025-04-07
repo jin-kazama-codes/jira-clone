@@ -25,8 +25,7 @@ async function uploadFileToS3(
   return fileName;
 }
 
-// Main API route handler
-export async function POST(request: NextRequest, response: NextResponse) {
+export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
     const file = formData.get("image") as Blob | null;
@@ -40,13 +39,16 @@ export async function POST(request: NextRequest, response: NextResponse) {
     const mimeType = file.type;
     const fileExtension = mimeType.split("/")[1];
 
-    // Determine the appropriate content type
-    let contentType: string;
-    if (mimeType.startsWith("image/")) {
-      contentType = "image/jpeg"; // or match the specific image type
-    } else if (mimeType === "application/pdf") {
-      contentType = "application/pdf";
-    } else {
+    // Supported MIME types
+    const supportedMimeTypes: Record<string, string> = {
+      "image/jpeg": "jpeg",
+      "image/png": "png",
+      "application/pdf": "pdf",
+      "application/vnd.ms-excel": "xls",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": "xlsx",
+    };
+
+    if (!Object.keys(supportedMimeTypes).includes(mimeType)) {
       return NextResponse.json(
         { error: "Unsupported file type." },
         { status: 400 }
@@ -56,8 +58,8 @@ export async function POST(request: NextRequest, response: NextResponse) {
     const buffer = Buffer.from(await file.arrayBuffer());
     const fileName = await uploadFileToS3(
       buffer,
-      uuid() + "." + fileExtension,
-      contentType
+      uuid() + "." + supportedMimeTypes[mimeType],
+      mimeType
     );
 
     return NextResponse.json({

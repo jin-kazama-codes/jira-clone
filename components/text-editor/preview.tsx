@@ -38,17 +38,14 @@ export const EditorPreview: React.FC<{
   };
 
   const isDocument = (url: string) => {
-    return /\.(pdf|doc|docx)$/i.test(url);
+    return /\.(pdf|doc|docx|xls|xlsx)$/i.test(url);
   };
 
   let documentIndex = 1;
 
-
   return (
-    <EditorComposer  readonly={true} jsonState={jsonState}>
-      <div
-        className={`w-full rounded-md bg-transparent relative`}
-      >
+    <EditorComposer readonly={true} jsonState={jsonState}>
+      <div className={`relative w-full rounded-md bg-transparent`}>
         <RichTextPlugin
           ErrorBoundary={LexicalErrorBoundary}
           contentEditable={
@@ -66,7 +63,7 @@ export const EditorPreview: React.FC<{
           }
         />
         {action === "comment" && (
-          <div className="flex my-2 gap-4 flex-nowrap">
+          <div className="my-2 flex flex-nowrap gap-4">
             {images &&
               images.map((image, index) => (
                 <div key={index} className="flex items-center gap-2">
