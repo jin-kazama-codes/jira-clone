@@ -46,6 +46,7 @@ model Company {
 model Member {
   id        Int     @id
   projectId Int
+  manager   Boolean?  @default(false)
   project   Project @relation(fields: [projectId], references: [id])
 }
 

@@ -147,9 +147,9 @@ const UserModal: React.FC<UserModalProps> = ({
         <ModalOverlay />
         <ModalContent>
           <div className="p-5 ">
-            <ModalTitle className="text-white ">Add Member</ModalTitle>
+            <ModalTitle className="text-white ">Add {manager ? "Manager" : "Member"}</ModalTitle>
             <ModalDescription className="mt-1 text-white dark:text-dark-50">
-              Enter the name and email of the new user.
+              Enter the name and email of the {manager ? "manager" : "new user"}.
             </ModalDescription>
           </div>
           <form
@@ -208,7 +208,7 @@ const UserModal: React.FC<UserModalProps> = ({
               type="submit"
               className="flex w-full justify-center rounded-xl !bg-button text-white hover:!bg-buttonHover dark:!bg-dark-0"
             >
-              Add
+              Add {manager ? "Manager" : "Member"}
             </Button>
           </form>
         </ModalContent>

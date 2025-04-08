@@ -14,13 +14,15 @@ type MembersParams = {
 
 export async function GET(req: NextRequest, { params }: MembersParams) {
   const { project_id } = params;
+
+  // Step 1: Get all members of the project
   const members = await prisma.member.findMany({
     where: {
       projectId: parseInt(project_id),
     },
   });
 
-  // USE THIS IF RUNNING LOCALLY -----------------------
+  // Step 2: Get corresponding user details
   const users = await prisma.defaultUser.findMany({
     where: {
       id: {
@@ -29,6 +31,15 @@ export async function GET(req: NextRequest, { params }: MembersParams) {
     },
   });
 
-  // return NextResponse.json<GetProjectMembersResponse>({ members:users });
-  return NextResponse.json({ members: users });
+  // Step 3: Merge role info from member table
+  const membersWithRole = users.map((user) => {
+    const member = members.find((m) => m.id === user.id);
+    return {
+      ...user,
+      role: member?.manager ? "manager" : "member", // Inject project-specific role
+    };
+  });
+
+  return NextResponse.json({ members: membersWithRole });
 }
+
