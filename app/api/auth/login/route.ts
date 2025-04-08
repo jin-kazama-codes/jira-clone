@@ -6,7 +6,6 @@ import bcrypt from "bcryptjs";
 export async function POST(request: Request) {
   const { email, password }: Partial<DefaultUser> = await request.json();
 
-  // Find the user by email
   const user = await prisma.defaultUser.findFirst({
     where: { email },
   });
@@ -16,13 +15,11 @@ export async function POST(request: Request) {
   }
 
   const isPasswordHashed = user.password.startsWith("$2");
-
   let isMatch;
+
   if (isPasswordHashed) {
-    // If password is hashed, use bcrypt to compare
     isMatch = await bcrypt.compare(password, user.password);
   } else {
-    // If password is not hashed, compare directly
     isMatch = password === user.password;
   }
 
@@ -30,14 +27,38 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid password" }, { status: 401 });
   }
 
-  // Omit the password from the user object in the response
+  // Omit password from response
   const { password: _, ...userWithoutPassword } = user;
+  let role = user.role;
+
+  // If role is not superAdmin or admin from defaultUser table
+  if (role !== "superAdmin" && role !== "admin") {
+    const memberships = await prisma.member.findMany({
+      where: {
+        id: user.id,
+      },
+    });
+  
+    if (memberships.length > 0) {
+      const isManager = memberships.some((m) => m.manager === true);
+      role = isManager ? "manager" : "member";
+    } else {
+      role = "member"; // Fallback if no memberships found
+    }
+  }
+  
+  const finalUser = {
+    ...userWithoutPassword,
+    role,
+  };
+  
 
   return NextResponse.json(
-    { message: "Login successful", user: userWithoutPassword },
+    { message: "Login successful", user: finalUser },
     { status: 200 }
   );
 }
+
 
 export async function PATCH(request: Request) {
   try {

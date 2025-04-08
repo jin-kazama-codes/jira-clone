@@ -33,17 +33,17 @@ export async function POST(req: Request) {
     const { companyId } = parseCookies(req, "user");
 
     const url = new URL(req.url);
-    const role = url.searchParams.get("role") === "manager" ? "manager" : "member";
+    const role = url.searchParams.get("role") === "manager";
 
     const resetToken = jwt.sign(
       { email: email, projectId: projectId },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
+      process.env.JWT_SECRET!,
+      { expiresIn: "3d" }
     );
     const ProjectToken = jwt.sign(
       { projectId: projectId },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
+      process.env.JWT_SECRET!,
+      { expiresIn: "3d" }
     );
     const baseUrl = getBaseUrl();
     const resetUrl = `${baseUrl}/reset-password?token=${resetToken}`;
@@ -71,11 +71,12 @@ export async function POST(req: Request) {
           data: {
             id: existingUser.id,
             projectId,
+            manager: role, 
           },
         });
 
         return NextResponse.json(
-          { user: existingUser, member: newMember, projectUrl: projectUrl },
+          { user: existingUser, member: newMember, projectUrl },
           { status: 201 }
         );
       }
@@ -87,7 +88,6 @@ export async function POST(req: Request) {
           email,
           password: hashedPassword,
           companyId: parseInt(companyId),
-          role,
         },
       });
 
@@ -95,6 +95,7 @@ export async function POST(req: Request) {
         data: {
           id: newUser.id,
           projectId,
+          manager: role, 
         },
       });
 
