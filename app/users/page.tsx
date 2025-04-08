@@ -20,20 +20,19 @@ const Userspage = () => {
     await refetch();
   };
 
-  // Filter users based on search query
   const filteredUsers =
-    members?.filter(
-      (user) =>
-        user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user?.role?.toLowerCase().includes(searchQuery.toLowerCase())
-    ) || [];
+  members?.filter(
+    (user) =>
+      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user?.role?.toLowerCase().includes(searchQuery.toLowerCase())
+  ) || [];
 
-  // Calculate pagination
-  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
-  const indexOfLastUser = currentPage * usersPerPage;
-  const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+const indexOfLastUser = currentPage * usersPerPage;
+const indexOfFirstUser = indexOfLastUser - usersPerPage;
+const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+
 
   // Reset to first page when search query changes
   useEffect(() => {
