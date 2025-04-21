@@ -28,7 +28,7 @@ const Project: React.FC = async () => {
           }`}
         >
           {/* Left: Project List */}
-          {projects && (
+          {projects ? (
             <div
               className={
                 isAdminOrManager
@@ -38,7 +38,7 @@ const Project: React.FC = async () => {
             >
               <ProjectList projects={projects} admin={isAdminOrManager} />
             </div>
-          )}
+          ): (<div>Loding projects...</div>)}
           {/* Right: Create Project Form */}
           {isAdminOrManager && (
             <div className="lg:col-span-1">
