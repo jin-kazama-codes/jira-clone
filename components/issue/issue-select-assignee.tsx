@@ -139,9 +139,9 @@ const IssueAssigneeSelect: React.FC<{
           </Fragment>
         </SelectValue>
       </SelectTrigger>
-      <SelectPortal className="z-50 w-full">
+      <SelectPortal className="z-50 w-full !h-64">
         <SelectContent position="popper">
-          <SelectViewport className="w-full rounded-md border border-gray-300 bg-white pt-2 shadow-md dark:border-darkSprint-30 dark:bg-darkSprint-20 dark:text-dark-50">
+          <SelectViewport className="w-full  rounded-md border border-gray-300 bg-white pt-2 shadow-md dark:border-darkSprint-30 dark:bg-darkSprint-20 dark:text-dark-50">
             <SelectGroup>
               {members &&
                 [...members, unassigned].map((member) => {
