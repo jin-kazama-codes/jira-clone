@@ -58,7 +58,7 @@ export async function POST(
   req: NextRequest,
   { params }: { params: { issueId: string } }
 ) {
-  const userId = parseCookies(req, 'user').id;
+  const userId = parseCookies(req, "user").id;
   if (!userId) return new Response("Unauthenticated request", { status: 403 });
   // const { success } = await ratelimit.limit(userId);
   // if (!success) return new Response("Too many requests", { status: 429 });
@@ -77,12 +77,21 @@ export async function POST(
 
   const { data: valid } = validated;
 
-  console.log("data", valid)
+  const fallbackContent =
+    '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Attachment","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}';
+
+  const emptyEditorContent =
+    '{"root":{"children":[{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1}],"direction":null,"format":"","indent":0,"type":"root","version":1}}';
 
   const comment = await prisma.comment.create({
     data: {
       issueId: issueId,
-      content: valid.content ?? '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Attachment","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}' ,
+      content: 
+      valid.content === undefined || 
+      valid.content === null || 
+      valid.content === emptyEditorContent 
+        ? fallbackContent 
+        : valid.content,
       authorId: valid.authorId,
       imageURL: valid.imageURL ?? undefined,
     },
