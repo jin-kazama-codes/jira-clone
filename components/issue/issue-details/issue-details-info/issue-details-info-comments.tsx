@@ -308,11 +308,7 @@ const CommentPreview: React.FC<{
           />
         ) : (
           <EditorPreview
-            key={
-              updatedComment.id +
-              JSON.parse(updatedComment.content).root.children[0].children[0]
-                .text
-            }
+            key={updatedComment.id}
             className="!text-dark-50"
             action="comment"
             content={
