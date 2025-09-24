@@ -43,6 +43,7 @@ const Backlog: React.FC = ({ state, project }) => {
     {
       initialData: state,
       getNextPageParam: (lastPage) => lastPage.nextPage ?? false,
+      refetchOnWindowFocus: false,
     }
   );
 
