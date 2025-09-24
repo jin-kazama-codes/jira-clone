@@ -19,6 +19,10 @@ import { IssueAssigneeSelect } from "../issue/issue-select-assignee";
 import { DARK_COLORS, LIGHT_COLORS } from "../color-picker";
 import { useCookie } from "@/hooks/use-cookie";
 import { OriginalEstimate } from "../original-estimate";
+import { IssueSelectType } from "../issue/issue-select-type";
+import { useIsAuthenticated } from "@/hooks/use-is-authed";
+import { useIssues } from "@/hooks/query-hooks/use-issues";
+import { toast } from "../toast";
 
 const getIssueKeyColorClass = (type: String) => {
   switch (type) {
@@ -51,6 +55,29 @@ const Issue: React.FC<{
   const user = useCookie("user");
   const isAdminOrManager =
     user && (user.role === "admin" || user.role === "manager");
+  const { updateIssue } = useIssues();
+  const [isAuthenticated, openAuthModal] = useIsAuthenticated();
+
+  function handleSelectType(type: IssueType["type"]) {
+    if (!isAuthenticated) {
+      openAuthModal();
+      return;
+    }
+    updateIssue(
+      {
+        issueId: issue.id,
+        type,
+      },
+      {
+        onSuccess: (data) => {
+          toast.success({
+            message: `Issue type updated to ${data.type}`,
+            description: "Issue type changed",
+          });
+        },
+      }
+    );
+  }
 
   return (
     <Draggable draggableId={issue.id} index={index}>
@@ -76,21 +103,27 @@ const Issue: React.FC<{
               : "border-b-slate-200 dark:border-b-darkButton-0"
           )}
         >
-          {isAdminOrManager && (<input
-            type="checkbox"
-            checked={onChecked}
-            onClick={(e) => e.stopPropagation()} // Prevent parent click event from triggering
-            onChange={(e) => {
-              e.stopPropagation(); // Prevent click event from propagating on checkbox change
-              onHandleCheck();
-            }}
-            className="form-checkbox mr-3 h-3 w-3 rounded-sm"
-          />)}
+          {isAdminOrManager && (
+            <input
+              type="checkbox"
+              checked={onChecked}
+              onClick={(e) => e.stopPropagation()} // Prevent parent click event from triggering
+              onChange={(e) => {
+                e.stopPropagation(); // Prevent click event from propagating on checkbox change
+                onHandleCheck();
+              }}
+              className="form-checkbox mr-3 h-3 w-3 rounded-sm"
+            />
+          )}
           <div
             data-state={isEditing ? "editing" : "not-editing"}
             className="flex w-fit items-center gap-x-2 rounded-xl [&[data-state=editing]]:w-full [&[data-state=not-editing]]:overflow-x-hidden"
           >
-            <IssueIcon issueType={issue.type} />
+            <IssueSelectType
+              key={issue.id + issue.type}
+              currentType={issue.type}
+              onSelect={handleSelectType}
+            />
             <div
               data-state={issue.status}
               className={clsx(
@@ -120,7 +153,7 @@ const Issue: React.FC<{
                   e.stopPropagation();
                   setIsEditing(!isEditing);
                 }}
-                className="invisible w-0 px-0 group-hover:visible group-hover:w-fit group-hover:bg-transparent group-hover:px-1.5 dark:text-dark-50 dark:group-hover:hover:bg-darkSprint-20 group-hover:hover:bg-gray-200 "
+                className="invisible w-0 px-0 group-hover:visible group-hover:w-fit group-hover:bg-transparent group-hover:px-1.5 group-hover:hover:bg-gray-200 dark:text-dark-50 dark:group-hover:hover:bg-darkSprint-20 "
               >
                 <MdEdit className="text-sm" />
               </Button>
@@ -151,7 +184,7 @@ const Issue: React.FC<{
                 isEditing={isEditingEstimate}
                 page="backlog"
                 issue={issue}
-                className="rounded-xl bg-gray-300 dark:bg-darkSprint-20 dark:text-dark-50  px-2"
+                className="rounded-xl bg-gray-300 px-2 dark:bg-darkSprint-20  dark:text-dark-50"
               />
             </div>
             <div className="flex w-20 items-center justify-end gap-x-2">
@@ -162,8 +195,8 @@ const Issue: React.FC<{
                     asChild
                     className=" flex items-center gap-x-2 bg-opacity-30 px-1.5 text-xs font-semibold  "
                   >
-                    <div className="invisible !rounded-full !bg-gray-300 p-1.5 group-hover:visible group-hover:bg-gray-300  dark:group-hover:!bg-darkSprint-40 dark:!bg-transparent group-hover:hover:bg-gray-300 [&[data-state=open]]:visible [&[data-state=open]]:bg-gray-300">
-                      <BsThreeDots className="dark:!text-dark-50 text-black sm:text-xl" />
+                    <div className="invisible !rounded-full !bg-gray-300 p-1.5 group-hover:visible group-hover:bg-gray-300  group-hover:hover:bg-gray-300 dark:!bg-transparent dark:group-hover:!bg-darkSprint-40 [&[data-state=open]]:visible [&[data-state=open]]:bg-gray-300">
+                      <BsThreeDots className="text-black dark:!text-dark-50 sm:text-xl" />
                     </div>
                   </DropdownTrigger>
                 </IssueDropdownMenu>

@@ -144,12 +144,38 @@ const Comments: React.FC<{ issue: IssueType }> = ({ issue }) => {
       <div className="mb-5 w-full bg-white dark:bg-transparent">
         <div ref={scrollRef} id="dummy-scroll-div" />
         {isWritingComment ? (
-          <Editor
-            action="comment"
-            content={undefined}
-            onSave={handleSave}
-            onCancel={handleCancel}
-          />
+          <div>
+            {/* ✅ Show attached files ABOVE the editor */}
+            {image && image.length > 0 && (
+              <div className="mb-2">
+                <h3 className="mb-1 text-sm font-semibold text-gray-700 dark:text-dark-50">
+                  Attached files
+                </h3>
+                <div className="flex flex-wrap items-center gap-2">
+                  {image.map((img, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                      <div className="whitespace-nowrap font-mono text-sm dark:text-dark-50">
+                        {img?.name}
+                      </div>
+                      <span
+                        onClick={() => handleDelete(index)}
+                        className="cursor-pointer"
+                      >
+                        <MdDelete className="text-lg text-red-600" />
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <Editor
+              action="comment"
+              content={undefined}
+              onSave={handleSave}
+              onCancel={handleCancel}
+            />
+          </div>
         ) : (
           <div className="">
             <AddComment
